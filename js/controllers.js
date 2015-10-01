@@ -16,7 +16,7 @@
             }
         }])
 
-        .controller('MainCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
+        .controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
         }])
 
         .controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {

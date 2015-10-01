@@ -5,27 +5,29 @@
 (function () {
 
     'use strict';
+var app = angular.module('catalog', ['ngRoute']);
 
-    angular.module('catalog', ['ngRoute'])
-
-        .config(function($routeProvider, $locationProvider) {
-            $routeProvider
-                .when('/', {
-                    templateUrl: 'partials/catalog.html',
-                    controller: 'CatalogCtrl'
-                })
-                .when('/landing', {
-                    templateUrl: 'partials/landing.html',
-                    controller: 'LandingCtrl'
-                })
-                .when('/category/:userId', {
-                    templateUrl: 'partials/user-categories.html',
-                    controller: 'CategoryCtrl'
-                })
-                .when('/category/:userId/items/:catId', {
-                    templateUrl: 'partials/category-items.html',
-                    controller: 'ItemsCtrl'
-                });
-            $locationProvider.html5Mode(true);
-        })
+    app.config(function($routeProvider, $locationProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: 'partials/catalog.html',
+                controller: 'CatalogCtrl'
+            })
+            .when('/landing', {
+                templateUrl: 'partials/landing.html',
+                controller: 'LandingCtrl'
+            })
+            .when('/category', {
+                templateUrl: 'partials/user-categories.html',
+                controller: 'CategoryCtrl'
+            })
+            .when('/items', {
+                templateUrl: 'partials/categories-items.html',
+                controller: 'ItemsCtrl'
+            })
+            .otherwise({
+                redirectTo: '/'
+            });
+        $locationProvider.html5Mode(true);
+    })
 }());
