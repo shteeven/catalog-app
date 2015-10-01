@@ -6,7 +6,7 @@
 
     'use strict';
 
-    angular.module('catalog', [])
+    angular.module('catalog', ['ngroute'])
 
         .controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
             $scope.getResults = function() {
@@ -28,5 +28,24 @@
             }
 
 
-        }]);
+        }])
+        .config(function($routeProvider, $locationProvider) {
+            $routeProvider
+                .when('/Book/', {
+                    templateUrl: 'book.html',
+                    controller: 'BookController',
+                    resolve: {
+                        // I will cause a 1 second delay
+                        delay: function ($q, $timeout) {
+                            var delay = $q.defer();
+                            $timeout(delay.resolve, 1000);
+                            return delay.promise;
+                        }
+                    }
+                })
+                .when('/Book/:bookId/ch/:chapterId', {
+                    templateUrl: 'chapter.html',
+                    controller: 'ChapterController'
+                });
+        })
 }());
