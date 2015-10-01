@@ -7,9 +7,10 @@
 
     'use strict';
 
-    angular.module('catalog', ['ngroute'])
+    angular.module('catalog')
 
         .controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
+            console.log('asdf');
             $scope.getResults = function() {
                 $log.log("test");
 

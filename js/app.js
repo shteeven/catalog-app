@@ -6,20 +6,20 @@
 
     'use strict';
 
-    angular.module('catalog', ['ngroute'])
+    angular.module('catalog', ['ngRoute'])
 
         .config(function($routeProvider, $locationProvider) {
             $routeProvider
                 .when('/', {
-                    templateUrl: 'partials/catalog-items.html',
+                    templateUrl: 'partials/user-categories.html',
                     controller: 'CatalogCtrl'
                 })
                 .when('/category/:userId', {
-                    templateUrl: 'category-items.html',
+                    templateUrl: 'partials/user-categories.html',
                     controller: 'CategoryCtrl'
                 })
                 .when('/category/:userId/items/:catId', {
-                    templateUrl: 'partials/user-items.html',
+                    templateUrl: 'partials/category-items.html',
                     controller: 'ItemsCtrl'
                 });
             $locationProvider.html5Mode(true);
