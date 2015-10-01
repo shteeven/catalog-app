@@ -11,8 +11,12 @@
         .config(function($routeProvider, $locationProvider) {
             $routeProvider
                 .when('/', {
-                    templateUrl: 'partials/user-categories.html',
+                    templateUrl: 'partials/catalog.html',
                     controller: 'CatalogCtrl'
+                })
+                .when('/landing', {
+                    templateUrl: 'partials/landing.html',
+                    controller: 'LandingCtrl'
                 })
                 .when('/category/:userId', {
                     templateUrl: 'partials/user-categories.html',
