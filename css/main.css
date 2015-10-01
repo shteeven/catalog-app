@@ -1,0 +1,18 @@
+@import url('http://fonts.googleapis.com/css?family=Open+Sans:400,700');
+
+*{
+	padding:0;
+	margin:0;
+}
+
+html{
+	background-color: #eaf0f2;
+}
+
+body{
+	font:14px/1.5 Arial, Helvetica, sans-serif;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
