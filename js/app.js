@@ -10,19 +10,19 @@ var app = angular.module('catalog', ['ngRoute']);
     app.config(function($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'templates/catalog.html',
+                templateUrl: 'partials/catalog.html',
                 controller: 'CatalogCtrl'
             })
             .when('/landing', {
-                templateUrl: 'templates/landing.html',
+                templateUrl: 'partials/landing.html',
                 controller: 'LandingCtrl'
             })
             .when('/category', {
-                templateUrl: 'templates/user-categories.html',
+                templateUrl: 'partials/user-categories.html',
                 controller: 'CategoryCtrl'
             })
             .when('/items', {
-                templateUrl: 'templates/categories-items.html',
+                templateUrl: 'partials/categories-items.html',
                 controller: 'ItemsCtrl'
             })
             .otherwise({
