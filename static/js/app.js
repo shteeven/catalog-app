@@ -28,7 +28,12 @@ var app = angular.module('catalog', ['ngRoute']);
       })
       .when('/landing', {
         templateUrl: 'static/partials/landing.html',
-        controller: 'LandingCtrl'
+        controller: 'LandingCtrl',
+        resolve: {
+          auth: function resolveAuthentication(AuthResolver) {
+          return AuthResolver.resolve();
+        }
+      }
       })
       .when('/category', {
         templateUrl: 'static/partials/user-categories.html',
