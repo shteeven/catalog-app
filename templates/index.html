@@ -21,40 +21,45 @@
 
 <body ng-controller="MainCtrl">
 
-    <!-- Site Top Nav -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation">
-        <a class="navbar-brand" href="/">Catalog</a>
-        <ul class="nav navbar-nav pull-right">
-            <li>
-                <a href="/">Home</a>
-            </li>
-            <li>
-                <a href="landing">landing</a>
-            </li>
-            <li>
-                <a href="items">items</a>
-            </li>
-            <li>
-                <a href="category">categories</a>
-            </li>
-            <li>
-              <div ng-if="currentUser">Welcome, {{ currentUser.name }}</div>
-            </li>
-<div ng-switch on="currentUser.role">
-  <div ng-switch-when="userRoles.admin">You're admin.</div>
-  <div ng-switch-when="userRoles.editor">You're editor.</div>
-  <div ng-switch-default>You're something else.</div>
-</div>
-            <li>
+    <div class="wrapper">
+
+        <!-- Site Top Nav -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation">
+            <a class="navbar-brand" href="/">Catalog</a>
+            <ul class="nav navbar-nav pull-right">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="landing">landing</a>
+                </li>
+                <li>
+                    <a href="items">items</a>
+                </li>
+                <li>
+                    <a href="category">categories</a>
+                </li>
+                <li>
+                  <div ng-if="currentUser">Welcome, {{ currentUser.name }}</div>
+              </li>
+              <div ng-switch on="currentUser.role">
+                  <div ng-switch-when="userRoles.admin">You're admin.</div>
+                  <div ng-switch-when="userRoles.editor">You're editor.</div>
+                  <div ng-switch-default>You're something else.</div>
+              </div>
+              <li>
                 <button class="menu-toggle" ng-click="toggleMenu()">
                     <i class="glyphicon glyphicon-menu-hamburger"></i>
                 </button>
-            </li>
-        </ul>
-    </nav>
+              </li>
+            </ul>
+        </nav>
 
+        <div ng-view></div>
 
-    <div ng-view></div>
+        <div class="push"></div>
+
+    </div> <!-- / .wrapper -->
 
     <!-- The content of your page would go here. -->
     <footer class="footer-distributed">
@@ -76,6 +81,8 @@
             </form>
         </div>
     </footer>
+
+
 
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
