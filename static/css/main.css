@@ -16,3 +16,7 @@ body{
 .navbar {
     margin-bottom: 0;
 }
+
+.img-thumb {
+	max-width: 100%;
+}

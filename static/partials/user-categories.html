@@ -1,25 +1,43 @@
 <div class="container-fluid">
-	
-	<!-- List of Categories -->
-	<ul class="cat-list">
-		<!-- First Category -->
-		<li class="cat-list--item">
-		<!-- Image thumbnail -->
-			<img src="" alt="Category thumbnail." class="cat-list--thumbnail">
-		<!-- Category Title -->
-			<h3 class="cat-list--title">Some Title</h3>
-		<!-- Category Description -->
-			<p class="cat-list--description">This is a description of Some Title.</p>
-		<!-- CRUD -->
-			<div class="cat-list--CRUD">
-				<!-- Write button -->
-				<button></button>
-				<!-- Delete button -->
-				<button></button>
-			</div>
 			
-		</li>
+	<div class="row"> <!-- Angular should repeat this entire section? -->
+		
+		<div class="col-md-10 col-md-offset-1">
 
-	</ul>
+			<div class="container-fluid">
+				
+				<div class="row"> <!-- Angular should repeat this block -->
+						
+					<!-- Image thumbnail -->
+					<div class="col-xs-2">
+						<img class="img-thumb" src="../img/thumbnail.svg" alt="Category thumbnail.">
+					</div>
 
-</div>
+					<!-- Category Title -->
+					<div class="col-xs-2">
+						<h3 class="title">Some Title</h3>
+					</div>
+
+					<!-- Category Description -->
+					<div class="col-xs-6">
+						<p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi dolorum ad eaque vel adipisci iusto doloremque fugiat autem libero aspernatur. Culpa blanditiis, ipsam cupiditate eaque.</p>
+					</div>
+					
+					<!-- CRUD -->
+					<div class="col-xs-2">
+						<!-- Edit button -->
+						<button type="button" class="btn btn-success btn-block hidden">Edit Catalog</button>
+						<!-- Delete button -->
+						<button type="button" class="btn btn-danger btn-block hidden">Delete Catalog</button>
+						<p>Date Created: January 17, 1707</p>
+					</div>
+
+				</div> <!-- / .row -->
+
+			</div> <!-- / .container-fluid -->
+
+		</div> <!-- / .col-md-10.col-md-offset-1 -->
+	
+	</div> <!-- / .row -->
+
+</div> <!-- / .container-fluid -->

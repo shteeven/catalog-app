@@ -5,27 +5,47 @@
 
 (function () {
 
-    'use strict';
+  'use strict';
+var app = angular.module('catalog');
 
-    angular.module('catalog')
+  app.controller('MainCtrl', ['$scope', 'USER_ROLES', 'AuthService', function($scope, USER_ROLES, AuthService) {
 
-        .controller('MainCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
+    $scope.currentUser = null;
+    $scope.userRoles = USER_ROLES;
+    $scope.isAuthorized = AuthService.isAuthorized;
 
-            function menuToggle() {
-                $scope.menu_toggled = !$scope.menu_toggled;
-            }
-        }])
+    $scope.setCurrentUser = function (user) {
+      $scope.currentUser = user;
+    };
 
-        .controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
-        }])
+    $scope.menuToggle = function() {
+      $scope.menu_toggled = !$scope.menu_toggled;
+    };
 
-        .controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
-        }])
 
-        .controller('CategoryCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
-        }])
+  }]);
 
-        .controller('ItemsCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
-        }])
+  app.controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+
+  app.controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+
+  app.controller('CategoryCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+
+  app.controller('ItemsCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+
+  app.controller('LoginController', function ($scope, $rootScope, AUTH_EVENTS, AuthService) {
+    $scope.credentials = {
+      username: '',
+      password: ''
+    };
+    $scope.login = function (credentials) {
+      AuthService.login(credentials).then(function (user) {
+        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+        $scope.setCurrentUser(user);
+      }, function () {
+        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+      });
+    };
+  });
 
 }());
