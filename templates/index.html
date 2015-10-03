@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="../static/css/vendor/bootstrap.css">
     <link rel="stylesheet" href="../static/css/vendor/bootstrap-theme.css">
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+	  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="../static/css/main.css">
     <link rel="stylesheet" href="../static/css/header.css">
@@ -40,13 +40,8 @@
                     <a href="category">categories</a>
                 </li>
                 <li>
-                  <div ng-if="currentUser">Welcome, {{ currentUser.name }}</div>
+                  <div ng-if="currentUser">Welcome, [[ currentUser.name ]]</div>
               </li>
-              <div ng-switch on="currentUser.role">
-                  <div ng-switch-when="userRoles.admin">You're admin.</div>
-                  <div ng-switch-when="userRoles.editor">You're editor.</div>
-                  <div ng-switch-default>You're something else.</div>
-              </div>
               <li>
                 <button class="menu-toggle" ng-click="toggleMenu()">
                     <i class="glyphicon glyphicon-menu-hamburger"></i>
@@ -91,6 +86,7 @@
     <script src="../static/js/app.js"></script>
     <script src="../static/js/controllers.js"></script>
     <script src="../static/js/services.js"></script>
+    <script src="../static/js/directives.js"></script>
 
 
 </body>
