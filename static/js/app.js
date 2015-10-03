@@ -11,6 +11,15 @@ var app = angular.module('catalog', ['ngRoute']);
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
   });
 
+  app.config(function ($httpProvider) {
+    $httpProvider.interceptors.push([
+      '$injector',
+      function ($injector) {
+        return $injector.get('AuthInterceptor');
+      }
+    ]);
+  });
+
   app.config(function($routeProvider, $locationProvider, USER_ROLES) {
     $routeProvider
       .when('/', {
