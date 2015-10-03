@@ -21,13 +21,19 @@ var app = angular.module('catalog', ['ngRoute']);
         templateUrl: 'static/partials/user-categories.html',
         controller: 'CategoryCtrl'
       })
-      .when('/category/:cat_id/create', {
+      .when('create/:type/:id', {
         templateUrl: 'static/partials/user-categories-create.html',
-        controller: 'CreateEditCtrl'
+        controller: 'CreateEditCtrl',
+        data: {
+          authorizedRoles: [USER_ROLES.registered]
+        }
       })
-      .when('/category/:cat_id/edit/:item_id', {
+      .when('edit/:type/:id', {
         templateUrl: 'static/partials/user-categories-create.html',
-        controller: 'CreateEditCtrl'
+        controller: 'CreateEditCtrl',
+        data: {
+          authorizedRoles: [USER_ROLES.registered]
+        }
       })
       .when('/items', {
         templateUrl: 'static/partials/categories-items.html',
