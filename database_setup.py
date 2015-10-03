@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 import datetime
+from passlib.apps import custom_app_context as pwd_context
 
 Base = declarative_base()
 
@@ -28,10 +29,10 @@ class Category(Base):
 class User(Base):
     __tablename__ = 'user'
 
-    name = Column(String(80), nullable=False)
+    name = Column(String(80))
     id = Column(Integer, primary_key=True)
     email = Column(String(250), unique=True, nullable=False)
-    password = Column(String(80))
+    password_hash = Column(String(128))
     picture = Column(String(250))
 
     @property
@@ -43,6 +44,12 @@ class User(Base):
             'id': self.id,
             'picture': self.picture,
         }
+
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
 
 
 class Item(Base):
