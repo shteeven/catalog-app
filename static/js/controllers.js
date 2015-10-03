@@ -25,6 +25,8 @@ var app = angular.module('catalog');
 
   }]);
 
+  app.controller('CreateEditCtrl', ['$scope', function($scope, $routeparams) {}]);
+
   app.controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
 
   app.controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);

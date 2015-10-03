@@ -21,6 +21,14 @@ var app = angular.module('catalog', ['ngRoute']);
         templateUrl: 'static/partials/user-categories.html',
         controller: 'CategoryCtrl'
       })
+      .when('/category/:cat_id/create', {
+        templateUrl: 'static/partials/user-categories-create.html',
+        controller: 'CreateEditCtrl'
+      })
+      .when('/category/:cat_id/edit/:item_id', {
+        templateUrl: 'static/partials/user-categories-create.html',
+        controller: 'CreateEditCtrl'
+      })
       .when('/items', {
         templateUrl: 'static/partials/categories-items.html',
         controller: 'ItemsCtrl'
@@ -42,8 +50,7 @@ var app = angular.module('catalog', ['ngRoute']);
 
   app.constant('USER_ROLES', {
     all: '*',
-    admin: 'admin',
-    editor: 'editor',
+    registered: 'registered',
     guest: 'guest'
   });
 
