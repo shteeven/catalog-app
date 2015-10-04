@@ -3,9 +3,8 @@
  */
 
 (function () {
-
-    'use strict';
-var app = angular.module('catalog', ['ngRoute']);
+  'use strict';
+  var app = angular.module('catalog', ['ngRoute']);
 
   app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
@@ -31,9 +30,9 @@ var app = angular.module('catalog', ['ngRoute']);
         controller: 'LandingCtrl',
         resolve: {
           auth: function resolveAuthentication(AuthResolver) {
-          return AuthResolver.resolve();
+            return !AuthResolver.resolve();
+          }
         }
-      }
       })
       .when('/category', {
         templateUrl: 'static/partials/user-categories.html',

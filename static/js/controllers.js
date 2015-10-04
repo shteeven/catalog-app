@@ -27,7 +27,13 @@ var app = angular.module('catalog');
 
   app.controller('CreateEditCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {}]);
 
-  app.controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+  app.controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
+
+    $scope.toggleLogin = function(){
+      console.log('toggling')
+      $scope.loginToggled = !$scope.loginToggled
+    };
+  }]);
 
   app.controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
 

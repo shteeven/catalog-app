@@ -56,7 +56,8 @@ def get_user(id):
 
 
 @app.route('/')
-def index():
+@app.route('/<path:path>')
+def index(path):
 		if 'username' not in login_session:
 				return render_template('index.html')
 		else:

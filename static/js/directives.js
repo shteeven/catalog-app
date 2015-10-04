@@ -11,7 +11,7 @@ var app = angular.module('catalog');
   app.directive('loginDialog', function (AUTH_EVENTS) {
     return {
       restrict: 'A',
-      template: '<div ng-if="visible" ng-include="\'login-form.html\'">',
+      templateUrl: '../static/partials/login-form.html', //'<div ng-if="visible" ng-include="\'login-form.html\'">',
       link: function (scope) {
         var showDialog = function () {
           scope.visible = true;

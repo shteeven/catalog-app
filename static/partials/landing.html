@@ -3,12 +3,12 @@
     <h1>Get Organized!</h1>
     <h2>With cardstock, ink, and elbow grease</h2>
     <ul>
-        <li><a href="#/login">Sign Up and Create</a></li>
-        <li><a href="#/home">Explore Categories</a></li>
+        <li><a ng-click="toggleLogin()">Sign Up and Create</a></li>
+        <li><a href="/">Explore Categories</a></li>
     </ul>
 </header>
 
-<div login-dialog ng-if="!isLoginPage"></div>
+<div login-dialog ng-if="loginToggled"></div>
 
 <!-- Services Section -->
 <section id="services">
