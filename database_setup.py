@@ -7,6 +7,7 @@ from passlib.apps import custom_app_context as pwd_context
 
 Base = declarative_base()
 
+
 class Category(Base):
     __tablename__ = 'category'
 
@@ -15,6 +16,8 @@ class Category(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     item = relationship('Item', cascade="all, delete-orphan")
     img_url = Column(String(500))
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
 
     @property
     def serialize(self):
@@ -32,6 +35,7 @@ class User(Base):
     name = Column(String(80))
     id = Column(Integer, primary_key=True)
     email = Column(String(250), unique=True, nullable=False)
+    username = Column(String(80), nullable=False)
     password_hash = Column(String(128))
     picture = Column(String(250))
 

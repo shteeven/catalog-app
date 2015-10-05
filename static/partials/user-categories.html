@@ -25,11 +25,24 @@
 					
 					<!-- CRUD -->
 					<div class="col-xs-2">
-						<!-- Edit button -->
-						<button type="button" class="btn btn-success btn-block hidden">Edit Catalog</button>
-						<!-- Delete button -->
-						<button type="button" class="btn btn-danger btn-block hidden">Delete Catalog</button>
-						<p>Date Created: January 17, 1707</p>
+            <div ng-hide="user.id != item.user_id">
+              <div ng-hide="!deletion_confirmation">
+                <!-- Edit button -->
+						    <button type="button" class="btn btn-success btn-block hidden">Edit Catalog</button>
+						    <!-- Delete button -->
+						    <button type="button" class="btn btn-danger btn-block hidden">Delete Catalog</button>
+              </div>
+              <div ng-hide="!deletion_confirmation">
+                <!-- Edit button -->
+						    <button type="button" class="btn btn-success btn-block hidden">Edit Catalog</button>
+						    <!-- Delete button -->
+						    <button type="button" class="btn btn-danger btn-block hidden">Delete Catalog</button>
+              </div>
+            </div>
+
+            <div ng-hide="user.id == item.user_id">
+              <p>Date Created: January 17, 1707</p>
+            </div>
 					</div>
 
 				</div> <!-- / .row -->

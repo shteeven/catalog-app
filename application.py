@@ -27,11 +27,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-# Initialize authentication
-login_manager = LoginManager()
-
 default_img_url = 'http://orig04.deviantart.net/fa85/f/2012/296/8/7/random_funny___2_by_guppy22-d5irouc.jpg'
-
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -88,6 +84,7 @@ def gconnect():
 
 	stored_access_token = login_session.get('access_token')
 	stored_gplus_id = login_session.get('gplus_id')
+
 	if stored_access_token is not None and gplus_id == stored_gplus_id:
 		login_session['access_token'] = access_token
 		response = make_response(
@@ -115,6 +112,88 @@ def gconnect():
 	# see if user exists, if it doesn't make a new one
 	user_id = getUserID(login_session['email'])
 	if not user_id:
+		user_id = registerUser(login_session)
+	login_session['user_id'] = user_id
+	output = ''
+	output += '<h1>Welcome, '
+	output += login_session['username']
+	output += '!</h1>'
+	output += '<img src="'
+	output += login_session['picture']
+	output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+	flash("you are now logged in as %s" % login_session['username'])
+	return output
+
+
+# DISCONNECT - Revoke a current user's token and reset their login_session
+# @app.route('/gdisconnect')
+def gdisconnect():
+	# Only disconnect a connected user.
+	access_token = login_session.get('access_token')
+	if access_token is None:
+		response = make_response(
+			json.dumps('Current user not connected.'), 401)
+		response.headers['Content-Type'] = 'application/json'
+		return response
+	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+	h = httplib2.Http()
+	result = h.request(url, 'GET')[0]
+	if result['status'] == '200':
+		# Reset the user's sesson.
+		return result
+	else:
+		# For whatever reason, the given token was invalid.
+		response = make_response(
+			json.dumps('Failed to revoke token for given user.', 400))
+		response.headers['Content-Type'] = 'application/json'
+		return response
+
+
+@app.route('/fbconnect', methods=['POST'])
+def fbconnect():
+	# Validate state token
+	if request.args.get('state') != login_session['state']:
+		response = make_response(json.dumps('Invalid state parameter.'), 401)
+		response.headers['Content-Type'] = 'application/json'
+		return response
+	access_token = request.data
+
+	app_object = json.loads(open('facebook_client_secrets.json', 'r').read())[
+		'web']
+	app_id = app_object['app_id']
+	app_secret = app_object['app_secret']
+
+	url = 'https://graph.facebook.com/oauth/access_token?' \
+	      'grant_type=fb_exchange_token' \
+	      '&client_id=%s' \
+	      '&client_secret=%s' \
+	      '&fb_exchange_token=%s' % (app_id, app_secret, access_token)
+	h = httplib2.Http()
+	result = h.request(url, 'GET')[1]
+
+	userinfo_url = 'https://graph.facebook.com/v2.4/me'
+	token = result.split("&")[0]
+
+	url = 'https://graph.facebook.com/v2.4/me?%s&fields=name,id,email' % token
+	h = httplib2.Http()
+	result = h.request(url, 'GET')[1]
+	data = json.loads(result)  #### ERROR ####
+	login_session['provider'] = 'facebook'
+	login_session['username'] = data['name']
+	login_session['email'] = data['email']
+	login_session['facebook_id'] = data['id']
+
+	# get user's picture
+	url = 'https://graph.facebook.com/v2.4/me/picture?%s&redirect=0&height=200&width=200' % token
+	h = httplib2.Http()
+	result = h.request(url, 'GET')[1]
+	data = json.loads(result)
+
+	login_session['picture'] = data['data']['url']
+
+	# see if user exists, if it doesn't make a new one
+	user_id = getUserID(login_session['email'])
+	if not user_id:
 		user_id = createUser(login_session)
 	login_session['user_id'] = user_id
 
@@ -129,39 +208,77 @@ def gconnect():
 	return output
 
 
+# @app.route('/fbdisconnect')
+def fbdisconnect():
+	facebook_id = login_session['facebook_id']
+	url = 'https://graph.facebook.com/%s/permissions' % facebook_id
+	h = httplib2.Http()
+	result = h.request(url, 'DELETE')[1]
+	return result
+
+
+# umbrella disconnect function, signing out user regardless of service used
+@app.route('/disconnect')
+def disconnect():
+	if 'provider' in login_session:
+		if login_session['provider'] == 'google':
+			gdisconnect()
+			del login_session['gplus_id']
+			del login_session['access_token']
+		if login_session['provider'] == 'facebook':
+			fbdisconnect()
+			del login_session['facebook_id']
+
+		del login_session['username']
+		del login_session['email']
+		del login_session['picture']
+		del login_session['user_id']
+		del login_session['provider']
+		flash('Successfully logged out.')
+		return redirect(url_for('index'))
+	else:
+		return redirect(url_for('index'))
+
+
+# register users without oauth
+@app.route('/register', methods=['POST'])
+def registerUser():
+		email = request.json.get('email')
+		password = request.json.get('password')
+		username = request.json.get('username')
+		if email is None or password is None or username is None:
+				print('Form fields incomplete.')
+				abort(400)  # missing arguments
+		if session.query(User).filter_by(email=email).first() is not None:
+				print('User already registered.')
+				abort(400)  # existing user
+		user = User(email=email)
+		user.username = username
+		user.hash_password(password)
+		session.add(user)
+		session.commit()
+
+		# set login_session data
+		user = session.query(User).filter_by(email=email).one()
+		login_session['username'] = user.username
+		login_session['email'] = user.email
+		login_session['user_id'] = user.id
+
+		return jsonify({'email': user.email, 'username': user.username}), 201
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	print(request.json)
+
 	return redirect(url_for('index'))
 
+
+# render login-form.html with state and client_id
 @app.route('/loginform')
 def loginForm():
 	state = generateRandomString()
 	login_session['state'] = state
 	return render_template("login-form.html", STATE=state, client_id=CLIENT_ID)
-
-
-@app.route('/api/users', methods=['POST'])
-def new_user():
-		email = request.json.get('email')
-		password = request.json.get('password')
-		if email is None or password is None:
-				abort(400)  # missing arguments
-		if session.query(User).filter_by(email=email).first() is not None:
-				abort(400)  # existing user
-		user = User(email=email)
-		user.hash_password(password)
-		session.add(user)
-		session.commit()
-		return jsonify({'email': user.email}), 201, {'Location': url_for('get_user', id=user.id, _external=True)}
-
-
-@app.route('/api/users/<int:id>')
-def get_user(id):
-		user = User.query.get(id)
-		if not user:
-				abort(400)
-		return jsonify({'username': user.username})
 
 
 @app.route('/')
@@ -173,6 +290,9 @@ def index(path=''):
 				return render_template('index.html', logged='true')
 
 
+@app.route('/')
+
+
 def generateRandomString():
 	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
 
@@ -181,6 +301,45 @@ def generateCsrfToken():
 	if '_csrf_token' not in login_session:
 		login_session['_csrf_token'] = generateRandomString()
 	return login_session['_csrf_token']
+
+# refresh the token and append it as a cookie
+@app.after_request
+def after_request(resp):
+	user = getUser(login_session['user_id'])
+	if user is not None:
+		# refresh token
+		token = user.generate_auth_token()
+		resp.set_cookie('XSRF-TOKEN', token.decode('ascii'))
+	return resp
+
+'''
+# User Helper Functions
+'''
+# register user with oauth
+def createUser(login_session):
+	newUser = User(name=login_session['username'], email=login_session[
+		'email'], picture=login_session['picture'])
+	session.add(newUser)
+	session.commit()
+	user = session.query(User).filter_by(email=login_session['email']).one()
+	return user.id
+
+
+# get user info
+@app.route('/api/users/<int:id>')
+def getUserInfo(user_id):
+	user = session.query(User).filter_by(id=user_id).one()
+	return user
+
+
+# get user ID
+def getUserID(email):
+	try:
+		user = session.query(User).filter_by(email=email).one()
+		return user.id
+	except:
+		flash("Failed to retrieve user ID.")
+		return None
 
 
 if __name__ == '__main__':

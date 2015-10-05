@@ -1,0 +1,25 @@
+
+	<div class="container-fluid">
+
+		<div class="row">
+
+			<div class="col-sm-6 col-sm-offset-3">
+
+				<form action="" class="form-horizontal">
+          <!-- Cross site request forgery prevention token -->
+          <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+
+					<!-- Confirm and Cancel -->
+					<div class="form-group">
+						<div class="col-sm-4 col-sm-offset-4">
+							<button class="btn btn-danger btn-block" type="submit">Confirm</button>
+							<button class="btn btn-default btn-block" type="button">Cancel</button>
+						</div>
+					</div>
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>

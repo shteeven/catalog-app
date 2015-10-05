@@ -21,6 +21,17 @@
         });
     };
 
+    authService.register = function (credentials) {
+      return $http
+        .post('/register', credentials)
+        .then(function (res) {
+          console.log(res);
+          Session.create(res.data.id, res.data.user.id,
+                         res.data.user.role);
+          return res.data.user;
+        });
+    };
+
     authService.isAuthenticated = function () {
       return !!Session.userId;
     };
