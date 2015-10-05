@@ -11,15 +11,12 @@ var app = angular.module('catalog');
   app.directive('loginDialog', function (AUTH_EVENTS) {
     return {
       restrict: 'A',
-      templateUrl: '../static/partials/login-form.html', //'<div ng-if="visible" ng-include="\'login-form.html\'">',
+      templateUrl: '/loginform',
       link: function (scope) {
-        var showDialog = function () {
-          scope.visible = true;
-        };
 
-        scope.visible = false;
-        scope.$on(AUTH_EVENTS.notAuthenticated, showDialog);
-        scope.$on(AUTH_EVENTS.sessionTimeout, showDialog)
+        //scope.visible = false;
+        //scope.$on(AUTH_EVENTS.notAuthenticated, showDialog);
+        //scope.$on(AUTH_EVENTS.sessionTimeout, showDialog)
       }
     };
   });

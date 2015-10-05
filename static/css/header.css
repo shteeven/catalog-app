@@ -41,32 +41,6 @@ header ul {
     margin: 60px auto 0;
 }
 
-header ul a{
-    text-decoration: none;
-    color: #FFF;
-    text-align: left;
-    background-color: #66B650;
-    padding: 10px 16px;
-    border-radius: 2px;
-    opacity: 0.8;
-    font-size: 16px;
-    display: inline-block;
-    margin: 4px;
-    line-height: 1;
-    outline: none;
-
-    transition: 0.2s ease;
-}
-
-header ul li a.active{
-    background-color: #66B650;
-    pointer-events: none;
-}
-
-header ul li a:hover {
-    opacity: 1;
-}
-
 header ul{
     list-style: none;
     padding: 0;

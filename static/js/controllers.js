@@ -43,7 +43,7 @@ var app = angular.module('catalog');
 
   app.controller('LoginController', function ($scope, $rootScope, AUTH_EVENTS, AuthService) {
     $scope.credentials = {
-      username: '',
+      email: '',
       password: ''
     };
     $scope.login = function (credentials) {
