@@ -27,11 +27,27 @@
       return $http
         .post('/register', credentials)
         .then(function (res) {
-          Session.create(res.data.user_id, res.data.user_id,
-                         res.data.username, res.email);
+          Session.create(res.data.user_id, res.data.user_id, res.data.username, res.email);
           return res.data;
         }, function(err) {
           console.log(err);
+        });
+    };
+
+    authService.gSignin = function (authResult, state) {
+      return $http({
+        method: "POST",
+        url: '/gconnect?state='+state,
+        headers: {
+          'Content-Type': 'application/octet-stream; charset=utf-8'
+        },
+        data: authResult['code'],
+        transformRequest: [] })
+        .then(function (res) {
+          Session.create(res.data.user_id, res.data.user_id, res.data.username, res.email);
+          return res.data;
+        }, function(err) {
+          console.log(err)
         });
     };
 
