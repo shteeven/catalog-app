@@ -31,12 +31,12 @@
     <button type="submit">Login</button>
   </form>
 </section>
-{{ CLIENT_ID }}
 
 <!-- GOOGLE PLUS SIGN IN-->
 <!--<div class="gconnect">-->
   <!--<div google-signin="" client-id="{{ CLIENT_ID }}"></div>-->
 <!--</div>-->
+<span ng-init="state = '{{ STATE }}'"></span>
 <div class="gconnect">
   <script src="//apis.google.com/js/platform.js?onload=start"> </script>
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
