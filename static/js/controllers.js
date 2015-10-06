@@ -41,7 +41,7 @@ var app = angular.module('catalog');
 
   app.controller('ItemsCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
 
-  app.controller('LoginController', function ($scope, $rootScope, $window, AUTH_EVENTS, AuthService) {
+  app.controller('LoginController', function ($scope, $window, $location, AuthService) {
     $scope.credentials = {
       email: '',
       username: '',
@@ -50,56 +50,31 @@ var app = angular.module('catalog');
 
     $scope.register = function (credentials) {
       AuthService.register(credentials).then(function (user) {
-        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
         $scope.setCurrentUser(user);
-      }, function () {
-        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+        $scope.credentials = {};
+        $location.path('/')
+      }, function (err) {
+        console.log(err)
       });
     };
 
     $scope.login = function (credentials) {
       AuthService.login(credentials).then(function (user) {
-        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
         $scope.setCurrentUser(user);
-      }, function () {
-        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+        $scope.credentials = {};
+        $location.path('/');
+      }, function (err) {
+        console.log(err)
       });
     };
 
     $window.signInCallback = function(authResult) {
       AuthService.gSignin(authResult, $scope.state).then(function (user) {
-        $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
         $scope.setCurrentUser(user);
-      }, function () {
-        $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+        $location.path('/');
+      }, function (err) {
+        console.log(err)
       });
     };
-
-    //$window.signInCallback = function(authResult) {
-    //  if (authResult['code']) {
-    //    // Hide the sign-in button now that the user is authorized
-    //    $('#signinButton').attr('style', 'display: none');
-    //    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
-    //    $.ajax({
-    //      type: 'POST',
-    //      url: '/gconnect?state=' + $scope.state,
-    //      processData: false,
-    //      data: authResult['code'],
-    //      contentType: 'application/octet-stream; charset=utf-8',
-    //      success: function(result) {
-    //        // Handle or verify the server response if necessary.
-    //        if (result) {
-    //          $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-    //          $scope.setCurrentUser(result);
-    //        } else if (authResult['error']) {
-    //          $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
-    //          console.log('There was an error: ' + authResult['error']);
-    //        } else {
-    //        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-    //        }
-    //      }
-    //    });
-    //  }
-    //}
   });
 }());
