@@ -27,20 +27,20 @@
         <nav class="navbar navbar-default navbar-static-top" role="navigation">
             <a class="navbar-brand" href="/">Catalog</a>
             <ul class="nav navbar-nav pull-right">
-                <li>
-                    <a href="/">Home</a>
-                </li>
-                <li>
-                    <a href="landing">landing</a>
-                </li>
-                <li>
-                    <a href="items">items</a>
-                </li>
-                <li>
-                    <a href="category">categories</a>
-                </li>
-                <li>
-                  <div ng-if="currentUser">Welcome, [[ currentUser.name ]]</div>
+              <li ng-if="currentUser">
+                Welcome, [[currentUser.username]]
+              </li>
+              <li>
+                <a href="/">Home</a>
+              </li>
+              <li>
+                <a href="landing">landing</a>
+              </li>
+              <li>
+                <a href="items">items</a>
+              </li>
+              <li>
+                <a href="category">categories</a>
               </li>
               <li>
                 <button class="menu-toggle" ng-click="toggleMenu()">

@@ -53,7 +53,6 @@ var app = angular.module('catalog');
         console.log(user);
         $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
         $scope.setCurrentUser(user);
-
       }, function () {
         $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
       });
@@ -61,6 +60,7 @@ var app = angular.module('catalog');
 
     $scope.login = function (credentials) {
       AuthService.login(credentials).then(function (user) {
+        console.log(user);
         $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
         $scope.setCurrentUser(user);
       }, function () {

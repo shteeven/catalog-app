@@ -15,10 +15,11 @@
       return $http
         .post('/login', credentials)
         .then(function (res) {
-          console.log(res);
           Session.create(res.data.user_id, res.data.user_id,
                          res.data.username, res.email);
-          return res.data.user;
+          return res.data;
+        }, function(err) {
+          console.log(err);
         });
     };
 
@@ -26,10 +27,11 @@
       return $http
         .post('/register', credentials)
         .then(function (res) {
-          console.log(res);
-          Session.create(res.data.user.id, res.data.user.id,
-                         res.data.user.role);
-          return res.data.user;
+          Session.create(res.data.user_id, res.data.user_id,
+                         res.data.username, res.email);
+          return res.data;
+        }, function(err) {
+          console.log(err);
         });
     };
 
@@ -52,12 +54,14 @@
     this.create = function (sessionId, userId, username, userEmail) {
       this.id = userId;
       this.userId = userId;
-
+      this.username = username;
+      this.userEmail = userEmail;
     };
     this.destroy = function () {
-      this.id = null;
-      this.userId = null;
-      this.userRole = null;
+      this.id = userId;
+      this.userId = userId;
+      this.username = username;
+      this.userEmail = userEmail;
     };
   });
 
