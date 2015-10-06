@@ -14,6 +14,7 @@
 	  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/sidebar.css">
     <link rel="stylesheet" href="../static/css/header.css">
     <link rel="stylesheet" href="../static/css/footer.css">
 
@@ -21,42 +22,51 @@
 
 <body ng-controller="MainCtrl">
 
-    <div class="wrapper">
+    <div id="wrapper">
 
-        <!-- Site Top Nav -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation">
-            <a class="navbar-brand" href="/">Catalog</a>
-            <ul class="nav navbar-nav pull-right">
-              <li ng-if="currentUser">
-                Welcome, [[currentUser.username]]
-              </li>
-              <li>
-                <a href="/">Home</a>
-              </li>
-              <li>
-                <a href="landing">landing</a>
-              </li>
-              <li>
-                <a href="items">items</a>
-              </li>
-              <li>
-                <a href="category">categories</a>
-              </li>
-              <li>
-                <button class="menu-toggle" ng-click="toggleMenu()">
-                    <i class="glyphicon glyphicon-menu-hamburger"></i>
-                </button>
-              </li>
-            </ul>
-        </nav>
+        <!-- <button ng-click="toggleMenu()"></button> -->
 
-        <div ng-view></div>
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper" ng-class="toggled: menu_toggled">
+            <nav>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-brand"><a href="#">Navigation</a></li>
+                    <li role="presentation" class="active"><a href="/">Home</a></li>
+                    <li role="presentation"><a href="landing">Landing</a></li>
+                    <li role="presentation"><a href="items">Items</a></li>
+                    <hr> 
+                    <li role="presentation"><a href="#">Create Category</a></li>
+                    <li role="presentation"><a href="#">Create Item</a></li>
+                    <li role="presentation"><a href="category">Categories</a></li>
+                    <li role="presentation">
+                        <button type="button" class="btn btn-block">Log In</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- /Sidebar -->
 
-        <div class="push"></div>
+        <!-- Main Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Insert Partials with Angular -->
+                        <div ng-view></div>
+                    </div>
+                </div>
+            </div>
 
-    </div> <!-- / .wrapper -->
+            
+            
+            <!-- Needed for sticky footer -->
+            <div class="push"></div>
+        </div>
+        <!-- /Main Content -->
+        
+    </div> <!-- /.container-fluid -->
 
-    <!-- The content of your page would go here. -->
+
     <footer class="footer-distributed">
         <div class="footer-left">
             <p class="footer-links">
@@ -87,6 +97,14 @@
     <script src="../static/js/controllers.js"></script>
     <script src="../static/js/services.js"></script>
     <script src="../static/js/directives.js"></script>
+    
+    <!-- Temporary script to test button toggle -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
 
 
 </body>
