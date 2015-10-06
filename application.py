@@ -31,7 +31,30 @@ session = DBSession()
 
 default_img_url = 'http://orig04.deviantart.net/fa85/f/2012/296/8/7/random_funny___2_by_guppy22-d5irouc.jpg'
 
+##########################
+# API and Page Rendering
+##########################
+# Create a new category; verify auth and redirect/render accordingly
+# @app.route('/category/new/', methods=['GET', 'POST'])
+# def newCategory():
+# 	if not validateSignedIn():
+# 		return redirect('/login')
+# 	if request.method == 'POST':
+# 		if validateName(request.form['name']):
+# 			valid, img_url = validateImageUrl(request.form['img_url'])
+# 			# Save new category.
+# 			if valid == 200:
+# 				newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
+# 				session.add(newCategory)
+# 				session.commit()
+# 				flash('New Category %s Successfully Created' % newCategory.name)
+# 				return redirect(url_for('showCategories'))
+# 	return render_template('newCategory.html', logged='true')
 
+
+##########################
+# User Authentication
+##########################
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
 	# Validate state token
@@ -264,6 +287,15 @@ def getUserID(email):
 		return None
 
 
+# Check if user is signed in
+def validateSignedIn():
+	if 'username' not in login_session:
+		flash('You must login to complete this action.')
+		return False
+	else:
+		return True
+
+
 ##########################
 # Security Helpers
 ##########################
@@ -282,7 +314,6 @@ def after_request(resp):
 	if user is not None:
 		# refresh token
 		token = generate_auth_token(user)
-		print(token)
 		resp.set_cookie('XSRF-TOKEN', token.decode('ascii'))
 	return resp
 
@@ -314,7 +345,8 @@ def user_valid(cookie=False):
 	if token is None:
 		return None
 	user = verify_auth_token(token)
-	g.user = user
+	print(user)
+	#login_session = user
 	return user
 
 
