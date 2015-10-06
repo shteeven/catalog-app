@@ -240,7 +240,7 @@ def login():
 
 
 # render login-form.html with state and client_id
-@app.route('/api/loginform')
+@app.route('/loginform')
 def loginForm():
 	state = generateRandomString()
 	login_session['state'] = state

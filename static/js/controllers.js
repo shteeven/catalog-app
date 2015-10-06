@@ -27,13 +27,7 @@ var app = angular.module('catalog');
 
   app.controller('CreateEditCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {}]);
 
-  app.controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {
-
-    $scope.toggleLogin = function(){
-      console.log('toggling')
-      $scope.loginToggled = !$scope.loginToggled
-    };
-  }]);
+  app.controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
 
   app.controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
 
@@ -41,7 +35,7 @@ var app = angular.module('catalog');
 
   app.controller('ItemsCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
 
-  app.controller('LoginController', function ($scope, $window, $location, AuthService) {
+  app.controller('LoginCtrl', ['$scope', '$window', '$location', 'AuthService', function ($scope, $window, $location, AuthService) {
     $scope.credentials = {
       email: '',
       username: '',
@@ -76,5 +70,5 @@ var app = angular.module('catalog');
         console.log(err)
       });
     };
-  });
+  }]);
 }());

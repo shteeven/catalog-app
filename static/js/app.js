@@ -34,6 +34,10 @@
           }
         }
       })
+      .when('/loginpage', {
+        templateUrl: '/loginform',
+        controller: 'LoginCtrl'
+      })
       .when('/category', {
         templateUrl: 'static/partials/user-categories.html',
         controller: 'CategoryCtrl'
