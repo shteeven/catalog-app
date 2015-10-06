@@ -15,8 +15,9 @@
       return $http
         .post('/login', credentials)
         .then(function (res) {
-          Session.create(res.data.id, res.data.user.id,
-                         res.data.user.role);
+          console.log(res);
+          Session.create(res.data.user_id, res.data.user_id,
+                         res.data.username, res.email);
           return res.data.user;
         });
     };
@@ -26,7 +27,7 @@
         .post('/register', credentials)
         .then(function (res) {
           console.log(res);
-          Session.create(res.data.id, res.data.user.id,
+          Session.create(res.data.user.id, res.data.user.id,
                          res.data.user.role);
           return res.data.user;
         });
@@ -48,10 +49,10 @@
   });
 
   app.service('Session', function () {
-    this.create = function (sessionId, userId, userRole) {
-      this.id = sessionId;
+    this.create = function (sessionId, userId, username, userEmail) {
+      this.id = userId;
       this.userId = userId;
-      this.userRole = userRole;
+
     };
     this.destroy = function () {
       this.id = null;

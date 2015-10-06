@@ -1,9 +1,9 @@
 <div class="btn-group">
-  <button class="btn btn-primary" ng-click="show_signin = !show_signin">Sign In</button>
-  <button class="btn btn-primary" ng-click="show_signin = !show_signin">Register</button>
+  <button class="btn btn-primary" ng-init="show_signin = true" ng-click="show_signin = true">Sign In</button>
+  <button class="btn btn-primary" ng-click="show_signin = false">Register</button>
 </div>
 
-<section class="login-signin" ng-init="show_signin = true" ng-show="show_signin">
+<section class="login-signin"  ng-if="show_signin">
   <iframe src="sink.html" name="sink"
         style="display:none"></iframe>
   <form name="loginForm" action="sink.html"
@@ -17,7 +17,7 @@
   </form>
 </section>
 
-<section class="login-register" ng-hide="show_signin">
+<section class="login-register" ng-if="!show_signin">
   <iframe src="sink.html" name="sink"
         style="display:none"></iframe>
   <form name="loginForm" action="sink.html" target="sink" method="post" ng-controller="LoginController"

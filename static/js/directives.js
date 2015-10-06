@@ -11,7 +11,7 @@ var app = angular.module('catalog');
   app.directive('loginDialog', function (AUTH_EVENTS) {
     return {
       restrict: 'A',
-      templateUrl: '/loginform',
+      templateUrl: '/api/loginform',
       link: function (scope) {
 
         //scope.visible = false;

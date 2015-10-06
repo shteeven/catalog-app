@@ -18,7 +18,6 @@ class Category(Base):
 		img_url = Column(String(500))
 		timestamp = Column(DateTime, default=datetime.datetime.utcnow)
 
-
 		@property
 		def serialize(self):
 				"""Return object data in easily serializeable format"""

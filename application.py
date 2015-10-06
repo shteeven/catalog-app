@@ -57,7 +57,7 @@ def gconnect():
 	# Check that the access token is valid.
 	access_token = credentials.access_token
 	url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
-	       % access_token)
+				 % access_token)
 	# Submit request, parse response - Python3 compatible
 	h = httplib2.Http()
 	response = h.request(url, 'GET')[1]
@@ -166,10 +166,10 @@ def fbconnect():
 	app_secret = app_object['app_secret']
 
 	url = 'https://graph.facebook.com/oauth/access_token?' \
-	      'grant_type=fb_exchange_token' \
-	      '&client_id=%s' \
-	      '&client_secret=%s' \
-	      '&fb_exchange_token=%s' % (app_id, app_secret, access_token)
+				'grant_type=fb_exchange_token' \
+				'&client_id=%s' \
+				'&client_secret=%s' \
+				'&fb_exchange_token=%s' % (app_id, app_secret, access_token)
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[1]
 
@@ -272,12 +272,12 @@ def registerUser():
 # login user without oauth
 @app.route('/login', methods=['POST'])
 def login():
-	email = request.json.get('email')
+	username = request.json.get('username')
 	password = request.json.get('password')
-	user = session.query(User).filter_by(email=email).first()
-	if email is None or password is None:
+	if username is None or password is None:
 		print('Form fields incomplete.')
 		abort(400)  # missing arguments
+	user = session.query(User).filter_by(username=username).first()
 	if user is None:
 		print('User not registered.')
 		abort(400)  # non-existent user
@@ -288,11 +288,11 @@ def login():
 	login_session['email'] = user.email
 	login_session['user_id'] = user.id
 
-	return jsonify({'email': user.email, 'username': user.username}), 201
+	return jsonify({'email': user.email, 'username': user.username, 'user_id': user.id}), 201
 
 
 # render login-form.html with state and client_id
-@app.route('/loginform')
+@app.route('/api/loginform')
 def loginForm():
 	state = generateRandomString()
 	login_session['state'] = state
@@ -308,31 +308,9 @@ def index(path=''):
 				return render_template('index.html', logged='true')
 
 
-@app.route('/')
-
-
-def generateRandomString():
-	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
-
-
-def generateCsrfToken():
-	if '_csrf_token' not in login_session:
-		login_session['_csrf_token'] = generateRandomString()
-	return login_session['_csrf_token']
-
-# refresh the token and append it as a cookie
-@app.after_request
-def after_request(resp):
-	user = getUserInfo(login_session['user_id'])
-	if user is not None:
-		# refresh token
-		token = generate_auth_token(user)
-		resp.set_cookie('XSRF-TOKEN', token.decode('ascii'))
-	return resp
-
-'''
-# User Helper Functions
-'''
+##########################
+# User Helper
+##########################
 # register user with oauth
 def createUser(login_session):
 	newUser = User(name=login_session['username'], email=login_session[
@@ -344,7 +322,7 @@ def createUser(login_session):
 
 
 # get user info
-@app.route('/api/users/<int:id>')
+# @app.route('/api/users/<int:id>')
 def getUserInfo(user_id):
 	user = session.query(User).filter_by(id=user_id).one()
 	return user
@@ -356,16 +334,76 @@ def getUserID(email):
 		user = session.query(User).filter_by(email=email).one()
 		return user.id
 	except:
+		print('here')
 		flash("Failed to retrieve user ID.")
 		return None
 
 
-def generate_auth_token(user, expiration=600):
-		s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
-		return s.dumps({'id': user.id})
+##########################
+# Security Helpers
+##########################
+# Generate a token for a cookie XSRF-prevention for registered users
+def generate_auth_token(user_id, expiration=600):
+	s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
+	return s.dumps({'id': user_id})
+
+# refresh the token and append it as a cookie
+@app.after_request
+def after_request(resp):
+	try:
+		user = getUserID(login_session['email'])
+	except KeyError:
+		return resp
+	if user is not None:
+		# refresh token
+		token = generate_auth_token(user)
+		print(token)
+		resp.set_cookie('XSRF-TOKEN', token.decode('ascii'))
+	return resp
 
 
+# verify token matches token sent to user
+def verify_auth_token(token):
+	print(app.config['SECRET_KEY'])
+	s = Serializer(app.config['SECRET_KEY'])
+	try:
+		data = s.loads(token)
+	except SignatureExpired:
+		return None    # valid token, but expired
+	except BadSignature:
+		return None    # invalid token
+	return User.query.get(data['id'])
+
+
+# Create 'STATE' strings
+def generateRandomString():
+	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+
+
+# Is auth token valid
+def user_valid(cookie=False):
+	if cookie:
+		token = request.cookies.get('XSRF-TOKEN')
+	else:
+		token = request.headers.get('X-XSRF-TOKEN')
+	if token is None:
+		return None
+	user = verify_auth_token(token)
+	g.user = user
+	return user
+
+
+@app.after_request
+def add_header(response):
+	# prevent browser caching
+	response.headers['Cache-Control'] = 'public, max-age=0'
+	return response
+
+
+##########################
+# Run application
+##########################
 if __name__ == '__main__':
-	app.secret_key = 'super_secret_key'
+	app.secret_key = 'Spray tans are so 1998.'
 	app.debug = True
 	app.run(host='0.0.0.0', port=8000)
