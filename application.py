@@ -14,6 +14,8 @@ from oauth2client.client import FlowExchangeError
 import httplib2
 import json
 import requests
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
+
 
 app = Flask(__name__)
 
@@ -267,10 +269,26 @@ def registerUser():
 		return jsonify({'email': user.email, 'username': user.username}), 201
 
 
-@app.route('/login', methods=['GET', 'POST'])
+# login user without oauth
+@app.route('/login', methods=['POST'])
 def login():
+	email = request.json.get('email')
+	password = request.json.get('password')
+	user = session.query(User).filter_by(email=email).first()
+	if email is None or password is None:
+		print('Form fields incomplete.')
+		abort(400)  # missing arguments
+	if user is None:
+		print('User not registered.')
+		abort(400)  # non-existent user
+	if not user.verify_password(password=password):
+		print('Username or password incorrect.')
+		abort(401)  # invalid credentials
+	login_session['username'] = user.username
+	login_session['email'] = user.email
+	login_session['user_id'] = user.id
 
-	return redirect(url_for('index'))
+	return jsonify({'email': user.email, 'username': user.username}), 201
 
 
 # render login-form.html with state and client_id
@@ -305,10 +323,10 @@ def generateCsrfToken():
 # refresh the token and append it as a cookie
 @app.after_request
 def after_request(resp):
-	user = getUser(login_session['user_id'])
+	user = getUserInfo(login_session['user_id'])
 	if user is not None:
 		# refresh token
-		token = user.generate_auth_token()
+		token = generate_auth_token(user)
 		resp.set_cookie('XSRF-TOKEN', token.decode('ascii'))
 	return resp
 
@@ -340,6 +358,11 @@ def getUserID(email):
 	except:
 		flash("Failed to retrieve user ID.")
 		return None
+
+
+def generate_auth_token(user, expiration=600):
+		s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
+		return s.dumps({'id': user.id})
 
 
 if __name__ == '__main__':
