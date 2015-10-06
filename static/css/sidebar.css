@@ -26,7 +26,8 @@
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
-    background: #000;
+    background: #292c2f;
+    border-right: 2px solid #1f2022;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -34,6 +35,7 @@
 }
 
 #wrapper.toggled #sidebar-wrapper {
+    position: fixed;
     width: 250px;
 }
 
@@ -73,7 +75,7 @@
 .sidebar-nav li a:hover {
     text-decoration: none;
     color: #fff;
-    background: rgba(255,255,255,0.2);
+    background: #1f2022;
 }
 
 .sidebar-nav li a:active,
@@ -106,6 +108,7 @@
     }
 
     #sidebar-wrapper {
+        position: fixed;
         width: 250px;
     }
 

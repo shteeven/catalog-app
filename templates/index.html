@@ -22,7 +22,8 @@
 
 <body ng-controller="MainCtrl">
 
-    <div id="wrapper">
+    <!-- Unfortunate naming required for sticky footer and sidebar -->
+    <div id="wrapper" class="wrapper">
 
         <!-- <button ng-click="toggleMenu()"></button> -->
 
@@ -34,7 +35,6 @@
                     <li role="presentation" class="active"><a href="/">Home</a></li>
                     <li role="presentation"><a href="landing">Landing</a></li>
                     <li role="presentation"><a href="items">Items</a></li>
-                    <hr> 
                     <li role="presentation"><a href="#">Create Category</a></li>
                     <li role="presentation"><a href="#">Create Item</a></li>
                     <li role="presentation"><a href="category">Categories</a></li>
@@ -51,6 +51,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
+                        <button id="menu-toggle">Toggle</button>
                         <!-- Insert Partials with Angular -->
                         <div ng-view></div>
                     </div>
@@ -59,12 +60,12 @@
 
             
             
-            <!-- Needed for sticky footer -->
-            <div class="push"></div>
         </div>
         <!-- /Main Content -->
         
-    </div> <!-- /.container-fluid -->
+        <!-- Needed for sticky footer -->
+        <div class="push"></div>
+    </div> <!-- #wrapper -->
 
 
     <footer class="footer-distributed">
@@ -100,10 +101,10 @@
     
     <!-- Temporary script to test button toggle -->
     <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
+        $("#menu-toggle").click(function(e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
     </script>
 
 
