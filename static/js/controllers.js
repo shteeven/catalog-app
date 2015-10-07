@@ -8,14 +8,17 @@
   'use strict';
 var app = angular.module('catalog');
 
-  app.controller('MainCtrl', ['$scope', 'USER_ROLES', 'AuthService', function($scope, USER_ROLES, AuthService) {
+  app.controller('MainCtrl', ['$scope', '$window', 'AuthService', 'UserService', function($scope, $window, AuthService, UserService) {
+    $scope.currentUser = {};
 
-    $scope.currentUser = null;
-    $scope.userRoles = USER_ROLES;
-    $scope.isAuthorized = AuthService.isAuthorized;
+    $scope.setCurrentUser = function (token) {
+      UserService.getData(token)
+        .then(function (res) {
+          $scope.currentUser = res.data;
+        }, function (err) {
+          console.log(err)
+        });
 
-    $scope.setCurrentUser = function (user) {
-      $scope.currentUser = user;
     };
 
     $scope.menuToggle = function() {
@@ -43,8 +46,8 @@ var app = angular.module('catalog');
     };
 
     $scope.register = function (credentials) {
-      AuthService.register(credentials).then(function (user) {
-        $scope.setCurrentUser(user);
+      AuthService.register(credentials).then(function (token) {
+        $scope.setCurrentUser(token);
         $scope.credentials = {};
         $location.path('/')
       }, function (err) {
@@ -53,8 +56,8 @@ var app = angular.module('catalog');
     };
 
     $scope.login = function (credentials) {
-      AuthService.login(credentials).then(function (user) {
-        $scope.setCurrentUser(user);
+      AuthService.login(credentials).then(function (token) {
+        $scope.setCurrentUser(token);
         $scope.credentials = {};
         $location.path('/');
       }, function (err) {
@@ -63,8 +66,8 @@ var app = angular.module('catalog');
     };
 
     $window.signInCallback = function(authResult) {
-      AuthService.gSignin(authResult, $scope.state).then(function (user) {
-        $scope.setCurrentUser(user);
+      AuthService.gSignin(authResult, $scope.state).then(function (token) {
+        $scope.setCurrentUser(token);
         $location.path('/');
       }, function (err) {
         console.log(err)

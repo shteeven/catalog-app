@@ -6,6 +6,7 @@ apt-get -qqy install python-pip
 apt-get -qqy install python-passlib
 pip install werkzeug==0.8.3
 pip install flask==0.9
+pip install flask-cors
 pip install Flask-Login==0.1.3
 pip install itsdangerous
 pip install oauth2client

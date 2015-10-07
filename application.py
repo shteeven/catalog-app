@@ -15,6 +15,7 @@ import httplib2
 import json
 import requests
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
+from flask.ext.cors import cross_origin
 
 
 app = Flask(__name__)
@@ -50,6 +51,13 @@ default_img_url = 'http://orig04.deviantart.net/fa85/f/2012/296/8/7/random_funny
 # 				flash('New Category %s Successfully Created' % newCategory.name)
 # 				return redirect(url_for('showCategories'))
 # 	return render_template('newCategory.html', logged='true')
+@app.route('/')
+@app.route('/<path:path>')
+def index(path=''):
+		if 'username' not in login_session:
+				return render_template('index.html')
+		else:
+				return render_template('index.html', logged='true')
 
 
 ##########################
@@ -58,6 +66,8 @@ default_img_url = 'http://orig04.deviantart.net/fa85/f/2012/296/8/7/random_funny
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
 	# Validate state token
+	print('this')
+	print(request.args.get('state'))
 	if request.args.get('state') != login_session['state']:
 		response = make_response(json.dumps('Invalid state parameter.'), 401)
 		response.headers['Content-Type'] = 'application/json'
@@ -137,10 +147,15 @@ def gconnect():
 	# see if user exists, if it doesn't make a new one
 	user_id = getUserID(login_session['email'])
 	if not user_id:
-		user_id = registerUser(login_session)
+		user_id = createUser(login_session)
 	login_session['user_id'] = user_id
 
-	return jsonify({'email': data['email'], 'username': data['name'], 'user_id': user_id, 'picture': data['picture']}), 201
+	user = getUser(user_id)
+
+	token = user.generate_auth_token()
+	return jsonify({ 'token': token.decode('ascii') })
+	# return jsonify({'email': data['email'], 'username': data['name'], 'user_id': user_id,
+	#                 'picture': data['picture'], 'token': generate_auth_token(user_id, 600)}), 201
 
 
 # DISCONNECT - Revoke a current user's token and reset their login_session
@@ -213,8 +228,9 @@ def registerUser():
 		login_session['username'] = user.username
 		login_session['email'] = user.email
 		login_session['user_id'] = user.id
-
-		return jsonify({'email': user.email, 'username': user.username}), 201
+		token = user.generate_auth_token()
+		return jsonify({ 'token': token.decode('ascii') })
+		# return jsonify({'email': user.email, 'username': user.username, 'token': generate_auth_token(user.id, 600)}), 201
 
 
 # login user without oauth
@@ -236,7 +252,9 @@ def login():
 	login_session['email'] = user.email
 	login_session['user_id'] = user.id
 
-	return jsonify({'email': user.email, 'username': user.username, 'user_id': user.id}), 201
+	token = user.generate_auth_token()
+	return jsonify({'token': token.decode('ascii')})
+	# return jsonify({'email': user.email, 'username': user.username, 'user_id': user.id, 'token': generate_auth_token(user.id, 600)}), 201
 
 
 # render login-form.html with state and client_id
@@ -244,16 +262,30 @@ def login():
 def loginForm():
 	state = generateRandomString()
 	login_session['state'] = state
+	print(state)
 	return render_template("login-form.html", STATE=state, client_id=CLIENT_ID)
 
 
-@app.route('/')
-@app.route('/<path:path>')
-def index(path=''):
-		if 'username' not in login_session:
-				return render_template('index.html')
-		else:
-				return render_template('index.html', logged='true')
+
+@app.route('/api/userdata')
+def getUserData():
+	if not validateSignedIn():
+		return redirect('/loginpage')
+	return jsonify({'name': 'steven'})
+
+##########################
+# Security Helpers: Login
+##########################
+# Create 'STATE' strings
+def generateRandomString():
+	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+
+# Check if user is signed in
+def validateSignedIn():
+	if 'username' not in login_session:
+		return False
+	else:
+		return True
 
 
 ##########################
@@ -262,7 +294,7 @@ def index(path=''):
 # register user with oauth
 def createUser(login_session):
 	newUser = User(name=login_session['username'], email=login_session[
-		'email'], picture=login_session['picture'])
+		'email'], picture=login_session['picture'], username=login_session['username'])
 	session.add(newUser)
 	session.commit()
 	user = session.query(User).filter_by(email=login_session['email']).one()
@@ -271,7 +303,7 @@ def createUser(login_session):
 
 # get user info
 # @app.route('/api/users/<int:id>')
-def getUserInfo(user_id):
+def getUser(user_id):
 	user = session.query(User).filter_by(id=user_id).one()
 	return user
 
@@ -282,22 +314,12 @@ def getUserID(email):
 		user = session.query(User).filter_by(email=email).one()
 		return user.id
 	except:
-		print('here')
 		flash("Failed to retrieve user ID.")
 		return None
 
 
-# Check if user is signed in
-def validateSignedIn():
-	if 'username' not in login_session:
-		flash('You must login to complete this action.')
-		return False
-	else:
-		return True
-
-
 ##########################
-# Security Helpers
+# Security Helpers: CSRF
 ##########################
 # Generate a token for a cookie XSRF-prevention for registered users
 def generate_auth_token(user_id, expiration=600):
@@ -317,6 +339,16 @@ def after_request(resp):
 		resp.set_cookie('XSRF-TOKEN', token.decode('ascii'))
 	return resp
 
+# Is auth token valid
+def user_valid(cookie=False):
+	if cookie:
+		token = request.cookies.get('XSRF-TOKEN')
+	else:
+		token = request.headers.get('X-XSRF-TOKEN')
+	if token is None:
+		return None
+	user = verify_auth_token(token)
+	return user
 
 # verify token matches token sent to user
 def verify_auth_token(token):
@@ -330,31 +362,12 @@ def verify_auth_token(token):
 		return None    # invalid token
 	return User.query.get(data['id'])
 
-
-# Create 'STATE' strings
-def generateRandomString():
-	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
-
-
-# Is auth token valid
-def user_valid(cookie=False):
-	if cookie:
-		token = request.cookies.get('XSRF-TOKEN')
-	else:
-		token = request.headers.get('X-XSRF-TOKEN')
-	if token is None:
-		return None
-	user = verify_auth_token(token)
-	print(user)
-	#login_session = user
-	return user
-
-
 @app.after_request
 def add_header(response):
 	# prevent browser caching
 	response.headers['Cache-Control'] = 'public, max-age=0'
 	return response
+
 
 
 ##########################

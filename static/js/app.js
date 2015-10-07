@@ -10,16 +10,16 @@
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
   });
 
-  app.config(function ($httpProvider) {
-    $httpProvider.interceptors.push([
-      '$injector',
-      function ($injector) {
-        return $injector.get('AuthInterceptor');
-      }
-    ]);
-  });
+  //app.config(function ($httpProvider) {
+  //  $httpProvider.interceptors.push([
+  //    '$injector',
+  //    function ($injector) {
+  //      return $injector.get('AuthInterceptor');
+  //    }
+  //  ]);
+  //});
 
-  app.config(function($routeProvider, $locationProvider, USER_ROLES) {
+  app.config(function($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'static/partials/catalog.html',
@@ -27,12 +27,7 @@
       })
       .when('/landing', {
         templateUrl: 'static/partials/landing.html',
-        controller: 'LandingCtrl',
-        resolve: {
-          auth: function resolveAuthentication(AuthResolver) {
-            return !AuthResolver.resolve();
-          }
-        }
+        controller: 'LandingCtrl'
       })
       .when('/loginpage', {
         templateUrl: '/loginform',
@@ -45,16 +40,10 @@
       .when('create/:type/:id', {
         templateUrl: 'static/partials/user-categories-create.html',
         controller: 'CreateEditCtrl',
-        data: {
-          authorizedRoles: [USER_ROLES.registered]
-        }
       })
       .when('edit/:type/:id', {
         templateUrl: 'static/partials/user-categories-create.html',
         controller: 'CreateEditCtrl',
-        data: {
-          authorizedRoles: [USER_ROLES.registered]
-        }
       })
       .when('/items', {
         templateUrl: 'static/partials/categories-items.html',
