@@ -4,20 +4,22 @@
 
 (function () {
   'use strict';
-  var app = angular.module('catalog', ['ngRoute']);
+  var app = angular.module('catalog', ['ngRoute', 'ngCookies']);
 
   app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
   });
 
-  //app.config(function ($httpProvider) {
-  //  $httpProvider.interceptors.push([
-  //    '$injector',
-  //    function ($injector) {
-  //      return $injector.get('AuthInterceptor');
-  //    }
-  //  ]);
-  //});
+  app.run(['$rootScope', '$location', 'Auth', function ($rootScope, $location, Auth) {
+
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
+        if (!Auth.authorize(next.access)) {
+            if(Auth.isLoggedIn()) $location.path('/');
+            else                  $location.path('/login');
+        }
+    });
+
+  }]);
 
   app.config(function($routeProvider, $locationProvider) {
     $routeProvider
@@ -40,6 +42,7 @@
       .when('create/:type/:id', {
         templateUrl: 'static/partials/user-categories-create.html',
         controller: 'CreateEditCtrl',
+        access:
       })
       .when('edit/:type/:id', {
         templateUrl: 'static/partials/user-categories-create.html',

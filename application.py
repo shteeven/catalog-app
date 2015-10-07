@@ -266,11 +266,12 @@ def loginForm():
 	return render_template("login-form.html", STATE=state, client_id=CLIENT_ID)
 
 
-
+# return user data if user is signed in and token is valid
 @app.route('/api/userdata')
-def getUserData():
+def returnUserData():
 	if not validateSignedIn():
 		return redirect('/loginpage')
+
 	return jsonify({'name': 'steven'})
 
 ##########################
@@ -302,7 +303,6 @@ def createUser(login_session):
 
 
 # get user info
-# @app.route('/api/users/<int:id>')
 def getUser(user_id):
 	user = session.query(User).filter_by(id=user_id).one()
 	return user
