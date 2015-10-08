@@ -4,6 +4,28 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+/* Toggle Button Styles */
+#menu-toggle {
+    position: fixed;
+    left: -20px;
+    z-index: 1000;
+    margin: 0.25em;
+    padding-left: 25px;
+
+    color: #999999;
+    background: #292c2f;
+    border: 2px solid #1f2022;
+
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#menu-toggle.toggled {
+    left: 230px;
+}
+
 /* Toggle Styles */
 
 #wrapper {
@@ -98,7 +120,17 @@
     background: none;
 }
 
+.sidebar-nav .btn-block {
+    width: 90%;
+    margin: auto;
+}
+
 @media(min-width:768px) {
+    /* Hide Menu Toggle on Large Screens */
+    #menu-toggle {
+        display: none;
+    }
+
     #wrapper {
         padding-left: 250px;
     }

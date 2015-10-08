@@ -1,5 +1,5 @@
 
-footer{
+footer {
     position: fixed;
     bottom: 0;
 }
@@ -149,5 +149,15 @@ footer{
 
 @media (max-height:800px){
     footer { position: static; }
+}
+
+/* Raise the footer above the sidebar */
+@media (min-width:768px) {
+	
+	.footer-distributed {	
+		position: fixed;
+		z-index: 1001;
+	}
+
 }
 
