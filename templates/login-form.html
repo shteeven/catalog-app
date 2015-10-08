@@ -5,8 +5,7 @@
 
 <section class="login-signin"  ng-if="show_signin">
   <iframe src="sink.html" name="sink" style="display:none"></iframe>
-  <form name="loginForm" action="sink.html" target="sink" method="post"
-        ng-submit="login(credentials)" novalidate form-autofill-fix>
+  <form name="loginForm" action="sink.html" target="sink" method="post" ng-submit="login(credentials)" novalidate form-autofill-fix>
     <input name=_csrf_token type=hidden ng-init="credentials.csrf_token = '{{ csrf_token }}'">
     <label for="username">Username:</label>
     <input type="text" id="username" ng-model="credentials.username" required>
@@ -18,8 +17,8 @@
 
 <section class="login-register" ng-if="!show_signin">
   <iframe src="sink.html" name="sink" style="display:none"></iframe>
-  <form name="loginForm" action="sink.html" target="sink" method="post"
-        ng-submit="register(credentials)" novalidate form-autofill-fix>
+  <form name="loginForm" action="sink.html" target="sink" method="post" ng-submit="register(credentials)" novalidate form-autofill-fix>
+    <input name=_csrf_token type=hidden ng-init="credentials.csrf_token = '{{ csrf_token }}'">
     <label for="newusername">Username:</label>
     <input type="text" id="newusername" ng-model="credentials.username" required>
     <label for="newemail">Email:</label>

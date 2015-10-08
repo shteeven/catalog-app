@@ -40,8 +40,10 @@ default_img_url = 'http://orig04.deviantart.net/fa85/f/2012/296/8/7/random_funny
 def index(path=''):
 	#print(login_session['username'])
 	if 'username' not in login_session:
+		print('here')
 		return render_template('index.html')
 	else:
+		print(login_session['username'])
 		return render_template('index.html', logged='true')
 
 
@@ -171,18 +173,10 @@ def gdisconnect():
 @app.route('/api/disconnect')
 def disconnect():
 	provider = login_session.pop('provider', None)
-	if provider is not None:
+	if provider == 'google':
 		gdisconnect()
-		login_session.pop('gplus_id', None)
-		login_session.pop('access_token', None)
-
-	login_session.pop('username', None)
-	login_session.pop('email', None)
-	login_session.pop('picture', None)
-	login_session.pop('user_id', None)
-	print('logged out')
-	resp = make_response(json.dumps("User logged out."), 201)
-	return resp
+	login_session.clear()
+	return 'Successfully logged out.'
 
 
 # register users without oauth

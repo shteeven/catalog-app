@@ -25,6 +25,15 @@ var app = angular.module('catalog');
       $scope.menu_toggled = !$scope.menu_toggled;
     };
 
+    $scope.logout = function() {
+      AuthService.logout().then(function (data) {
+        console.log('success')
+      }, function (err) {
+          console.log(err);
+        }
+      )
+    }
+
 
   }]);
 

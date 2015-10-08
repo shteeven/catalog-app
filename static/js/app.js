@@ -10,8 +10,13 @@
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
   });
 
+  app.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.defaults.withCredentials = true;
+  }]);
+
   app.run(['$rootScope', '$location', '$cookies', function ($rootScope, $location, $cookies) {
     var currentUser = $cookies.getAll();
+    console.log('what');
     console.log(currentUser)
   }]);
 

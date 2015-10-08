@@ -8,7 +8,7 @@
     'use strict';
   var app = angular.module('catalog');
 
-  app.factory('AuthService', function ($http, $window) {
+  app.factory('AuthService', function ($http, $window, $cookies) {
     var authService = {};
 
     // login user on server and return access token
@@ -34,7 +34,12 @@
 
     // register user and return access token
     authService.register = function (credentials) {
-      return $http
+      return $http({
+        method: 'POST',
+        url: '/api/register',
+        data: $.param(credentials),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+      })
         .post('/api/register', credentials)
         .success(function (data, status, headers, config) {
           $window.sessionStorage.token = data.token;
@@ -74,9 +79,10 @@
 
     authService.logout = function () {
       return $http
-        .get('/api/ldisconnect')
+        .get('/api/disconnect')
         .success(function (data, status, headers, config) {
-          $window.sessionStorage.token = data.token;
+          $cookies.remove('userInfo');
+
           return data;
         })
         .error(function (data, status, headers, config) {
