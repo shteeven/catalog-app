@@ -10,18 +10,15 @@
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
   });
 
-  app.run(['$rootScope', '$location', 'Auth', function ($rootScope, $location, Auth) {
-
-    $rootScope.$on("$routeChangeStart", function (event, next, current) {
-        if (!Auth.authorize(next.access)) {
-            if(Auth.isLoggedIn()) $location.path('/');
-            else                  $location.path('/login');
-        }
-    });
-
+  app.run(['$rootScope', '$location', '$cookies', function ($rootScope, $location, $cookies) {
+    var currentUser = $cookies.getAll();
+    console.log(currentUser)
   }]);
 
-  app.config(function($routeProvider, $locationProvider) {
+  app.config(function($routeProvider, $locationProvider, $httpProvider) {
+
+    //var access = routingConfig.accessLevels;
+
     $routeProvider
       .when('/', {
         templateUrl: 'static/partials/catalog.html',
@@ -31,7 +28,7 @@
         templateUrl: 'static/partials/landing.html',
         controller: 'LandingCtrl'
       })
-      .when('/loginpage', {
+      .when('/login', {
         templateUrl: '/loginform',
         controller: 'LoginCtrl'
       })
@@ -41,12 +38,12 @@
       })
       .when('create/:type/:id', {
         templateUrl: 'static/partials/user-categories-create.html',
-        controller: 'CreateEditCtrl',
-        access:
+        controller: 'CreateEditCtrl'
+        //access: access.user
       })
       .when('edit/:type/:id', {
         templateUrl: 'static/partials/user-categories-create.html',
-        controller: 'CreateEditCtrl',
+        controller: 'CreateEditCtrl'
       })
       .when('/items', {
         templateUrl: 'static/partials/categories-items.html',
@@ -56,7 +53,18 @@
         redirectTo: '/'
       });
     $locationProvider.html5Mode(true);
+
+    $httpProvider.interceptors.push(function($q, $location) {
+        return {
+            'responseError': function(response) {
+                if(response.status === 401 || response.status === 403) {
+                    $location.path('/login');
+                }
+                return $q.reject(response);
+            }
+        };
     });
+  });
 
   app.constant('AUTH_EVENTS', {
     loginSuccess: 'auth-login-success',

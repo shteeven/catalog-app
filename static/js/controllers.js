@@ -56,6 +56,7 @@ var app = angular.module('catalog');
     };
 
     $scope.login = function (credentials) {
+      console.log(credentials);
       AuthService.login(credentials).then(function (token) {
         $scope.setCurrentUser(token);
         $scope.credentials = {};

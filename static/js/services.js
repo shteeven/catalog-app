@@ -13,10 +13,14 @@
 
     // login user on server and return access token
     authService.login = function (credentials) {
-      return $http
-        .post('/login', credentials)
+      return $http({
+        method: 'POST',
+        url: '/api/login',
+        data: $.param(credentials),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
         .success(function (data, status, headers, config) {
-          $window.sessionStorage.token = data.token;
+          $window.sessionStorage.data = data;
           return data;
         })
         .error(function (data, status, headers, config) {
@@ -31,7 +35,7 @@
     // register user and return access token
     authService.register = function (credentials) {
       return $http
-        .post('/register', credentials)
+        .post('/api/register', credentials)
         .success(function (data, status, headers, config) {
           $window.sessionStorage.token = data.token;
           return data;
@@ -55,6 +59,22 @@
         },
         data: authResult['code'],
         transformRequest: [] })
+        .success(function (data, status, headers, config) {
+          $window.sessionStorage.token = data.token;
+          return data;
+        })
+        .error(function (data, status, headers, config) {
+          // Erase the token if the user fails to log in
+          delete $window.sessionStorage.token;
+
+          // Handle login errors here
+          console.log(data);
+        });
+    };
+
+    authService.logout = function () {
+      return $http
+        .get('/api/ldisconnect')
         .success(function (data, status, headers, config) {
           $window.sessionStorage.token = data.token;
           return data;
