@@ -56,7 +56,6 @@ def gconnect():
 		response.headers['Content-Type'] = 'application/json'
 		return response
 	# Obtain authorization code, now compatible with Python3
-	# request.get_data()
 	code = request.data.decode('utf-8')
 
 	try:
@@ -100,21 +99,6 @@ def gconnect():
 		response.headers['Content-Type'] = 'application/json'
 		return response
 
-	# stored_access_token = login_session.get('access_token')
-	# stored_gplus_id = login_session.get('gplus_id')
-
-	# if stored_access_token is not None and gplus_id == stored_gplus_id:
-	# 	login_session['access_token'] = access_token
-	# 	response = make_response(
-	# 		json.dumps('Current user is already connected.'),
-	# 		200)
-	# 	response.headers['Content-Type'] = 'application/json'
-	# 	return response
-
-	# Store the access token in the session for later use.
-	# login_session['access_token'] = access_token
-	# login_session['gplus_id'] = gplus_id
-
 	# Get user info
 	userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
 	params = {'access_token': access_token, 'alt': 'json'}
@@ -139,7 +123,6 @@ def gconnect():
 	login_session['provider'] = 'google'
 	response = make_response(json.dumps(user.serialize), 200)
 	response.headers['Content-Type'] = 'application/json'
-	print('HERE')
 	return response
 
 
@@ -154,7 +137,7 @@ def gdisconnect():
 	result = h.request(url, 'GET')[0]
 	print(result)
 	if result['status'] == '200':
-		# Reset the user's sesson.
+		# Reset the user's session.
 		print(result)
 		return '200'
 	else:
@@ -188,7 +171,7 @@ def registerUser():
 	if session.query(User).filter_by(email=email).first() is not None:
 		print('User already registered.')
 		abort(400)  # existing user
-		# initialize user
+	# initialize user
 	user = User(email=email)
 	user.username = username
 	user.hash_password(password)
@@ -231,6 +214,7 @@ def login():
 	return jsonify({ 'username': user.username, 'email': user.email, 'picture': user.picture, 'user_id': user.id }), 201
 
 
+# get the user who is currently signed in.
 @app.route('/api/userdata')
 def getCurrentUser():
 	if 'username' not in login_session:
