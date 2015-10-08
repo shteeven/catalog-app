@@ -15,7 +15,7 @@
   }]);
 
   app.run(['$rootScope', '$location', '$cookies', function ($rootScope, $location, $cookies) {
-    var currentUser = $cookies.getAll();
+    var currentUser = $cookies.get('user');
     console.log('what');
     console.log(currentUser)
   }]);

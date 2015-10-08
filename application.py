@@ -38,7 +38,6 @@ default_img_url = 'http://orig04.deviantart.net/fa85/f/2012/296/8/7/random_funny
 @app.route('/')
 @app.route('/<path:path>')
 def index(path=''):
-	#print(login_session['username'])
 	if 'username' not in login_session:
 		print('here')
 		return render_template('index.html')
@@ -135,38 +134,38 @@ def gconnect():
 		user_id = createUser(login_session)
 	login_session['user_id'] = user_id
 
+	# set login_session data
 	user = getUser(user_id)
+	login_session['username'] = user.username
+	login_session['email'] = user.email
+	login_session['picture'] = user.picture
+	login_session['user_id'] = user.id
+	login_session['provider'] = 'none'
+	response = make_response(json.dumps(user.serialize), 200)
+	response.headers['Content-Type'] = 'application/json'
+	return response
 
-	print(login_session['provider'])
 
-	token = user.generate_auth_token()
-	return jsonify({ 'token': token.decode('ascii') })
-	# return jsonify({'email': data['email'], 'username': data['name'], 'user_id': user_id,
-	#                 'picture': data['picture'], 'token': generate_auth_token(user_id, 600)}), 201
-
-
-# DISCONNECT - Revoke a current user's token and reset their login_session
-# @app.route('/gdisconnect')
+# Revoke google oauth token
 def gdisconnect():
 	# Only disconnect a connected user.
 	access_token = login_session.get('access_token')
 	if access_token is None:
-		response = make_response(
-			json.dumps('Current user not connected.'), 401)
-		response.headers['Content-Type'] = 'application/json'
-		return response
+		return '200'
 	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[0]
+	print(result)
 	if result['status'] == '200':
 		# Reset the user's sesson.
-		return result
+		print(result)
+		return '200'
 	else:
 		# For whatever reason, the given token was invalid.
 		response = make_response(
 			json.dumps('Failed to revoke token for given user.', 400))
 		response.headers['Content-Type'] = 'application/json'
-		return response
+		return '200'
 
 
 # umbrella disconnect function, signing out user regardless of service used
@@ -176,38 +175,42 @@ def disconnect():
 	if provider == 'google':
 		gdisconnect()
 	login_session.clear()
+	print('success')
 	return 'Successfully logged out.'
 
 
 # register users without oauth
 @app.route('/api/register', methods=['POST'])
 def registerUser():
-		email = request.json.get('email')
-		password = request.json.get('password')
-		username = request.json.get('username')
-		if email is None or password is None or username is None:
-				print('Form fields incomplete.')
-				abort(400)  # missing arguments
-		if session.query(User).filter_by(email=email).first() is not None:
-				print('User already registered.')
-				abort(400)  # existing user
+	email = request.form.get('email')
+	password = request.form.get('password')
+	username = request.form.get('username')
+	if email is None or password is None or username is None:
+		print('Form fields incomplete.')
+		abort(400)  # missing arguments
+	if session.query(User).filter_by(email=email).first() is not None:
+		print('User already registered.')
+		abort(400)  # existing user
 		# initialize user
-		user = User(email=email)
-		user.username = username
-		user.hash_password(password)
-		session.add(user)
-		session.commit()
+	user = User(email=email)
+	user.username = username
+	user.hash_password(password)
+	session.add(user)
+	session.commit()
 
-		# set login_session data
-		user = session.query(User).filter_by(email=email).one()
-		login_session['username'] = user.username
-		login_session['email'] = user.email
-		login_session['picture'] = ''
-		login_session['user_id'] = user.id
-		login_session['provider'] = 'none'
-		token = user.generate_auth_token()
-		return jsonify({ 'token': token.decode('ascii') })
-		# return jsonify({'email': user.email, 'username': user.username, 'token': generate_auth_token(user.id, 600)}), 201
+	# set login_session data
+	user = session.query(User).filter_by(email=email).one()
+	login_session['username'] = user.username
+	login_session['email'] = user.email
+	login_session['picture'] = user.picture
+	login_session['user_id'] = user.id
+	login_session['provider'] = 'none'
+
+	return jsonify({ 'username': user.username, 'email': user.email, 'picture': user.picture, 'user_id': user.id }), 201
+	# response = make_response(json.dumps(user.serialize), 200)
+	# response.headers['Content-Type'] = 'application/json'
+	# return response
+
 
 
 # login user without oauth
@@ -225,14 +228,18 @@ def login():
 	if not user.verify_password(password=password):
 		print('Username or password incorrect.')
 		abort(401)  # invalid credentials
+
+	# set login_session data
 	login_session['username'] = user.username
 	login_session['email'] = user.email
 	login_session['picture'] = user.picture
 	login_session['user_id'] = user.id
 	login_session['provider'] = 'none'
-	response = make_response(json.dumps(user.serialize), 200)
-	response.headers['Content-Type'] = 'application/json'
-	return response
+	return jsonify({ 'username': user.username, 'email': user.email, 'picture': user.picture, 'user_id': user.id }), 201
+
+	# response = make_response(json.dumps(user.serialize), 200)
+	# response.headers['Content-Type'] = 'application/json'
+	# return response
 
 
 # render login-form.html with state and client_id
@@ -309,12 +316,20 @@ def generateCsfrToken(user_id, expiration=1200):
 @app.before_request
 def csrfProtect():
 	if request.method == "POST":
-		print(request.form.get('password'))
-		print(request.form.get('_csrf_token'))
-		print(login_session['_csrf_token'])
 		token = login_session.pop('_csrf_token', None)
-		if not token or token != request.form.get('csrf_token'):
+		req_token = request.form.get('csrf_token') or request.args.get('state')
+		if not token or token != req_token:
+			print('Token does not match.')
 			abort(403)
+
+
+##########################
+# Run application
+##########################
+if __name__ == '__main__':
+	app.secret_key = 'Spray tans are so 1998.'
+	app.debug = True
+	app.run(host='0.0.0.0', port=8000)
 
 
 # refresh the token and append it as a cookie
@@ -336,11 +351,7 @@ def csrfProtect():
 # 	#	login_session.clear()
 # 	return resp
 
-# @app.after_request
-# def remove_if_invalid(response):
-# 	if "__invalidate__" in session:
-# 		response.delete_cookie(app.session_cookie_name)
-# 	return response
+#
 
 # Is auth token valid
 # def user_valid(cookie=False):
@@ -369,17 +380,6 @@ def csrfProtect():
 # 	# prevent browser caching
 # 	response.headers['Cache-Control'] = 'public, max-age=0'
 # 	return response
-
-
-
-##########################
-# Run application
-##########################
-if __name__ == '__main__':
-	app.secret_key = 'Spray tans are so 1998.'
-	app.debug = True
-	app.run(host='0.0.0.0', port=8000)
-
 
 
 # __author__ = 'Shtav'
