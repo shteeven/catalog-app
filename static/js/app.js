@@ -19,15 +19,8 @@
   app.run(['$rootScope', '$location', '$cookies', 'AuthService', function ($rootScope, $location, $cookies, AuthService) {
     var isLoggedin = $cookies.get('loggedin');
     if (isLoggedin) {
-      AuthService.setUserData().then(function (data) {
-        console.log('user set');
-        $rootScope.myUser = data;
-        console.log(data);
-      }, function (err) {
-        console.log(err)
-      })
+      AuthService.setUserData()
     }
-
   }]);
 
   app.config(function($routeProvider, $locationProvider, $httpProvider) {
@@ -69,16 +62,16 @@
       });
     $locationProvider.html5Mode(true);
 
-    $httpProvider.interceptors.push(function($q, $location) {
-        return {
-            'responseError': function(response) {
-                if(response.status === 401 || response.status === 403) {
-                    $location.path('/login');
-                }
-                return $q.reject(response);
-            }
-        };
-    });
+    //$httpProvider.interceptors.push(function($q, $location) {
+    //    return {
+    //        'responseError': function(response) {
+    //            if(response.status === 401 || response.status === 403) {
+    //                $location.path('/login');
+    //            }
+    //            return $q.reject(response);
+    //        }
+    //    };
+    //});
   });
 
   app.constant('AUTH_EVENTS', {

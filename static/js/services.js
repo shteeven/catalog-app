@@ -23,6 +23,7 @@
         })
         .success(function (data, status, headers, config) {
           $cookies.put('loggedin', 'true');
+          authService.setUserData();
           return data;
         })
         .error(function (data, status, headers, config) {
@@ -44,6 +45,7 @@
         })
         .success(function (data, status, headers, config) {
           $cookies.put('loggedin', 'true');
+          authService.setUserData();
           return data;
         })
         .error(function (data, status, headers, config) {
@@ -60,38 +62,31 @@
       return $http({
         method: "POST",
         url: '/gconnect?state='+$cookies.get('XSRF-TOKEN'),
-        headers: {
-          'Content-Type': 'application/octet-stream; charset=utf-8'
-        },
+        headers: { 'Content-Type': 'application/octet-stream; charset=utf-8' },
         data: authResult['code'],
-        transformRequest: [] })
-        .success(function (data, status, headers, config) {
+        transformRequest: []
+        })
+        .success(function () {
           $cookies.put('loggedin', 'true');
-          return data;
+          authService.setUserData();
         })
         .error(function (data, status, headers, config) {
-          // Erase the token if the user fails to log in
-          delete $window.sessionStorage.token;
-
-          // Handle login errors here
-          console.log(data);
+          //$cookies.put('loggedin', ''); // Erase the token if the user fails to log in
+          console.log(data); // Handle login errors here
         });
     };
 
     authService.logout = function () {
       return $http
         .get('/api/disconnect')
-        .success(function (data, status, headers, config) {
+        .success(function () {
           $cookies.put('loggedin', '');
           $cookies.remove('user');
           $cookies.remove('userInfo');
-          return data;
+          authService.currentUser = angular.copy({}, authService.currentUser);
         })
-        .error(function (data, status, headers, config) {
-          // Erase the token if the user fails to log in
-
-          // Handle login errors here
-          console.log(data);
+        .error(function (err) {
+          console.log(err);
         });
     };
 
@@ -101,13 +96,10 @@
         .get('/api/userdata')
         .success(function (data, status, headers, config) {
           authService.currentUser = angular.copy(data, authService.currentUser);
-          return data;
         })
-        .error(function (data, status, headers, config) {
-          // Erase the token if the user fails to log in
-          $cookies.put('loggedin', '');
-          // Handle login errors here
-          console.log(data);
+        .error(function (err) {
+          //$cookies.put('loggedin', ''); // set user to not loggedin
+          console.log(err);
         });
     };
 

@@ -8,30 +8,15 @@
   'use strict';
 var app = angular.module('catalog');
 
-  app.controller('MainCtrl', ['$scope', '$window', 'AuthService', 'UserService', function($scope, $window, AuthService, UserService) {
+  app.controller('MainCtrl', ['$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+
     $scope.currentUser = AuthService.getUserData();
 
-    $scope.$watchCollection('currentUser', function(newValue) {
-      $scope.currentUser = newValue;
-    });
+    $scope.$watch('currentUser', function(newValue) { $scope.currentUser = newValue; });
 
+    $scope.menuToggle = function() { $scope.menu_toggled = !$scope.menu_toggled; };
 
-    $scope.menuToggle = function() {
-      $scope.menu_toggled = !$scope.menu_toggled;
-    };
-
-    $scope.logout = function() {
-      AuthService.logout()
-        .then(function (data) {
-          $scope.currentUser = {};
-          console.log('success');
-          //$window.location.reload();
-        }, function (err) {
-          console.log(err);
-        }
-      )
-    }
-
+    $scope.logout = function() { AuthService.logout(); }
 
   }]);
 
@@ -46,37 +31,19 @@ var app = angular.module('catalog');
   app.controller('ItemsCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
 
   app.controller('LoginCtrl', ['$scope', '$window', '$location', 'AuthService', function ($scope, $window, $location, AuthService) {
-    $scope.credentials = {
-      email: '',
-      username: '',
-      password: ''
+
+    $scope.credentials = { email: '', username: '', password: ''};
+
+    $scope.register = function (credentials) { AuthService.register(credentials)
+      .then(function () { $scope.credentials = {} }, function (err) { console.log(err) });};
+
+    $scope.login = function (credentials) { AuthService.login(credentials)
+      .then(function (data) { $scope.credentials = {}; }, function (err) { console.log(err) });};
+
+    $window.signInCallback = function(authResult) { AuthService.gSignin(authResult);
+    console.log('why');
     };
 
-    $scope.register = function (credentials) {
-      AuthService.register(credentials).then(function () {
-        AuthService.setUserData();
-        $scope.credentials = {};
-      }, function (err) {
-        console.log(err)
-      });
-    };
-
-    $scope.login = function (credentials) {
-      console.log(credentials);
-      AuthService.login(credentials).then(function (data) {
-        AuthService.setUserData();
-        $scope.credentials = {};
-      }, function (err) {
-        console.log(err)
-      });
-    };
-
-    $window.signInCallback = function(authResult) {
-      AuthService.gSignin(authResult).then(function () {
-        AuthService.setUserData();
-      }, function (err) {
-        console.log(err)
-      });
-    };
   }]);
+
 }());
