@@ -56,10 +56,10 @@
     };
 
     // Authorize user with oauth
-    authService.gSignin = function (authResult, state) {
+    authService.gSignin = function (authResult) {
       return $http({
         method: "POST",
-        url: '/gconnect?state='+state,
+        url: '/gconnect?state='+$cookies.get('XSRF-TOKEN'),
         headers: {
           'Content-Type': 'application/octet-stream; charset=utf-8'
         },

@@ -11,9 +11,8 @@ var app = angular.module('catalog');
   app.controller('MainCtrl', ['$scope', '$window', 'AuthService', 'UserService', function($scope, $window, AuthService, UserService) {
     $scope.currentUser = AuthService.getUserData();
 
-    var listener = $scope.$watchCollection('currentUser', function(newValue) {
+    $scope.$watchCollection('currentUser', function(newValue) {
       $scope.currentUser = newValue;
-      //listener(); // unbind after value is set.
     });
 
 
@@ -54,10 +53,9 @@ var app = angular.module('catalog');
     };
 
     $scope.register = function (credentials) {
-      AuthService.register(credentials).then(function (token) {
-        $scope.setCurrentUser(token);
+      AuthService.register(credentials).then(function () {
+        AuthService.setUserData();
         $scope.credentials = {};
-        $location.path('/')
       }, function (err) {
         console.log(err)
       });
@@ -68,16 +66,14 @@ var app = angular.module('catalog');
       AuthService.login(credentials).then(function (data) {
         AuthService.setUserData();
         $scope.credentials = {};
-        //$location.path('/');
       }, function (err) {
         console.log(err)
       });
     };
 
     $window.signInCallback = function(authResult) {
-      AuthService.gSignin(authResult, $scope.state).then(function (token) {
-        $scope.setCurrentUser(token);
-        $location.path('/');
+      AuthService.gSignin(authResult).then(function () {
+        AuthService.setUserData();
       }, function (err) {
         console.log(err)
       });

@@ -39,7 +39,6 @@ default_img_url = 'http://orig04.deviantart.net/fa85/f/2012/296/8/7/random_funny
 @app.route('/<path:path>')
 def index(path=''):
 	if 'username' not in login_session:
-		print('here')
 		return render_template('index.html')
 	else:
 		print(login_session['username'])
@@ -52,7 +51,7 @@ def index(path=''):
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
 	# Validate state token
-	if request.args.get('state') != login_session['state']:
+	if request.args.get('state') != login_session['_csrf_token']:
 		response = make_response(json.dumps('Invalid state parameter.'), 401)
 		response.headers['Content-Type'] = 'application/json'
 		return response
@@ -101,21 +100,20 @@ def gconnect():
 		response.headers['Content-Type'] = 'application/json'
 		return response
 
-	stored_access_token = login_session.get('access_token')
-	stored_gplus_id = login_session.get('gplus_id')
+	# stored_access_token = login_session.get('access_token')
+	# stored_gplus_id = login_session.get('gplus_id')
 
-	if stored_access_token is not None and gplus_id == stored_gplus_id:
-		login_session['access_token'] = access_token
-		response = make_response(
-			json.dumps('Current user is already connected.'),
-			200)
-		response.headers['Content-Type'] = 'application/json'
-		return response
+	# if stored_access_token is not None and gplus_id == stored_gplus_id:
+	# 	login_session['access_token'] = access_token
+	# 	response = make_response(
+	# 		json.dumps('Current user is already connected.'),
+	# 		200)
+	# 	response.headers['Content-Type'] = 'application/json'
+	# 	return response
 
 	# Store the access token in the session for later use.
-	login_session['provider'] = 'google'
-	login_session['access_token'] = access_token
-	login_session['gplus_id'] = gplus_id
+	# login_session['access_token'] = access_token
+	# login_session['gplus_id'] = gplus_id
 
 	# Get user info
 	userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -124,25 +122,24 @@ def gconnect():
 
 	data = answer.json()
 
-	login_session['username'] = data['name']
-	login_session['picture'] = data['picture']
-	login_session['email'] = data['email']
-
 	# see if user exists, if it doesn't make a new one
-	user_id = getUserID(login_session['email'])
+	user_id = getUserID(data['email'])
 	if not user_id:
 		user_id = createUser(login_session)
-	login_session['user_id'] = user_id
 
 	# set login_session data
 	user = getUser(user_id)
+	login_session['access_token'] = access_token
+	login_session['gplus_id'] = gplus_id
+
 	login_session['username'] = user.username
 	login_session['email'] = user.email
 	login_session['picture'] = user.picture
 	login_session['user_id'] = user.id
-	login_session['provider'] = 'none'
+	login_session['provider'] = 'google'
 	response = make_response(json.dumps(user.serialize), 200)
 	response.headers['Content-Type'] = 'application/json'
+	print('HERE')
 	return response
 
 
@@ -207,10 +204,6 @@ def registerUser():
 	login_session['provider'] = 'none'
 
 	return jsonify({ 'username': user.username, 'email': user.email, 'picture': user.picture, 'user_id': user.id }), 201
-	# response = make_response(json.dumps(user.serialize), 200)
-	# response.headers['Content-Type'] = 'application/json'
-	# return response
-
 
 
 # login user without oauth
@@ -237,9 +230,6 @@ def login():
 	login_session['provider'] = 'none'
 	return jsonify({ 'username': user.username, 'email': user.email, 'picture': user.picture, 'user_id': user.id }), 201
 
-	# response = make_response(json.dumps(user.serialize), 200)
-	# response.headers['Content-Type'] = 'application/json'
-	# return response
 
 @app.route('/api/userdata')
 def getCurrentUser():
@@ -256,29 +246,6 @@ def loginForm():
 	login_session['state'] = state
 	login_session['_csrf_token'] = state
 	return render_template("login-form.html", STATE=state, client_id=CLIENT_ID, csrf_token=state)
-
-
-# return user data if user is signed in and token is valid
-# @app.route('/api/userdata')
-# def returnUserData():
-# 	if not validateSignedIn():
-# 		return redirect('/loginpage')
-#
-# 	return jsonify({'name': 'steven'})
-
-##########################
-# Security Helpers: Login
-##########################
-# Create 'STATE' strings
-def generateRandomString():
-	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
-
-# Check if user is signed in
-def validateSignedIn():
-	if 'username' not in login_session:
-		return False
-	else:
-		return True
 
 
 ##########################
@@ -311,8 +278,12 @@ def getUserID(email):
 
 
 ##########################
-# Security Helpers: CSRF
+# Security Helpers: Login
 ##########################
+# Create 'STATE' strings
+def generateRandomString():
+	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
+
 # Generate a token for a cookie XSRF-prevention for registered users
 def generateCsfrToken(user_id, expiration=1200):
 	s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
@@ -320,14 +291,27 @@ def generateCsfrToken(user_id, expiration=1200):
 	login_session['_csrf_token'] = token
 	return token
 
+# Read in token
 @app.before_request
-def csrfProtect():
-	if request.method == "POST":
+def csrfProtectRead():
+	if request.method == "POST" and request.endpoint != "gconnect":
+		print('it popped')
 		token = login_session.pop('_csrf_token', None)
-		req_token = request.form.get('csrf_token') or request.args.get('state')
+		req_token = request.cookies.get('XSRF-TOKEN')  # or request.args.get('state')
 		if not token or token != req_token:
 			print('Token does not match.')
 			abort(403)
+
+# Set csrf token
+@app.after_request
+def crsfProtectWrite(resp):
+	if 'username' not in login_session:
+		token = generateRandomString()
+	else:
+		token = generateCsfrToken(login_session['user_id'])
+	login_session['_csrf_token'] = token
+	resp.set_cookie('XSRF-TOKEN', token.decode('ascii'))
+	return resp
 
 
 ##########################
