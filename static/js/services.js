@@ -11,6 +11,8 @@
   app.factory('AuthService', function ($http, $window, $cookies) {
     var authService = {};
 
+    authService.currentUser = {};
+
     // login user on server and return access token
     authService.login = function (credentials) {
       return $http({
@@ -21,8 +23,6 @@
         })
         .success(function (data, status, headers, config) {
           $cookies.put('loggedin', 'true');
-          console.log(data);
-          $cookies.put('user', data);
           return data;
         })
         .error(function (data, status, headers, config) {
@@ -93,6 +93,26 @@
           // Handle login errors here
           console.log(data);
         });
+    };
+
+    // get current user from server
+    authService.setUserData = function () {
+      return $http
+        .get('/api/userdata')
+        .success(function (data, status, headers, config) {
+          authService.currentUser = angular.copy(data, authService.currentUser);
+          return data;
+        })
+        .error(function (data, status, headers, config) {
+          // Erase the token if the user fails to log in
+          $cookies.put('loggedin', '');
+          // Handle login errors here
+          console.log(data);
+        });
+    };
+
+    authService.getUserData = function () {
+      return authService.currentUser
     };
 
     return authService;

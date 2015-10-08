@@ -241,6 +241,13 @@ def login():
 	# response.headers['Content-Type'] = 'application/json'
 	# return response
 
+@app.route('/api/userdata')
+def getCurrentUser():
+	if 'username' not in login_session:
+		abort(403)
+	else:
+		user = session.query(User).filter_by(username=login_session['username']).first()
+		return jsonify({'username': user.username, 'email': user.email, 'picture': user.picture, 'user_id': user.id}), 201
 
 # render login-form.html with state and client_id
 @app.route('/loginform')

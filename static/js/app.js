@@ -10,14 +10,24 @@
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
   });
 
-  app.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.withCredentials = true;
-  }]);
+  //app.run(['$rootScope','$templateCache',function($rootScope, $templateCache) {
+  //  $rootScope.$on('$routeChangeStart', function(event, next, current) {
+  //    $templateCache.remove(current.templateUrl);
+  //  });
+  //}]);
 
-  app.run(['$rootScope', '$location', '$cookies', function ($rootScope, $location, $cookies) {
-    var currentUser = $cookies.get('user');
-    console.log('what');
-    console.log(currentUser)
+  app.run(['$rootScope', '$location', '$cookies', 'AuthService', function ($rootScope, $location, $cookies, AuthService) {
+    var isLoggedin = $cookies.get('loggedin');
+    if (isLoggedin) {
+      AuthService.setUserData().then(function (data) {
+        console.log('user set');
+        $rootScope.myUser = data;
+        console.log(data);
+      }, function (err) {
+        console.log(err)
+      })
+    }
+
   }]);
 
   app.config(function($routeProvider, $locationProvider, $httpProvider) {

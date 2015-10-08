@@ -9,26 +9,25 @@
 var app = angular.module('catalog');
 
   app.controller('MainCtrl', ['$scope', '$window', 'AuthService', 'UserService', function($scope, $window, AuthService, UserService) {
-    $scope.currentUser = {};
+    $scope.currentUser = AuthService.getUserData();
 
-    $scope.setCurrentUser = function (token) {
-      UserService.getData(token)
-        .then(function (res) {
-          $scope.currentUser = res.data;
-        }, function (err) {
-          console.log(err)
-        });
+    var listener = $scope.$watchCollection('currentUser', function(newValue) {
+      $scope.currentUser = newValue;
+      //listener(); // unbind after value is set.
+    });
 
-    };
 
     $scope.menuToggle = function() {
       $scope.menu_toggled = !$scope.menu_toggled;
     };
 
     $scope.logout = function() {
-      AuthService.logout().then(function (data) {
-        console.log('success')
-      }, function (err) {
+      AuthService.logout()
+        .then(function (data) {
+          $scope.currentUser = {};
+          console.log('success');
+          //$window.location.reload();
+        }, function (err) {
           console.log(err);
         }
       )
@@ -66,10 +65,10 @@ var app = angular.module('catalog');
 
     $scope.login = function (credentials) {
       console.log(credentials);
-      AuthService.login(credentials).then(function (token) {
-        $scope.setCurrentUser(token);
+      AuthService.login(credentials).then(function (data) {
+        AuthService.setUserData();
         $scope.credentials = {};
-        $location.path('/');
+        //$location.path('/');
       }, function (err) {
         console.log(err)
       });
