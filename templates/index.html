@@ -25,18 +25,18 @@
 <body ng-controller="MainCtrl">
 
     <!-- Unfortunate naming required for sticky footer and sidebar -->
-    <div id="wrapper" class="wrapper">
+    <div id="wrapper" ng-class="{toggled: menu_toggled}" class="wrapper">
 
         <!-- <button ng-click="toggleMenu()"></button> -->
 
         <!-- Sidebar Toggle -->
-        <button id="menu-toggle" type="button" class="btn">
+        <button id="menu-toggle" ng-class="{toggled: menu_toggled}" ng-click="menuToggle()" type="button" class="btn">
             <p class="sr-only">Sidebar Menu Toggle</p>
             <span class="glyphicon glyphicon-menu-hamburger"></span>
         </button>
 
         <!-- Sidebar -->
-        <div id="sidebar-wrapper" ng-class="{toggled: menu_toggled}">
+        <div id="sidebar-wrapper">
             
             <nav>
                 <ul class="sidebar-nav">
@@ -99,24 +99,25 @@
 
 
 
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.js"></script>
+    <script src="//code.angularjs.org/1.4.7/angular-route.js"></script>
     <script src="//code.angularjs.org/1.4.7/angular-cookies.js"></script>
-    <script src="../static/js/vendor/bootstrap.js"></script>
+    <script src="//code.angularjs.org/1.4.7/angular-resource.min.js"></script>
+    <!--<script src="../static/js/vendor/bootstrap.js"></script>-->
     <script src="../static/js/app.js"></script>
     <script src="../static/js/controllers.js"></script>
     <script src="../static/js/services.js"></script>
     <script src="../static/js/directives.js"></script>
     
     <!-- Temporary script to test button toggle -->
-    <script>
-        $("#menu-toggle").click(function(e) {
-            e.preventDefault();
-            $("#wrapper").toggleClass("toggled");
-            $("#menu-toggle").toggleClass("toggled");
-        });
-    </script>
+    <!--<script>-->
+        <!--$("#menu-toggle").click(function(e) {-->
+            <!--e.preventDefault();-->
+            <!--$("#wrapper").toggleClass("toggled");-->
+            <!--$("#menu-toggle").toggleClass("toggled");-->
+        <!--});-->
+    <!--</script>-->
 
 
 </body>

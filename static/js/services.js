@@ -98,7 +98,6 @@
           authService.currentUser = angular.copy(data, authService.currentUser);
         })
         .error(function (err) {
-          //$cookies.put('loggedin', ''); // set user to not loggedin
           console.log(err);
         });
     };
@@ -110,31 +109,19 @@
     return authService;
   });
 
-  app.factory('UserService', function ($http, $window) {
-    var userService = {};
+  app.factory('CategoryService', function ($http) {
+    var categoryService = {};
 
-    userService.getData = function (token) {
+
+    categoryService.getAllCategories = function () {
       return $http
-        .get('/api/userdata', token)
+        .get('/api/allcategories')
         .success(function (data, status, headers, config) {
-          $window.sessionStorage.user = data;
+
         })
+        .error(function (err) { console.log(err) });
     };
 
-    return userService;
-
-    //userService.create = function (sessionId, userId, username, userEmail) {
-    //  this.id = userId;
-    //  this.userId = userId;
-    //  this.username = username;
-    //  this.userEmail = userEmail;
-    //};
-    //userService.destroy = function () {
-    //  this.id = null;
-    //  this.userId = null;
-    //  this.username = null;
-    //  this.userEmail = null;
-    //};
   });
 
 

@@ -45,7 +45,6 @@ def index(path=''):
 		print(login_session['username'])
 		return render_template('index.html', logged='true')
 
-
 # render login-form.html with state and client_id
 @app.route('/loginform')
 def loginForm():
@@ -54,12 +53,17 @@ def loginForm():
 	login_session['_csrf_token'] = state
 	return render_template("login-form.html", client_id=CLIENT_ID)
 
-
-# return all catalogs to any request, optional limit
-@app.route('/api/categories')
-def getCategories():
+# return all categories to any request, TODO: optional limit
+@app.route('/api/allcategories')
+def getAllCategories():
 	categories = session.query(Category).order_by(Category.timestamp).all()
-	return jsonify(Category=[r.serialize for r in categories])
+	return jsonify(Categories=[r.serialize for r in categories])
+
+# return all items to any request TODO: optional limit
+@app.route('/api/allitems')
+def getAllItems():
+	items = session.query(Item).order_by(Item.timestamp).all()
+	return jsonify(items=[r.serialize for r in items])
 
 
 ##########################
@@ -67,6 +71,7 @@ def getCategories():
 ##########################
 
 # CREATE a CATEGORY, requires login  (COMPLETE)
+# requires user_id
 @app.route('/api/createcategory', methods=['POST'])
 def createCategory():
 	if 'username' not in login_session:
@@ -85,6 +90,7 @@ def createCategory():
 
 
 # CREATE an ITEM, requires login and category ownership TODO:
+# requires user_id and cat_id
 @app.route('/api/createitem', methods=['POST'])
 def createItem():
 	if 'username' not in login_session:
@@ -102,8 +108,9 @@ def createItem():
 		return jsonify('message', 'You must enter a name.'), 422
 
 # EDIT a CATEGORY, requires login and category ownership TODO
-@app.route('/api/createcategory', methods=['POST'])
-def createCategory():
+# requires user_id and cat_id
+@app.route('/api/editcategory', methods=['POST'])
+def editCategory():
 	if 'username' not in login_session:
 		abort(401)
 	if validateExists(request.form['name']):
@@ -119,8 +126,9 @@ def createCategory():
 		return jsonify('message', 'You must enter a name.'), 422
 
 # EDIT an ITEM, requires login and item ownership TODO
-@app.route('/api/createcategory', methods=['POST'])
-def createCategory():
+# requires user_id, cat_id, and item_id
+@app.route('/api/edititem', methods=['POST'])
+def editItem():
 	if 'username' not in login_session:
 		abort(401)
 	if validateExists(request.form['name']):
