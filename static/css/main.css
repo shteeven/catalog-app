@@ -35,6 +35,10 @@ footer, .push {
 	height: 155px; /* '.push' must be the same height as 'footer' */
 }
 
+.greeting {
+	margin: 1em 0.5em;
+}
+
 /* Keeps angular objects from flashing before angular is loaded and data populated. */
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
