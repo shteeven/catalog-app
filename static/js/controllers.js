@@ -12,40 +12,43 @@ var app = angular.module('catalog');
 
     $scope.menu_toggled = false; // initialize toggle
 
+    $scope.menuToggle = function() { $scope.menu_toggled = !$scope.menu_toggled; };
+
+    // USER Authentication
     $scope.currentUser = AuthService.getUserData();
 
     $scope.$watch('currentUser', function(newValue) { $scope.currentUser = newValue; });
-
-    $scope.menuToggle = function() { $scope.menu_toggled = !$scope.menu_toggled; };
 
     $scope.logout = function() { AuthService.logout(); }
 
   }]);
 
-  app.controller('CreateEditCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {}]);
+  // Primary page for non-logged users
+  app.controller('LandingCtrl', ['$scope', function($scope) {}]);
 
-  app.controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+  // Primary page for logged in users
+  app.controller('CatalogCtrl', ['$scope', function($scope) {}]);
 
-  app.controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+  app.controller('CategoryCtrl', ['$scope', function($scope) {}]);
 
-  app.controller('CategoryCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
-
-  app.controller('ItemsCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+  app.controller('ItemsCtrl', ['$scope', function($scope) {}]);
 
   app.controller('LoginCtrl', ['$scope', '$window', '$location', 'AuthService', function ($scope, $window, $location, AuthService) {
 
     $scope.credentials = { email: '', username: '', password: ''};
 
     $scope.register = function (credentials) { AuthService.register(credentials)
-      .then(function () { $scope.credentials = {} }, function (err) { console.log(err) });};
-
-    $scope.login = function (credentials) { AuthService.login(credentials)
-      .then(function (data) { $scope.credentials = {}; }, function (err) { console.log(err) });};
-
-    $window.signInCallback = function(authResult) { AuthService.gSignin(authResult);
-    console.log('why');
+      .then(function () { $scope.credentials = {} }, function (err) { console.log(err) });
     };
 
+    $scope.login = function (credentials) { AuthService.login(credentials)
+      .then(function (data) { $scope.credentials = {}; }, function (err) { console.log(err) });
+    };
+
+    $window.signInCallback = function(authResult) { AuthService.gSignin(authResult) };
+
   }]);
+
+  app.controller('CreateEditCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {}]);
 
 }());
