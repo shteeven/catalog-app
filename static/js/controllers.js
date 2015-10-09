@@ -10,7 +10,7 @@ var app = angular.module('catalog');
 
   app.controller('MainCtrl', ['$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
 
-    $scope.menu_toggled = true; // initialize toggle
+    $scope.menu_toggled = false; // initialize toggle
 
     $scope.currentUser = AuthService.getUserData();
 

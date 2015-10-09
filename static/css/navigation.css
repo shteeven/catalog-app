@@ -4,13 +4,17 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
+
+
+
+
 /* Toggle Button Styles */
 #menu-toggle {
-    position: fixed;
-    left: -20px;
+    position: absolute;
+    display: block;
+    right: -55px;
     z-index: 1000;
     margin: 0.25em;
-    padding-left: 25px;
 
     color: #999999;
     background: #292c2f;
@@ -22,32 +26,15 @@
     transition: all 0.5s ease;
 }
 
-#menu-toggle.toggled {
-    left: 230px;
-}
-
 /* Toggle Styles */
-
-#wrapper {
-    padding-left: 0;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
-
-#wrapper.toggled {
-    padding-left: 250px;
-}
 
 #sidebar-wrapper {
     z-index: 1000;
     position: fixed;
-    left: 250px;
-    width: 0;
+    left: -250px; /* move sidebar off screen on toggle */
+    width: 250px;
     height: 100%;
-    margin-left: -250px;
-    overflow-y: auto;
+    overflow: visible; /* the placement of the button requires this */
     background: #292c2f;
     border-right: 2px solid #1f2022;
     -webkit-transition: all 0.5s ease;
@@ -56,21 +43,10 @@
     transition: all 0.5s ease;
 }
 
-#wrapper.toggled #sidebar-wrapper {
-    position: fixed;
-    width: 250px;
+#sidebar-wrapper.toggled {
+    left: 0;
 }
 
-#page-content-wrapper {
-    width: 100%;
-    position: absolute;
-    padding: 15px;
-}
-
-#wrapper.toggled #page-content-wrapper {
-    position: absolute;
-    margin-right: -250px;
-}
 
 /* Sidebar Styles */
 
@@ -131,30 +107,16 @@
         display: none;
     }
 
-    #wrapper {
-        padding-left: 250px;
-    }
-
-    #wrapper.toggled {
-        padding-left: 0;
-    }
-
+    /* Set sidebar to be a permanently opened*/
     #sidebar-wrapper {
         position: fixed;
+        left: 0; /* move sidebar back in viewport*/
         width: 250px;
     }
 
-    #wrapper.toggled #sidebar-wrapper {
-        width: 0;
-    }
-
+    /* Adjust page wrapper to provide space for sidebar*/
     #page-content-wrapper {
-        padding: 20px;
+        padding-left: 250px;
         position: relative;
-    }
-
-    #wrapper.toggled #page-content-wrapper {
-        position: relative;
-        margin-right: 0;
     }
 }

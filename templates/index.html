@@ -16,7 +16,7 @@
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
   <link rel="stylesheet" href="../static/css/main.css">
-  <link rel="stylesheet" href="../static/css/sidebar.css">
+  <link rel="stylesheet" href="../static/css/navigation.css">
   <link rel="stylesheet" href="../static/css/header.css">
   <link rel="stylesheet" href="../static/css/footer.css">
 
@@ -24,21 +24,15 @@
 
 <body ng-controller="MainCtrl">
 
-    <!-- Unfortunate naming required for sticky footer and sidebar -->
-    <div id="wrapper" ng-class="{toggled: menu_toggled}" class="wrapper">
-
-        <!-- <button ng-click="toggleMenu()"></button> -->
-
-        <!-- Sidebar Toggle -->
-        <button id="menu-toggle" ng-class="{toggled: menu_toggled}" ng-click="menuToggle()" type="button" class="btn">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper" ng-class="{toggled: menu_toggled}">
+            <!-- Sidebar Toggle -->
+          <button id="menu-toggle" ng-class="{toggled: menu_toggled}" ng-click="menuToggle()" type="button" class="btn">
             <p class="sr-only">Sidebar Menu Toggle</p>
             <span class="glyphicon glyphicon-menu-hamburger"></span>
-        </button>
+          </button>
 
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            
-            <nav>
+          <nav>
                 <ul class="sidebar-nav">
                     <li class="sidebar-brand"><a href="#">Navigation</a></li>
                     <li role="presentation" class="active"><a href="/">Home</a></li>
@@ -58,23 +52,31 @@
 
         <!-- Main Content -->
         <div id="page-content-wrapper">
+          <nav class="navbar navbar-default">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!-- Insert Partials with Angular -->
-                        <div ng-view></div>
-                    </div>
-                </div>
-            </div>
+              <div class="pull-right greeting ng-cloak">
+                <div ng-if="currentUser.username">Welcome, [[currentUser.username]]</div>
+                <div ng-if="!currentUser.username"><a href="login">Login or Register</a></div>
+              </div>
+            </div><!-- /.container-fluid -->
+          </nav>
 
-            
-            
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-lg-12">
+
+                <!-- Insert Partials with Angular -->
+                <div ng-view></div>
+
+              </div>
+            </div>
+          </div>
         </div>
         <!-- /Main Content -->
         
         <!-- Needed for sticky footer -->
         <div class="push"></div>
-    </div> <!-- #wrapper -->
+    <!--</div> &lt;!&ndash; #wrapper &ndash;&gt;-->
 
 
     <footer class="footer-distributed hidden">
@@ -99,26 +101,15 @@
 
 
 
-    <!--<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>-->
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
     <script src="//code.angularjs.org/1.4.7/angular-route.js"></script>
     <script src="//code.angularjs.org/1.4.7/angular-cookies.js"></script>
     <script src="//code.angularjs.org/1.4.7/angular-resource.min.js"></script>
-    <!--<script src="../static/js/vendor/bootstrap.js"></script>-->
     <script src="../static/js/app.js"></script>
     <script src="../static/js/controllers.js"></script>
     <script src="../static/js/services.js"></script>
     <script src="../static/js/directives.js"></script>
-    
-    <!-- Temporary script to test button toggle -->
-    <!--<script>-->
-        <!--$("#menu-toggle").click(function(e) {-->
-            <!--e.preventDefault();-->
-            <!--$("#wrapper").toggleClass("toggled");-->
-            <!--$("#menu-toggle").toggleClass("toggled");-->
-        <!--});-->
-    <!--</script>-->
-
 
 </body>
 
