@@ -61,7 +61,7 @@
     authService.gSignin = function (authResult) {
       return $http({
         method: "POST",
-        url: '/gconnect?state='+$cookies.get('XSRF-TOKEN'),
+        url: '/api/gconnect?state='+$cookies.get('XSRF-TOKEN'),
         headers: { 'Content-Type': 'application/octet-stream; charset=utf-8' },
         data: authResult['code'],
         transformRequest: []

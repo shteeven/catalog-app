@@ -3,10 +3,11 @@
   <button class="btn btn-primary" ng-click="show_signin = false">Register</button>
 </div>
 
+
+<!-- USER SIGN IN-->
 <section class="login-signin"  ng-if="show_signin">
   <iframe src="sink.html" name="sink" style="display:none"></iframe>
   <form name="loginForm" action="sink.html" target="sink" method="post" ng-submit="login(credentials)" novalidate form-autofill-fix>
-    <input name=_csrf_token type=hidden ng-init="credentials.csrf_token = '{{ csrf_token }}'">
     <label for="username">Username:</label>
     <input type="text" id="username" ng-model="credentials.username" required>
     <label for="password">Password:</label>
@@ -14,11 +15,13 @@
     <button type="submit">Login</button>
   </form>
 </section>
+<!-- END USER SIGN IN-->
 
+
+<!-- USER REGISTER-->
 <section class="login-register" ng-if="!show_signin">
   <iframe src="sink.html" name="sink" style="display:none"></iframe>
   <form name="loginForm" action="sink.html" target="sink" method="post" ng-submit="register(credentials)" novalidate form-autofill-fix>
-    <input name=_csrf_token type=hidden ng-init="credentials.csrf_token = '{{ csrf_token }}'">
     <label for="newusername">Username:</label>
     <input type="text" id="newusername" ng-model="credentials.username" required>
     <label for="newemail">Email:</label>
@@ -28,10 +31,10 @@
     <button type="submit">Login</button>
   </form>
 </section>
+<!-- END USER REGISTER-->
+
 
 <!-- GOOGLE PLUS SIGN IN-->
-
-<span ng-init="state = '{{ STATE }}'"></span>
 <div class="gconnect">
   <script src="//apis.google.com/js/platform.js?onload=start"> </script>
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
@@ -47,57 +50,4 @@
   </span>
   </div>
 </div>
-
 <!--END GOOGLE PLUS SIGN IN -->
-
-<!--<div class="fbconnect">-->
-  <!--&lt;!&ndash; FACEBOOK SIGN IN&ndash;&gt;-->
-<!--<script>-->
-  <!--window.fbAsyncInit = function() {-->
-    <!--FB.init({-->
-      <!--appId      : '416258111893595',-->
-      <!--cookie     : true,-->
-      <!--xfbml      : true,-->
-      <!--version    : 'v2.4'-->
-    <!--});-->
-  <!--};-->
-  <!--function sendTokenToServer() {-->
-      <!--var access_token = FB.getAuthResponse()['accessToken'];-->
-      <!--console.log('Fetching token.');-->
-      <!--console.log(access_token);-->
-      <!--FB.api('/me', function(response) {-->
-          <!--console.log('Successfully logged in ' + response.name);-->
-          <!--$.ajax({-->
-              <!--type:'POST',-->
-              <!--url:'/fbconnect?state={{STATE}}',-->
-              <!--processData: false,-->
-              <!--data: access_token,-->
-              <!--contentType: 'application/octet-stream; charset=utf-8',-->
-              <!--success: function(result) {-->
-                  <!--if (result) {-->
-                      <!--$('#result').html('Login successful!<br>'+result+'<br>Redirecting...');-->
-                      <!--setTimeout(function(){-->
-                          <!--window.location.href = '/';-->
-                      <!--}, 3000);-->
-                  <!--} else {-->
-                      <!--$('#result').html('Failed to make server-side call. Check console for details.');-->
-                  <!--}-->
-              <!--}-->
-          <!--})-->
-      <!--})-->
-  <!--}-->
-
-  <!--(function(d, s, id){-->
-     <!--var js, fjs = d.getElementsByTagName(s)[0];-->
-     <!--if (d.getElementById(id)) {return;}-->
-     <!--js = d.createElement(s); js.id = id;-->
-     <!--js.src = "//connect.facebook.net/en_US/sdk.js";-->
-     <!--fjs.parentNode.insertBefore(js, fjs);-->
-   <!--}(document, 'script', 'facebook-jssdk'));-->
-<!--</script>-->
-
-<!--<fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">-->
-    <!--<a href="javascript:sendTokenToServer()">Login!</a>-->
-<!--</fb:login-button>-->
-<!--&lt;!&ndash;END FACEBOOK SIGN IN &ndash;&gt;-->
-<!--</div>-->
