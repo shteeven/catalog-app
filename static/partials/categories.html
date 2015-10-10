@@ -5,7 +5,7 @@
 
 <div class="container-fluid">
 			
-	<div class="row"> <!-- Angular should repeat this entire section? -->
+	<div class="row" ng-repeat="category in categories"> <!-- Angular should repeat this entire section? -->
 		
 		<div class="col-md-10 col-md-offset-1">
 
@@ -15,33 +15,35 @@
 						
 					<!-- Image thumbnail -->
 					<div class="col-xs-2">
-						<img class="img-thumb" src="../static/img/thumbnail.svg" alt="Category thumbnail.">
+						<img class="img-thumb" ng-src="[[ category.img_url ]]" alt="[[ category.name ]] image.">
 					</div>
 
 					<!-- Category Title -->
 					<div class="col-xs-2">
-						<h3 class="title">Some Title</h3>
+						<h3 class="title">[[ category.name ]]</h3>
 					</div>
 
-					<!-- Category Description -->
-					<div class="col-xs-6">
-						<p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi dolorum ad eaque vel adipisci iusto doloremque fugiat autem libero aspernatur. Culpa blanditiis, ipsam cupiditate eaque.</p>
-					</div>
-					
+					<!--&lt;!&ndash; Category Description &ndash;&gt;-->
+					<!--<div class="col-xs-6">-->
+						<!--<p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi dolorum ad eaque vel adipisci iusto doloremque fugiat autem libero aspernatur. Culpa blanditiis, ipsam cupiditate eaque.</p>-->
+					<!--</div>-->
+					gg[[ currentUser.id ]]
+          hh[[ category.user_id ]]
+          jj[[currentUser.id != category.user_id]]
 					<!-- CRUD -->
 					<div class="col-xs-2">
-            <div ng-hide="user.id != item.user_id">
-              <div ng-hide="!deletion_confirmation">
+            <div ng-show="currentUser.id === category.user_id">
+              <div ng-hide="deletion_confirmation">
                 <!-- Edit button -->
-						    <button type="button" class="btn btn-success btn-block hidden">Edit Catalog</button>
-						    <!-- Delete button -->
-						    <button type="button" class="btn btn-danger btn-block hidden">Delete Catalog</button>
+                <button type="button" class="btn btn-success btn-block">Edit Catalog</button>
+                <!-- Delete button -->
+                <button type="button" class="btn btn-danger btn-block">Delete Catalog</button>
               </div>
               <div ng-hide="!deletion_confirmation">
                 <!-- Edit button -->
-						    <button type="button" class="btn btn-success btn-block hidden">Edit Catalog</button>
+						    <button type="button" class="btn btn-success btn-block">Edit Catalog</button>
 						    <!-- Delete button -->
-						    <button type="button" class="btn btn-danger btn-block hidden">Delete Catalog</button>
+						    <button type="button" class="btn btn-danger btn-block">Delete Catalog</button>
               </div>
             </div>
 
