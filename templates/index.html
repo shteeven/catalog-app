@@ -34,15 +34,16 @@
 
           <nav>
                 <ul class="sidebar-nav">
-                    <li class="sidebar-brand"><a href="#">Navigation</a></li>
-                    <li role="presentation" class="active"><a href="/">Home</a></li>
+                    <li class="sidebar-brand">Catalog</li>
+                    <li role="presentation"><a href="home">Home</a></li>
                     <li role="presentation"><a href="landing">Landing</a></li>
                     <li role="presentation"><a href="items">Items</a></li>
-                    <li role="presentation"><a href="#">Create Category</a></li>
-                    <li role="presentation"><a href="#">Create Item</a></li>
+                    <li role="presentation"><a href="category/create">Create Category</a></li>
+                    <li role="presentation"><a href="item/create">Create Item</a></li>
                     <li role="presentation"><a href="category">Categories</a></li>
                     <li role="presentation">
-                      <button type="button" ng-click="logout()" class="btn btn-block">Log In</button>
+                      <a ng-if="!currentUser.username" type="button" href="login" class="btn btn-block btn-success ng-cloak">Login or Register</a>
+                      <button ng-if="currentUser.username" type="button" ng-click="logout()" class="btn btn-block ng-cloak">Log Out</button>
                     </li>
                 </ul>
             </nav>
