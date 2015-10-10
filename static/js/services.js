@@ -8,6 +8,9 @@
     'use strict';
   var app = angular.module('catalog');
 
+  //////////////////
+  //AUTHENTICATION//
+  //////////////////
   app.factory('AuthService', function ($http, $cookies, $state) {
     var authService = {};
 
@@ -105,6 +108,9 @@
     return authService;
   });
 
+  //////////////////
+  ///RESOURCES//////
+  //////////////////
   app.factory('Category', function($resource) {
     return $resource('/api/category/:id', {id: '@id'}, {
         update: {
@@ -116,7 +122,13 @@
   });
 
   app.factory('Item', function ($resource) {
-
-  })
+    return $resource('/api/category/:id', {id: '@id'}, {
+      update: {
+        method: 'PUT' // this method issues a PUT request
+      }
+    }, {
+      stripTrailingSlashes: false
+    });
+  });
 
 }());

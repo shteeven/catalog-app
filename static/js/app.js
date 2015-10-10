@@ -47,32 +47,32 @@
       })
       .state('categories', {
         url: '/categories',
-        templateUrl: 'static/partials/user-categories.html',
-        controller: 'CategoryCtrl'
-      })
-      .state('items', {
-        url: '/items',
-        templateUrl: 'static/partials/user-items.html',
+        templateUrl: 'static/partials/categories.html',
         controller: 'CategoryCtrl'
       })
       .state('createCategory', {
         url: '/category/create',
-        templateUrl: 'static/partials/user-categories-create.html',
+        templateUrl: 'static/partials/categories-create.html',
         controller: 'CategoryCreateCtrl'
       })
       .state('editCategory', {
         url: '/category/:id/edit',
-        templateUrl: 'static/partials/user-categories-create.html',
+        templateUrl: 'static/partials/categories-edit.html',
         controller: 'CategoryeEditCtrl'
+      })
+      .state('items', {
+        url: '/items',
+        templateUrl: 'static/partials/items.html',
+        controller: 'ItemCtrl'
       })
       .state('createItem', {
         url: '/item/create',
-        templateUrl: 'static/partials/user-categories-create.html',
+        templateUrl: 'static/partials/items-create.html',
         controller: 'ItemCreateCtrl'
       })
       .state('editItem', {
         url: '/item/:id/edit',
-        templateUrl: 'static/partials/user-categories-create.html',
+        templateUrl: 'static/partials/items-edit.html',
         controller: 'ItemEditCtrl'
       })
       .state('test', {
