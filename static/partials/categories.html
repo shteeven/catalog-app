@@ -35,9 +35,9 @@
             <div ng-show="currentUser.id === category.user_id">
               <div ng-hide="deletion_confirmation">
                 <!-- Edit button -->
-                <button type="button" class="btn btn-success btn-block">Edit Catalog</button>
+                <button type="button" ui-sref="editCategory({id:category.id})" class="btn btn-success btn-block">Edit</button>
                 <!-- Delete button -->
-                <button type="button" class="btn btn-danger btn-block">Delete Catalog</button>
+                <button type="button" ng-click="deleteCategory(category)" class="btn btn-danger btn-block">Delete Catalog</button>
               </div>
               <div ng-hide="!deletion_confirmation">
                 <!-- Edit button -->

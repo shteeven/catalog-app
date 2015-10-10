@@ -58,7 +58,7 @@
       .state('editCategory', {
         url: '/category/:id/edit',
         templateUrl: 'static/partials/categories-edit.html',
-        controller: 'CategoryeEditCtrl'
+        controller: 'CategoryEditCtrl'
       })
       .state('items', {
         url: '/items',

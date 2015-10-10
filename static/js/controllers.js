@@ -31,18 +31,18 @@ var app = angular.module('catalog');
 
   app.controller('CategoryCtrl', ['$scope', '$state', '$window', 'Category', function($scope, $state, $window, Category) {
     $scope.categories = Category.query(function () {
-      console.log($scope.categories)
-      console.log($scope.currentUser)
-    }); //fetch all movies. Issues a GET to /api/movies
+      console.log($scope.categories);
+      console.log($scope.currentUser);
+    }); //fetch all categories. Issues a GET to /api/categories
 
     // ADD DELETE FEATURE LATER
-    //$scope.deleteMovie = function(movie) { // Delete a movie. Issues a DELETE to /api/movies/:id
-    //  if (popupService.showPopup('Really delete this?')) {
-    //    movie.$delete(function() {
-    //      $window.location.href = ''; //redirect to home
-    //    });
-    //  }
-    //};
+    $scope.deleteCategory = function(category) { // Delete a movie. Issues a DELETE to /api/movies/:id
+      if (popupService.showPopup('Really delete this?')) {
+        movie.$delete(function(resp) {
+          console.log('resp');
+        });
+      }
+    };
   }]);
 
   app.controller('CategoryCreateCtrl', ['$scope', 'Category', '$state', function($scope, Category, $state) {
@@ -62,22 +62,18 @@ var app = angular.module('catalog');
     };
   }]);
 
-  app.controller('CategoryEditCtrl', ['$scope', 'Category', function($scope, Category) {
-    var entry = Catalog.get({ id: $scope.id }, function() {
-      console.log(entry);
-    }); // get() returns a single entry
+  app.controller('CategoryEditCtrl', ['$scope', 'Category', '$stateParams', '$state', function($scope, Category, $stateParams, $state) {
+    $scope.updateCategory = function() { //Update the edited category. Issues a PUT to /api/category/:id
+      $scope.category.$update(function() {
+        $state.go('categories'); // on success go back to categories
+      });
+    };
 
-    var entries = Catalog.query(function() {
-      console.log(entries);
-    }); //query() returns all the entries
+    $scope.loadCategory = function() { //Issues a GET request to /api/categories/:id to get a category
+      $scope.category = Category.get({ id: $stateParams.id });
+    };
 
-    $scope.entry = new Catalog(); //You can instantiate resource class
-
-    $scope.entry.data = 'some data';
-
-    Catalog.save($scope.entry, function() {
-      //data saved. do something here.
-    }); //saves an entry. Assuming $scope.entry is the Entry object
+    $scope.loadCategory(); // Load a movie which can be edited on UI
   }]);
 
   app.controller('ItemCtrl', ['$scope', 'Item', function($scope, Item) {}]);

@@ -63,7 +63,7 @@ def categoryAPI(id=''):
 		return json.dumps([r.serialize for r in categories])
 	elif request.method == 'GET':
 		category = session.query(Category).filter_by(id=id).one()
-		return jsonify([category.serialize])
+		return json.dumps(category.serialize)
 
 	if 'username' in login_session:
 		# CREATE a CATEGORY, requires login
@@ -86,8 +86,8 @@ def categoryAPI(id=''):
 					return jsonify(message=msg), valid
 			else:
 				return jsonify(message='You must enter a name.'), 422
-		else:
-			abort(401)
+		# else:
+		# 	abort(401)
 		# END CREATE
 
 		# get category for PUT or DELETE, user_id, must match that of category.user_id for PUT or DELETE
@@ -95,6 +95,7 @@ def categoryAPI(id=''):
 		if category is None:
 			return jsonify(message='Category not found.'), 404
 		if category.user_id != login_session['user_id']:
+			print('here')
 			jsonify(message='You are not the creator.'), 401
 
 
@@ -108,8 +109,9 @@ def categoryAPI(id=''):
 				valid, img_url, msg = validateImageUrl(img_url)
 				# Save edited category.
 				if valid == 200:
-					editCategory = Category(name=request.json['name'], img_url=img_url)
-					session.add(editCategory)
+					category.name = request.json['name']
+					category.img_url = img_url
+					session.add(category)
 					session.commit()
 					return jsonify(message='Category updated.'), 202
 				else:
