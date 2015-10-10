@@ -29,7 +29,23 @@ var app = angular.module('catalog');
   // Primary page for logged in users
   app.controller('CatalogCtrl', ['$scope', function($scope) {}]);
 
-  app.controller('CategoryCtrl', ['$scope', function($scope) {}]);
+  app.controller('CategoryCtrl', ['$scope', 'Catalog', function($scope, Catalog) {
+    var entry = Catalog.get({ id: $scope.id }, function() {
+      console.log(entry);
+    }); // get() returns a single entry
+
+    var entries = Catalog.query(function() {
+      console.log(entries);
+    }); //query() returns all the entries
+
+    $scope.entry = new Catalog(); //You can instantiate resource class
+
+    $scope.entry.data = 'some data';
+
+    Catalog.save($scope.entry, function() {
+      //data saved. do something here.
+    }); //saves an entry. Assuming $scope.entry is the Entry object
+  }]);
 
   app.controller('ItemsCtrl', ['$scope', function($scope) {}]);
 
@@ -50,5 +66,8 @@ var app = angular.module('catalog');
   }]);
 
   app.controller('CreateEditCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {}]);
+
+  app.controller('TestCtrl', ['$scope', function($scope) {}]);
+
 
 }());
