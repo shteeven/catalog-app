@@ -1,25 +1,219 @@
-<div class="btn-group">
+ <!-- New Form -->
+<div class="container">
+<div class="row">
+  
+<div class="col-lg-6 col-md-7 col-sm-9">
+
+  <h4 style="border-bottom: 1px solid #c5c5c5;">
+    <i class="glyphicon glyphicon-user">
+    </i>
+    Account Access
+  </h4>
+
+  <div style="padding: 20px;" ng-init="show_signin = true">
+
+    <!-- Sign In Form -->
+    <section class="login-signin"  ng-if="show_signin">
+      
+      <h4 class="">Sign In!</h4>
+      <iframe src="sink.html" name="sink" style="display:none"></iframe>
+
+      <form name="loginForm" action="sink.html" target="sink" method="post" ng-submit="login(credentials)" novalidate form-autofill-fix>
+
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input class="form-control" type="text" id="username" ng-model="credentials.username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input class="form-control" type="password" id="password" ng-model="credentials.password" required>
+        </div>
+
+        <div class="form-group">
+          
+          <button class="btn btn-primary btn-block" type="submit">Login</button>
+
+        </div>
+
+      </form>
+    <p class="help-block">
+      <a class="pull-right text-muted" href="#" ng-click="show_signin = false"><small>Register</small></a>
+    </p>
+    </section>
+    <!-- / Sign In Form -->
+
+
+
+    <!-- User Registration Form -->
+    <section class="login-register" ng-if="!show_signin">
+      
+      <h4>Registration</h4>
+      <h5>Please register to get started.</h6>
+
+      <iframe src="sink.html" name="sink" style="display:none"></iframe>
+
+      <form name="loginForm" action="sink.html" target="sink" method="post" ng-submit="register(credentials)" novalidate form-autofill-fix>
+
+        <div class="form-group">
+          <label for="newusername">Username:</label>
+          <input class="form-control" type="text" id="newusername" ng-model="credentials.username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="newemail">Email:</label>
+          <input class="form-control" type="text" id="newemail" ng-model="credentials.email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="newpassword">Password:</label>
+          <input class="form-control" type="password" id="newpassword" ng-model="credentials.password" required>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="submit">Login</button>
+
+      </form>
+    
+    <p class="help-block">
+      <a class="pull-left text-muted" href="#" ng-click="show_signin = true"><small>Sign In</small></a>
+    </p>
+    </section>
+    <!-- / User Registration Form -->
+
+
+    <!-- Sign In and Registration Form Swap -->
+   <!--  <p class="help-block">
+      <a class="pull-left text-muted" href="#" ng-init="show_signin = true" ng-click="show_signin = true"><small>Sign In</small></a>
+      <a class="pull-right text-muted" href="#" ng-click="show_signin = false"><small>Register</small></a>
+    </p> -->
+
+
+    <!-- Divider -->
+    <div class="login-or">
+      <hr class="hr-or">
+      <span class="span-or">or</span>
+    </div>
+
+    <!-- Facebook and Google Sign In Buttons -->
+    <div class="row">
+
+      <div class="col-xs-6 col-sm-6 col-md-6">
+        <a href="#" class="btn btn-primary btn-block">Facebook</a>
+      </div>
+
+      <div class="col-xs-6 col-sm-6 col-md-6">
+        <!-- GOOGLE PLUS SIGN IN-->
+        <div class="gconnect">
+          <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+          <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+          <div id="signInButton">
+            <span class="g-signin"
+            data-scope="openid email"
+            data-clientid="{{ client_id }}"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback"
+            data-approvalprompt="force">
+            </span>
+          </div>
+        </div>
+      <!--END GOOGLE PLUS SIGN IN -->
+      </div> <!-- / .col-xs-6.col-sm-6.col-md-6 -->
+    </div> <!-- / .row -->
+    <!-- / Facebook and Google Sign In Buttons -->
+
+  </div>
+
+
+
+
+
+  <!-- Sign Up Page -->
+  <div style="display: none;" id="form-olvidado2">
+    <h4 class="">
+      Welcome!
+    </h4>
+
+    <form accept-charset="UTF-8" role="form" id="login-recordar" method="post">
+      <fieldset>
+        <span class="help-block">
+          Signup page
+          <br>
+          Please sign up and start!
+        </span>
+        <div class="form-group input-group">
+          <span class="input-group-addon">
+            @
+          </span>
+          <input class="form-control" placeholder="Email" name="email" type="email" required="">
+        </div>
+
+        <div class="form-group input-group">
+          <span class="input-group-addon">
+            <i class="glyphicon glyphicon-lock">
+            </i>
+          </span>
+          <input class="form-control" placeholder="Password" name="password_new" type="password" required="">
+        </div>
+        <div class="form-group input-group">
+          <span class="input-group-addon">
+            <i class="glyphicon glyphicon-lock">
+            </i>
+          </span>
+          <input class="form-control" placeholder="Repeat Password" name="password_new_2" type="password" required="">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="btn-olvidado">
+          Continue
+        </button>
+        <p class="help-block">
+          <a class="text-muted" href="#" id="acceso2"><small>Account Access</small></a>
+        </p>
+      </fieldset>
+    </form>
+
+  </div>
+  <!-- / Sign Up Page -->
+
+</div> <!-- / .columns -->
+</div> <!-- / .row -->
+</div> <!-- / .container -->
+
+
+
+
+
+
+
+
+<!-- <div class="btn-group">
   <button class="btn btn-primary" ng-init="show_signin = true" ng-click="show_signin = true">Sign In</button>
   <button class="btn btn-primary" ng-click="show_signin = false">Register</button>
-</div>
+</div> -->
 
+
+<!-- OLD FORM -->
 
 <!-- USER SIGN IN-->
-<section class="login-signin"  ng-if="show_signin">
+<!-- <section class="login-signin"  ng-if="show_signin">
+  
   <iframe src="sink.html" name="sink" style="display:none"></iframe>
+  
   <form name="loginForm" action="sink.html" target="sink" method="post" ng-submit="login(credentials)" novalidate form-autofill-fix>
     <label for="username">Username:</label>
     <input type="text" id="username" ng-model="credentials.username" required>
     <label for="password">Password:</label>
     <input type="password" id="password" ng-model="credentials.password" required>
-    <button type="submit">Login</button>
+    <button class="btn btn-success btn-block" type="submit">Login</button>
   </form>
-</section>
+
+</section> -->
 <!-- END USER SIGN IN-->
 
 
 <!-- USER REGISTER-->
-<section class="login-register" ng-if="!show_signin">
+<!-- <section class="login-register" ng-if="!show_signin">
   <iframe src="sink.html" name="sink" style="display:none"></iframe>
   <form name="loginForm" action="sink.html" target="sink" method="post" ng-submit="register(credentials)" novalidate form-autofill-fix>
     <label for="newusername">Username:</label>
@@ -30,24 +224,5 @@
     <input type="password" id="newpassword" ng-model="credentials.password" required>
     <button type="submit">Login</button>
   </form>
-</section>
-<!-- END USER REGISTER-->
-
-
-<!-- GOOGLE PLUS SIGN IN-->
-<div class="gconnect">
-  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
-	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
-  <div id="signInButton">
-  <span class="g-signin"
-        data-scope="openid email"
-        data-clientid="{{ client_id }}"
-        data-redirecturi="postmessage"
-        data-accesstype="offline"
-        data-cookiepolicy="single_host_origin"
-        data-callback="signInCallback"
-        data-approvalprompt="force">
-  </span>
-  </div>
-</div>
-<!--END GOOGLE PLUS SIGN IN -->
+</section> -->
+<!-- END USER REGISTER
