@@ -42,7 +42,7 @@
       <li role="presentation"><a href="item/create">Create Item</a></li>
       <li role="presentation">
         <a ng-if="!currentUser.username" type="button" href="login" class="btn btn-block btn-success ng-cloak">Login or Register</a>
-        <button ng-if="currentUser.username" type="button" ng-click="logout()" class="btn btn-block ng-cloak">Log Out</button>
+        <a ng-if="currentUser.username" type="button" ng-click="logout()" class="btn btn-success btn-block ng-cloak">Log Out</a>
       </li>
     </ul>
   </nav>
