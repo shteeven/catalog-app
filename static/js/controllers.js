@@ -12,40 +12,102 @@ var app = angular.module('catalog');
 
     $scope.menu_toggled = false; // initialize toggle
 
+    $scope.menuToggle = function() { $scope.menu_toggled = !$scope.menu_toggled; };
+
+    // USER Authentication
     $scope.currentUser = AuthService.getUserData();
 
     $scope.$watch('currentUser', function(newValue) { $scope.currentUser = newValue; });
-
-    $scope.menuToggle = function() { $scope.menu_toggled = !$scope.menu_toggled; };
 
     $scope.logout = function() { AuthService.logout(); }
 
   }]);
 
-  app.controller('CreateEditCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {}]);
+  // Primary page for non-logged users
+  app.controller('LandingCtrl', ['$scope', function($scope) {}]);
 
-  app.controller('LandingCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+  // Primary page for logged in users
+  app.controller('CatalogCtrl', ['$scope', function($scope) {}]);
 
-  app.controller('CatalogCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+  app.controller('CategoryCtrl', ['$scope', 'Catalog', function($scope, Catalog) {
+    var entry = Catalog.get({ id: $scope.id }, function() {
+      console.log(entry);
+    }); // get() returns a single entry
 
-  app.controller('CategoryCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+    var entries = Catalog.query(function() {
+      console.log(entries);
+    }); //query() returns all the entries
 
-  app.controller('ItemsCtrl', ['$scope', '$log', '$http', function($scope, $log, $http) {}]);
+    $scope.entry = new Catalog(); //You can instantiate resource class
+
+    $scope.entry.data = 'some data';
+
+    Catalog.save($scope.entry, function() {
+      //data saved. do something here.
+    }); //saves an entry. Assuming $scope.entry is the Entry object
+  }]);
+
+  app.controller('CategoryCreateCtrl', ['$scope', 'Catalog', function($scope, Catalog) {
+    var entry = Catalog.get({ id: $scope.id }, function() {
+      console.log(entry);
+    }); // get() returns a single entry
+
+    var entries = Catalog.query(function() {
+      console.log(entries);
+    }); //query() returns all the entries
+
+    $scope.entry = new Catalog(); //You can instantiate resource class
+
+    $scope.entry.data = 'some data';
+
+    Catalog.save($scope.entry, function() {
+      //data saved. do something here.
+    }); //saves an entry. Assuming $scope.entry is the Entry object
+  }]);
+
+  app.controller('CategoryEditCtrl', ['$scope', 'Catalog', function($scope, Catalog) {
+    var entry = Catalog.get({ id: $scope.id }, function() {
+      console.log(entry);
+    }); // get() returns a single entry
+
+    var entries = Catalog.query(function() {
+      console.log(entries);
+    }); //query() returns all the entries
+
+    $scope.entry = new Catalog(); //You can instantiate resource class
+
+    $scope.entry.data = 'some data';
+
+    Catalog.save($scope.entry, function() {
+      //data saved. do something here.
+    }); //saves an entry. Assuming $scope.entry is the Entry object
+  }]);
+
+  app.controller('ItemCtrl', ['$scope', function($scope) {}]);
+
+  app.controller('ItemCreateCtrl', ['$scope', function($scope) {}]);
+
+  app.controller('ItemEditCtrl', ['$scope', function($scope) {}]);
 
   app.controller('LoginCtrl', ['$scope', '$window', '$location', 'AuthService', function ($scope, $window, $location, AuthService) {
 
     $scope.credentials = { email: '', username: '', password: ''};
 
     $scope.register = function (credentials) { AuthService.register(credentials)
-      .then(function () { $scope.credentials = {} }, function (err) { console.log(err) });};
-
-    $scope.login = function (credentials) { AuthService.login(credentials)
-      .then(function (data) { $scope.credentials = {}; }, function (err) { console.log(err) });};
-
-    $window.signInCallback = function(authResult) { AuthService.gSignin(authResult);
-    console.log('why');
+      .then(function () { $scope.credentials = {} }, function (err) { console.log(err) });
     };
 
+    $scope.login = function (credentials) { AuthService.login(credentials)
+      .then(function (data) { $scope.credentials = {}; }, function (err) { console.log(err) });
+    };
+
+    $window.signInCallback = function(authResult) { AuthService.gSignin(authResult) };
+
   }]);
+
+  app.controller('CreateEditCtrl', ['$scope', '$routeParams', function($scope, $routeParams) {}]);
+
+  app.controller('TestCtrl', ['$scope', function($scope) {}]);
+
 
 }());

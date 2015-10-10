@@ -53,14 +53,144 @@ def loginForm():
 	login_session['_csrf_token'] = state
 	return render_template("login-form.html", client_id=CLIENT_ID)
 
-# return all categories to any request, TODO: optional limit
-@app.route('/api/allcategories')
-def getAllCategories():
-	categories = session.query(Category).order_by(Category.timestamp).all()
-	return jsonify(Categories=[r.serialize for r in categories])
+# CRUD operations for categories (complete)
+@app.route('/api/category', methods=['GET', 'POST'])
+@app.route('/api/category/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def categoryAPI(id=''):
+	# return categories
+	if request.method == 'GET' and id == '':
+		categories = session.query(Category).order_by(Category.timestamp).all()
+		return jsonify(Category=[r.serialize for r in categories])
+	elif request.method == 'GET':
+		category = session.query(Category).filter_by(id=id).one()
+		return jsonify(Category=[category.serialize])
+
+	if 'username' in login_session:
+
+		# CREATE a CATEGORY, requires login
+		if request.method == 'POST':
+			if validateExists(request.form['name']):
+				valid, img_url, msg = validateImageUrl(request.form['img_url'])
+				# Save new category.
+				if valid == 200:
+					newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
+					session.add(newCategory)
+					session.commit()
+				else:
+					return jsonify('message', msg), valid
+			else:
+				return jsonify('message', 'You must enter a name.'), 422
+		else:
+			abort(401)
+		# END CREATE
+
+		# get category for PUT or DELETE, user_id, must match that of category.user_id for PUT or DELETE
+		category = session.query(Category).filter_by(id=id).one()
+		if category is None:
+			return jsonify('message', 'Category not found.'), 404
+		if category.user_id != login_session['user_id']:
+			jsonify('message', 'You are not the creator.'), 401
+
+
+		# EDIT a CATEGORY, requires login and user_id match
+		if request.method == 'PUT':
+			if validateExists(request.form['name']):
+				valid, img_url, msg = validateImageUrl(request.form['img_url'])
+				# Save edited category.
+				if valid == 200:
+					editCategory = Category(name=request.form['name'], img_url=img_url)
+					session.add(editCategory)
+					session.commit()
+				else:
+					return jsonify('message', msg), valid
+			else:
+				return jsonify('message', 'You must enter a name.'), 422
+		# END EDIT
+
+		# DELETE a CATEGORY, requires category id and signed user_id to match category.user_id
+		if request.method == 'DELETE':
+			session.delete(category)
+			session.commit()
+		# END DELETE
+
+	# Request that require login, but user is not loggedin
+	else:
+		redirect('/login')
+
+
+# CRUD operations for items (complete)
+@app.route('/api/item', methods=['GET', 'POST'])
+@app.route('/api/item/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def itemAPI(id=''):
+	# return items
+	if request.method == 'GET' and id == '':
+		items = session.query(Item).order_by(Item.timestamp).all()
+		return jsonify(Item=[r.serialize for r in items])
+	elif request.method == 'GET':
+		item = session.query(Item).filter_by(id=id).one()
+		return jsonify(Item=[item.serialize])
+
+	if 'username' in login_session:
+		# verify that the user owns the category in which they are creating an item
+		if request.method != 'DELETE':
+			category = session.query(Category).filter_by(id=request.form['category_id']).one()
+			if category.user_id != login_session['user_id']:
+				return jsonify('message', 'You do not own the category for which this item is to be created.'), 401
+
+		# CREATE an ITEM, requires login
+		if request.method == 'POST':
+			if validateExists(request.form['name']) and validateExists(request.form['category_id']):
+				valid, img_url, msg = validateImageUrl(request.form['img_url'])
+				# Save new item.
+				if valid == 200:
+					new_item = Item(name=request.form['name'], description=request.form['description'],
+					     img_url=request.form['img_url'], category_id=request.form['category_id'], user_id=login_session['user_id'])
+					session.add(new_item)
+					session.commit()
+				else:
+					return jsonify('message', msg), valid
+			else:
+				return jsonify('message', 'You must enter a name.'), 422
+		else:
+			abort(401)
+		# END CREATE
+
+		# get item for PUT or DELETE, user_id, must match that of category.user_id for PUT or DELETE
+		item = session.query(Item).filter_by(id=id).one()
+		if item is None:
+			return jsonify('message', 'Item not found.'), 404
+		if item.user_id != login_session['user_id']:
+			jsonify('message', 'You are not the creator.'), 401
+
+		# EDIT an ITEM, requires login and user_id match
+		if request.method == 'PUT':
+			if validateExists(request.form['name']) and validateExists(request.form['category_id']):
+				valid, img_url, msg = validateImageUrl(request.form['img_url'])
+				# Save new item.
+				if valid == 200:
+					edit_item = item(name=request.form['name'], description=request.form['description'],
+					     img_url=request.form['img_url'], category_id=request.form['category_id'])
+					session.add(edit_item)
+					session.commit()
+				else:
+					return jsonify('message', msg), valid
+			else:
+				return jsonify('message', 'You must enter a name.'), 422
+		# END EDIT
+
+		# DELETE an ITEM, requires item id and user_id match
+		if request.method == 'DELETE':
+			session.delete(item)
+			session.commit()
+		# END DELETE
+
+	# Request that require login, but user is not loggedin
+	else:
+		redirect('/login')
+
 
 # return all items to any request TODO: optional limit
-@app.route('/api/allitems')
+@app.route('/api/item')
 def getAllItems():
 	items = session.query(Item).order_by(Item.timestamp).all()
 	return jsonify(items=[r.serialize for r in items])
@@ -72,76 +202,75 @@ def getAllItems():
 
 # CREATE a CATEGORY, requires login  (COMPLETE)
 # requires user_id
-@app.route('/api/createcategory', methods=['POST'])
-def createCategory():
-	if 'username' not in login_session:
-		abort(401)
-	if validateExists(request.form['name']):
-		valid, img_url, msg = validateImageUrl(request.form['img_url'])
-		# Save new category.
-		if valid == 200:
-			newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
-			session.add(newCategory)
-			session.commit()
-		else:
-			return jsonify('message', msg), valid
-	else:
-		return jsonify('message', 'You must enter a name.'), 422
-
-
-# CREATE an ITEM, requires login and category ownership TODO:
-# requires user_id and cat_id
-@app.route('/api/createitem', methods=['POST'])
-def createItem():
-	if 'username' not in login_session:
-		abort(401)
-	if validateExists(request.form['name']):
-		valid, img_url, msg = validateImageUrl(request.form['img_url'])
-		# Save new category.
-		if valid == 200:
-			newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
-			session.add(newCategory)
-			session.commit()
-		else:
-			return jsonify('message', msg), valid
-	else:
-		return jsonify('message', 'You must enter a name.'), 422
-
-# EDIT a CATEGORY, requires login and category ownership TODO
-# requires user_id and cat_id
-@app.route('/api/editcategory', methods=['POST'])
-def editCategory():
-	if 'username' not in login_session:
-		abort(401)
-	if validateExists(request.form['name']):
-		valid, img_url, msg = validateImageUrl(request.form['img_url'])
-		# Save new category.
-		if valid == 200:
-			newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
-			session.add(newCategory)
-			session.commit()
-		else:
-			return jsonify('message', msg), valid
-	else:
-		return jsonify('message', 'You must enter a name.'), 422
-
-# EDIT an ITEM, requires login and item ownership TODO
-# requires user_id, cat_id, and item_id
-@app.route('/api/edititem', methods=['POST'])
-def editItem():
-	if 'username' not in login_session:
-		abort(401)
-	if validateExists(request.form['name']):
-		valid, img_url, msg = validateImageUrl(request.form['img_url'])
-		# Save new category.
-		if valid == 200:
-			newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
-			session.add(newCategory)
-			session.commit()
-		else:
-			return jsonify('message', msg), valid
-	else:
-		return jsonify('message', 'You must enter a name.'), 422
+# @app.route('/api/createcategory', methods=['POST'])
+# def createCategory():
+#
+# 	if validateExists(request.form['name']):
+# 		valid, img_url, msg = validateImageUrl(request.form['img_url'])
+# 		# Save new category.
+# 		if valid == 200:
+# 			newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
+# 			session.add(newCategory)
+# 			session.commit()
+# 		else:
+# 			return jsonify('message', msg), valid
+# 	else:
+# 		return jsonify('message', 'You must enter a name.'), 422
+#
+#
+# # CREATE an ITEM, requires login and category ownership TODO:
+# # requires user_id and cat_id
+# @app.route('/api/createitem', methods=['POST'])
+# def createItem():
+# 	if 'username' not in login_session:
+# 		abort(401)
+# 	if validateExists(request.form['name']):
+# 		valid, img_url, msg = validateImageUrl(request.form['img_url'])
+# 		# Save new category.
+# 		if valid == 200:
+# 			newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
+# 			session.add(newCategory)
+# 			session.commit()
+# 		else:
+# 			return jsonify('message', msg), valid
+# 	else:
+# 		return jsonify('message', 'You must enter a name.'), 422
+#
+# # EDIT a CATEGORY, requires login and category ownership TODO
+# # requires user_id and cat_id
+# @app.route('/api/editcategory', methods=['POST'])
+# def editCategory():
+# 	if 'username' not in login_session:
+# 		abort(401)
+# 	if validateExists(request.form['name']):
+# 		valid, img_url, msg = validateImageUrl(request.form['img_url'])
+# 		# Save new category.
+# 		if valid == 200:
+# 			newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
+# 			session.add(newCategory)
+# 			session.commit()
+# 		else:
+# 			return jsonify('message', msg), valid
+# 	else:
+# 		return jsonify('message', 'You must enter a name.'), 422
+#
+# # EDIT an ITEM, requires login and item ownership TODO
+# # requires user_id, cat_id, and item_id
+# @app.route('/api/edititem', methods=['POST'])
+# def editItem():
+# 	if 'username' not in login_session:
+# 		abort(401)
+# 	if validateExists(request.form['name']):
+# 		valid, img_url, msg = validateImageUrl(request.form['img_url'])
+# 		# Save new category.
+# 		if valid == 200:
+# 			newCategory = Category(name=request.form['name'], img_url=img_url, user_id=login_session['user_id'])
+# 			session.add(newCategory)
+# 			session.commit()
+# 		else:
+# 			return jsonify('message', msg), valid
+# 	else:
+# 		return jsonify('message', 'You must enter a name.'), 422
 
 
 

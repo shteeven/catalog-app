@@ -8,7 +8,10 @@
     'use strict';
   var app = angular.module('catalog');
 
-  app.factory('AuthService', function ($http, $window, $cookies) {
+  //////////////////
+  //AUTHENTICATION//
+  //////////////////
+  app.factory('AuthService', function ($http, $cookies, $state) {
     var authService = {};
 
     authService.currentUser = {};
@@ -24,12 +27,9 @@
         .success(function (data, status, headers, config) {
           $cookies.put('loggedin', 'true');
           authService.setUserData();
-          return data;
+          $state.go('home');
         })
         .error(function (data, status, headers, config) {
-          // Erase the token if the user fails to log in
-          delete $window.sessionStorage.token;
-
           // Handle login errors here
           console.log(data);
         });
@@ -46,12 +46,9 @@
         .success(function (data, status, headers, config) {
           $cookies.put('loggedin', 'true');
           authService.setUserData();
-          return data;
+          $state.go('home');
         })
         .error(function (data, status, headers, config) {
-          // Erase the token if the user fails to log in
-          delete $window.sessionStorage.token;
-
           // Handle login errors here
           console.log(data);
         });
@@ -69,9 +66,9 @@
         .success(function () {
           $cookies.put('loggedin', 'true');
           authService.setUserData();
+          $state.go('home');
         })
         .error(function (data, status, headers, config) {
-          //$cookies.put('loggedin', ''); // Erase the token if the user fails to log in
           console.log(data); // Handle login errors here
         });
     };
@@ -84,6 +81,7 @@
           $cookies.remove('user');
           $cookies.remove('userInfo');
           authService.currentUser = angular.copy({}, authService.currentUser);
+          $state.go('landing');
         })
         .error(function (err) {
           console.log(err);
@@ -98,6 +96,7 @@
           authService.currentUser = angular.copy(data, authService.currentUser);
         })
         .error(function (err) {
+          $cookies.put('loggedin', '');
           console.log(err);
         });
     };
@@ -109,20 +108,27 @@
     return authService;
   });
 
-  app.factory('CategoryService', function ($http) {
-    var categoryService = {};
-
-
-    categoryService.getAllCategories = function () {
-      return $http
-        .get('/api/allcategories')
-        .success(function (data, status, headers, config) {
-
-        })
-        .error(function (err) { console.log(err) });
-    };
-
+  //////////////////
+  ///RESOURCES//////
+  //////////////////
+  app.factory('Category', function($resource) {
+    return $resource('/api/category/:id', {id: '@id'}, {
+        update: {
+          method: 'PUT' // this method issues a PUT request
+        }
+      }, {
+        stripTrailingSlashes: false
+      });
   });
 
+  app.factory('Item', function ($resource) {
+    return $resource('/api/category/:id', {id: '@id'}, {
+      update: {
+        method: 'PUT' // this method issues a PUT request
+      }
+    }, {
+      stripTrailingSlashes: false
+    });
+  });
 
 }());
