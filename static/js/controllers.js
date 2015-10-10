@@ -86,6 +86,12 @@ var app = angular.module('catalog');
 
     $scope.credentials = { email: '', username: '', password: ''};
 
+    $scope.show_signin = true;
+
+    $scope.toggleSignin = function (val) {
+      $scope.show_signin = val;
+    };
+
     $scope.register = function (credentials) { AuthService.register(credentials)
       .then(function () { $scope.credentials = {} }, function (err) { console.log(err) });
     };
