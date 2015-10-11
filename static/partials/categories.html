@@ -3,52 +3,44 @@
 <!-- Only Categories of the signed in user should show CRUD ops -->
 <!-- Only SIGNED IN users should see the ADD button -->
 
-<div class="container-fluid">
+<div class="container-fluid ng-cloak">
 			
 	<div class="row" ng-repeat="category in categories"> <!-- Angular should repeat this entire section? -->
 		
-		<div class="col-md-10 col-md-offset-1">
+		<div class="col-xs-12 col-md-10 col-md-offset-1">
 
 			<div class="container-fluid">
 				
 				<div class="row"> <!-- Angular should repeat this block -->
 						
 					<!-- Image thumbnail -->
-					<div class="col-xs-2">
+					<div class="col-xs-3 col-md-2">
 						<img class="img-thumb" ng-src="[[ category.img_url ]]" alt="[[ category.name ]] image.">
 					</div>
 
 					<!-- Category Title -->
-					<div class="col-xs-2">
+					<div class="col-xs-6 col-md-8">
 						<h3 class="title">[[ category.name ]]</h3>
 					</div>
 
-					<!--&lt;!&ndash; Category Description &ndash;&gt;-->
-					<!--<div class="col-xs-6">-->
-						<!--<p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi dolorum ad eaque vel adipisci iusto doloremque fugiat autem libero aspernatur. Culpa blanditiis, ipsam cupiditate eaque.</p>-->
-					<!--</div>-->
-					gg[[ currentUser.id ]]
-          hh[[ category.user_id ]]
-          jj[[currentUser.id != category.user_id]]
 					<!-- CRUD -->
-					<div class="col-xs-2">
+					<div class="col-xs-3 col-md-2 crud">
             <div ng-show="currentUser.id === category.user_id">
-              <div ng-hide="deletion_confirmation">
-                <!-- Edit button -->
-                <button type="button" ui-sref="editCategory({id:category.id})" class="btn btn-success btn-block">Edit</button>
-                <!-- Delete button -->
-                <button type="button" ng-click="deleteCategory(category)" class="btn btn-danger btn-block">Delete Catalog</button>
-              </div>
-              <div ng-hide="!deletion_confirmation">
-                <!-- Edit button -->
-						    <button type="button" class="btn btn-success btn-block">Edit Catalog</button>
-						    <!-- Delete button -->
-						    <button type="button" class="btn btn-danger btn-block">Delete Catalog</button>
-              </div>
+              <!-- Edit button -->
+              <button type="button" ui-sref="editCategory({id:category.id})" class="btn btn-success">
+								<span class="glyphicon glyphicon-pencil"></span>
+              </button>
+              <!-- Delete button -->
+              <button type="button" ng-click="open(category)" class="btn btn-danger">
+								<span class="glyphicon glyphicon-trash"></span>
+              </button>
             </div>
 
-            <div ng-hide="user.id == item.user_id">
-              <p>Date Created: January 17, 1707</p>
+            <div ng-hide="currentUser.id === category.user_id">
+              <p>
+                Date Created: [[ category.created[0] ]]-[[ category.created[1] ]]-[[ category.created[2] ]]
+                @ [[ category.created[3] ]]:[[ category.created[4] ]]
+              </p>
             </div>
 					</div>
 
@@ -59,5 +51,4 @@
 		</div> <!-- / .col-md-10.col-md-offset-1 -->
 	
 	</div> <!-- / .row -->
-
-</div> <!-- / .container-fluid -->
+</div>

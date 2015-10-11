@@ -8,7 +8,7 @@
   'use strict';
 var app = angular.module('catalog');
 
-  app.controller('MainCtrl', ['$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+  app.controller('MainCtrl', ['$scope', '$window', '$rootScope', 'AuthService', function($scope, $window, $rootScope, AuthService) {
 
     $scope.menu_toggled = false; // initialize toggle
 
@@ -19,31 +19,50 @@ var app = angular.module('catalog');
 
     $scope.$watch('currentUser', function(newValue) { $scope.currentUser = newValue; });
 
-    $scope.logout = function() { AuthService.logout(); }
+    $scope.logout = function() { AuthService.logout(); };
+
 
   }]);
+
 
   // Primary page for non-logged users
   app.controller('LandingCtrl', ['$scope', function($scope) {}]);
 
+
   // Primary page for logged in users
   app.controller('CatalogCtrl', ['$scope', function($scope) {}]);
 
-  app.controller('CategoryCtrl', ['$scope', '$state', '$window', 'Category', function($scope, $state, $window, Category) {
-    $scope.categories = Category.query(function () {
-      console.log($scope.categories);
-      console.log($scope.currentUser);
-    }); //fetch all categories. Issues a GET to /api/categories
 
-    // ADD DELETE FEATURE LATER
-    $scope.deleteCategory = function(category) { // Delete a movie. Issues a DELETE to /api/movies/:id
-      if (popupService.showPopup('Really delete this?')) {
-        movie.$delete(function(resp) {
-          console.log('resp');
-        });
-      }
+  app.controller('CategoryCtrl', ['$scope', 'Category', '$uibModal', function($scope, Category, $uibModal) {
+    $scope.categories = Category.query(function () {}); //fetch all categories. Issues a GET to /api/categories
+
+    $scope.deleteCategory = function(category) {
+      category.$delete(function(resp) {
+        $scope.categories = Category.query(function () {});
+      })
     };
+
+    $scope.open = function (category) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '../static/partials/_confirm_delete.html',
+        controller: 'ModalInstanceCtrl',
+        size: 'sm',
+        resolve: {
+          header: function () { return 'Are you sure?' },
+          body: function () {
+            return 'If you delete this category, all items under it will also be deleted.'
+          }
+        }
+      });
+
+      modalInstance.result.then(function () {
+        $scope.deleteCategory(category);
+      }, function () {});
+    };
+
   }]);
+
 
   app.controller('CategoryCreateCtrl', ['$scope', 'Category', '$state', function($scope, Category, $state) {
     $scope.category = new Category();  //create new Category instance. Properties will be set via ng-model on UI
@@ -62,6 +81,7 @@ var app = angular.module('catalog');
     };
   }]);
 
+
   app.controller('CategoryEditCtrl', ['$scope', 'Category', '$stateParams', '$state', function($scope, Category, $stateParams, $state) {
     $scope.updateCategory = function() { //Update the edited category. Issues a PUT to /api/category/:id
       $scope.category.$update(function() {
@@ -76,11 +96,30 @@ var app = angular.module('catalog');
     $scope.loadCategory(); // Load a movie which can be edited on UI
   }]);
 
-  app.controller('ItemCtrl', ['$scope', 'Item', function($scope, Item) {}]);
+
+  app.controller('ItemCtrl', ['$scope', 'Item', function($scope, Item) {
+    // I open a Confirm-type modal.
+    $scope.confirmSomething = function() {
+      // The .open() method returns a promise that will be either
+      // resolved or rejected when the modal window is closed.
+      var promise = modals.open("confirm", {
+          message: "Are you sure you want to taste that?!"
+        });
+      promise.then(function handleResolve( response ) {
+          console.log( "Confirm resolved." );
+        },
+        function handleReject( error ) {
+          console.warn( "Confirm rejected!" );
+        });
+    };
+  }]);
+
 
   app.controller('ItemCreateCtrl', ['$scope', 'Item', function($scope, Item) {}]);
 
+
   app.controller('ItemEditCtrl', ['$scope', 'Item', function($scope, Item) {}]);
+
 
   app.controller('LoginCtrl', ['$scope', '$window', 'AuthService', function ($scope, $window, AuthService) {
 
@@ -103,5 +142,17 @@ var app = angular.module('catalog');
     $window.signInCallback = function(authResult) { AuthService.gSignin(authResult) };
 
   }]);
+
+
+  app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, header, body) {
+
+    $scope.header = header;
+    $scope.body = body;
+
+    $scope.delete = function () { $modalInstance.close(); };
+
+    $scope.cancel = function () { $modalInstance.dismiss(); };
+  });
+
 
 }());

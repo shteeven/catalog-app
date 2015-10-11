@@ -1,10 +1,11 @@
 /**
  * Created by stevenbarnhurst on 10/1/15.
+ * Modal operations and functions courtesy of Ben Nadel (http://www.bennadel.com/blog/2806-creating-a-simple-modal-system-in-angularjs.htm)
  */
 
 (function () {
   'use strict';
-  var app = angular.module('catalog', ['ui.router', 'ngResource', 'ngCookies']);
+  var app = angular.module('catalog', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngCookies', 'ngMessages']);
 
   app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
@@ -13,6 +14,22 @@
   app.run(['$rootScope', '$cookies', '$state', 'AuthService', function ($rootScope, $cookies, $state, AuthService) {
 
     var isLoggedin = $cookies.get('loggedin');
+
+    ///////////////////////////////////
+    // Handle display of error messages
+    //////////////////////////////////
+    $rootScope.serverRejects = [];
+
+    $rootScope.removeServerReject = function(msg) {
+      var index = $rootScope.serverRejects.indexOf(msg);
+      $rootScope.serverRejects.splice(index, 1);
+    };
+
+    $rootScope.$on('$stateChangeSuccess', function(){
+      $rootScope.serverRejects.splice(0,$rootScope.serverRejects.length)
+    });
+
+
     if (isLoggedin != '') {
       AuthService.setUserData();
     }
@@ -84,47 +101,22 @@
 
     $locationProvider.html5Mode(true);
 
-    //$httpProvider.interceptors.push(function($q, $location) {
-    //    return {
-    //        'responseError': function(response) {
-    //            if(response.status === 401 || response.status === 403) {
-    //                $location.path('/login');
-    //            }
-    //            return $q.reject(response);
-    //        }
-    //    };
-    //});
   });
 
-  //app.constant('AUTH_EVENTS', {
-  //  loginSuccess: 'auth-login-success',
-  //  loginFailed: 'auth-login-failed',
-  //  logoutSuccess: 'auth-logout-success',
-  //  sessionTimeout: 'auth-session-timeout',
-  //  notAuthenticated: 'auth-not-authenticated',
-  //  notAuthorized: 'auth-not-authorized'
-  //});
-  //
-  //app.constant('USER_ROLES', {
-  //  all: '*',
-  //  registered: 'registered',
-  //  guest: 'guest'
-  //});
+  app.config(function ($provide, $httpProvider) {
+    $provide.factory('ErrorInterceptor', function ($q, $rootScope) {
+      return {
+        responseError: function(rejection) {
 
-  //app.run(function ($rootScope, AUTH_EVENTS, AuthService) {
-  //  $rootScope.$on('$stateChangeStart', function (event, next) {
-  //    var authorizedRoles = next.data.authorizedRoles;
-  //    if (!AuthService.isAuthorized(authorizedRoles)) {
-  //      event.preventDefault();
-  //      if (AuthService.isAuthenticated()) {
-  //        // user is not allowed
-  //        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-  //      } else {
-  //        // user is not logged in
-  //        $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-  //      }
-  //    }
-  //  });
-  //});
+          $rootScope.serverRejects.push(rejection.data.message);
+          console.log(rejection);
+
+          return $q.reject(rejection);
+        }
+      };
+    });
+
+    $httpProvider.interceptors.push('ErrorInterceptor');
+  });
 
 }());

@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 import datetime
+import json
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 
@@ -71,7 +72,8 @@ class Category(Base):
 			'name': self.name,
 			'id': self.id,
 			'user_id': self.user_id,
-			'img_url': self.img_url
+			'img_url': self.img_url,
+			'created': list(self.timestamp.timetuple())
 		}
 
 
