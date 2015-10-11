@@ -1,10 +1,11 @@
 /**
  * Created by stevenbarnhurst on 10/1/15.
+ * Modal operations and functions courtesy of Ben Nadel (http://www.bennadel.com/blog/2806-creating-a-simple-modal-system-in-angularjs.htm)
  */
 
 (function () {
   'use strict';
-  var app = angular.module('catalog', ['ui.router', 'ngResource', 'ngCookies']);
+  var app = angular.module('catalog', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngCookies']);
 
   app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');

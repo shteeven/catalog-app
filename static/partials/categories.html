@@ -23,28 +23,13 @@
 						<h3 class="title">[[ category.name ]]</h3>
 					</div>
 
-					<!--&lt;!&ndash; Category Description &ndash;&gt;-->
-					<!--<div class="col-xs-6">-->
-						<!--<p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi dolorum ad eaque vel adipisci iusto doloremque fugiat autem libero aspernatur. Culpa blanditiis, ipsam cupiditate eaque.</p>-->
-					<!--</div>-->
-					gg[[ currentUser.id ]]
-          hh[[ category.user_id ]]
-          jj[[currentUser.id != category.user_id]]
 					<!-- CRUD -->
 					<div class="col-xs-2">
             <div ng-show="currentUser.id === category.user_id">
-              <div ng-hide="deletion_confirmation">
-                <!-- Edit button -->
-                <button type="button" ui-sref="editCategory({id:category.id})" class="btn btn-success btn-block">Edit</button>
-                <!-- Delete button -->
-                <button type="button" ng-click="deleteCategory(category)" class="btn btn-danger btn-block">Delete Catalog</button>
-              </div>
-              <div ng-hide="!deletion_confirmation">
-                <!-- Edit button -->
-						    <button type="button" class="btn btn-success btn-block">Edit Catalog</button>
-						    <!-- Delete button -->
-						    <button type="button" class="btn btn-danger btn-block">Delete Catalog</button>
-              </div>
+              <!-- Edit button -->
+              <button type="button" ui-sref="editCategory({id:category.id})" class="btn btn-success btn-block">Edit</button>
+              <!-- Delete button -->
+              <button type="button" ng-click="open(category)" class="btn btn-danger btn-block">Delete Catalog</button>
             </div>
 
             <div ng-hide="user.id == item.user_id">
@@ -59,5 +44,6 @@
 		</div> <!-- / .col-md-10.col-md-offset-1 -->
 	
 	</div> <!-- / .row -->
-
-</div> <!-- / .container-fluid -->
+</div>
+    <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
+[[selected]]
