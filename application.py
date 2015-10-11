@@ -280,7 +280,7 @@ def gconnect():
 	# see if user exists, if it doesn't make a new one
 	user_id = getUserID(data['email'])
 	if not user_id:
-		user_id = createUser(login_session)
+		user_id = createUser(data)
 
 	# set login_session data
 	user = getUser(user_id)
@@ -430,8 +430,8 @@ def validateImageUrl(img_url):
 
 # register user with oauth
 def createUser(login_session):
-	newUser = User(name=login_session['username'], email=login_session[
-		'email'], picture=login_session['picture'], username=login_session['username'])
+	newUser = User(name=login_session['name'], email=login_session['email'],
+	               picture=login_session['picture'], username=login_session['name'])
 	session.add(newUser)
 	session.commit()
 	user = session.query(User).filter_by(email=login_session['email']).one()

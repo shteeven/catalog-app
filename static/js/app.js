@@ -13,8 +13,6 @@
 
   app.run(['$rootScope', '$cookies', '$state', 'AuthService', function ($rootScope, $cookies, $state, AuthService) {
 
-    var isLoggedin = $cookies.get('loggedin');
-
     ///////////////////////////////////
     // Handle display of error messages
     //////////////////////////////////
@@ -25,10 +23,18 @@
       $rootScope.serverRejects.splice(index, 1);
     };
 
+    $rootScope.addServerReject = function (msg) {
+      $rootScope.serverRejects.push(msg);
+    };
+
     $rootScope.$on('$stateChangeSuccess', function(){
       $rootScope.serverRejects.splice(0,$rootScope.serverRejects.length)
     });
 
+    ///////////////////////////////////
+    // Handle login
+    //////////////////////////////////
+    var isLoggedin = $cookies.get('loggedin');
 
     if (isLoggedin != '') {
       AuthService.setUserData();
@@ -41,6 +47,18 @@
         $state.go('home')
       }
     }
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+      if (toState.name === 'login' && isLoggedin != '') {
+        event.preventDefault();
+        $state.go('home')
+      }
+      var restricted = ['editCategory', 'createCategory', 'editItem', 'createItem'];
+      if (restricted.indexOf(toState.name) != -1 && isLoggedin === '') {
+        event.preventDefault();
+        $state.go('login')
+      }
+    });
 
   }]);
 

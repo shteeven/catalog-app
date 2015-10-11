@@ -121,6 +121,18 @@
       });
   });
 
+  //app.factory('EditCategory', function(Category, AuthService) {
+  //  var editCategory = {};
+  //
+  //  console.log(AuthService.getUserData());
+  //
+  //  editCategory.resolveCategory = function(id) {
+  //    Category.get({ id: id }).then(function())
+  //  };
+  //
+  //});
+
+
   app.factory('Item', function ($resource) {
     return $resource('/api/category/:id', {id: '@id'}, {
       update: {

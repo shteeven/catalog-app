@@ -73,10 +73,7 @@ var app = angular.module('catalog');
       }, function(err) {
         if (err.status === 401) {
           $state.go('login');
-        } else {
-          console.log('we should add messages on the rootscope to alert the user of the error.')
         }
-
       });
     };
   }]);
@@ -123,6 +120,8 @@ var app = angular.module('catalog');
 
   app.controller('LoginCtrl', ['$scope', '$window', 'AuthService', function ($scope, $window, AuthService) {
 
+    var only_once = 0;
+
     $scope.credentials = { email: '', username: '', password: ''};
 
     $scope.show_signin = true;
@@ -139,7 +138,13 @@ var app = angular.module('catalog');
       .then(function (data) { $scope.credentials = {}; }, function (err) { console.log(err) });
     };
 
-    $window.signInCallback = function(authResult) { AuthService.gSignin(authResult) };
+    $window.signInCallback = function(authResult) {
+      //hack to stop google from firing callback twice at once
+      if (only_once === 0) {
+        only_once = 1;
+        AuthService.gSignin(authResult)
+      }
+    };
 
   }]);
 
