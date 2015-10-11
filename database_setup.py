@@ -98,7 +98,7 @@ class Item(Base):
 			'description': self.description,
 			'id': self.id,
 			'category_id': self.category_id,
-			'user': self.user_id,
+			'user_id': self.user_id,
 			'timestamp': datetimeformat(self.timestamp),
 			'img_url': self.img_url
 		}
