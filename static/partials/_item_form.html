@@ -16,8 +16,18 @@
     <input type="text" ng-model="item.img_url" class="form-control" id="img_url" placeholder="URL here or leave blank."/>
   </div>
 </div>
+<!-- Select Field -->
 <div class="form-group">
-  <label for="category" class="col-sm-2 control-label"> Item Category</label>
+  <label for="selectField" class="col-sm-2 control-label">Item Category</label>
+  <div class="col-sm-10">
+    <select name="selectField" id="selectField" class="form-control" ng-model="item.category_id">
+      <option value="">---Please select---</option> <!-- not selected / blank option -->
+      <option ng-repeat="category in categories" value="[[ category.id ]]">[[ category.name ]]</option>
+    </select>
+  </div>
+</div>
+<div class="form-group">
+  <label for="category" class="col-sm-2 control-label"> </label>
   <div class="col-sm-10">
     <input type="text" ng-model="item.category_id" class="form-control" id="category" placeholder="Item Category"/>
   </div>
@@ -27,64 +37,3 @@
     <input type="submit" class="btn btn-primary" value="Save"/>
   </div>
 </div>
-
-
-	<!--<div class="container-fluid">-->
-
-		<!--<div class="row">-->
-
-			<!--<div class="col-sm-6 col-sm-offset-3">-->
-
-				<!--<form action="" class="form-horizontal">-->
-					<!--&lt;!&ndash; Category/Item Title &ndash;&gt;-->
-					<!--<div class="form-group">-->
-						<!--<label for="title" class="col-sm-2 control-label">Title</label>-->
-						<!--<div class="col-sm-10">-->
-							<!--<input type="text" class="form-control" id="title">-->
-						<!--</div>-->
-					<!--</div>-->
-
-					<!--&lt;!&ndash; Category/Item Description &ndash;&gt;-->
-					<!--<div class="form-group">-->
-						<!--<label for="description" class="col-sm-2 control-label">Description</label>-->
-						<!--<div class="col-sm-10">-->
-							<!--<textarea name="description" id="description" rows="3" class="form-control"></textarea>-->
-						<!--</div>-->
-					<!--</div>-->
-
-					<!--&lt;!&ndash; Image URL &ndash;&gt;-->
-					<!--<div class="form-group">-->
-						<!--<label for="imgURL" class="col-sm-2 control-label">Image URL</label>-->
-						<!--<div class="col-sm-10">-->
-							<!--<input type="text" class="form-control" id="imgURL">-->
-						<!--</div>-->
-					<!--</div>-->
-
-					<!--&lt;!&ndash; Select Field &ndash;&gt;-->
-					<!--<div class="form-group">-->
-						<!--<label for="selectField" class="col-sm-2 control-label">Select Field</label>-->
-						<!--<div class="col-sm-10">-->
-							<!--<select name="selectField" class="form-control" id="selectField">-->
-								<!--<option value="1">Some</option>-->
-								<!--<option value="2">Options</option>-->
-								<!--<option value="3">Go</option>-->
-								<!--<option value="4">Here</option>-->
-							<!--</select>-->
-						<!--</div>-->
-					<!--</div>-->
-
-					<!--&lt;!&ndash; Confirm and Cancel &ndash;&gt;-->
-					<!--<div class="form-group">-->
-						<!--<div class="col-sm-4 col-sm-offset-4">-->
-							<!--<button class="btn btn-primary btn-block" type="submit">Submit</button>-->
-							<!--<button class="btn btn-danger btn-block" type="button">Cancel</button>-->
-						<!--</div>-->
-					<!--</div>-->
-
-				<!--</form>-->
-
-			<!--</div>-->
-
-		<!--</div>-->
-
-	<!--</div>-->

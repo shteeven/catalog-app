@@ -58,6 +58,10 @@ def loginForm():
 @app.route('/api/category/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def categoryAPI(id=''):
 	# return categories
+	if request.method == 'GET' and 'user_id' in request.args:
+		categories = session.query(Category).filter_by(user_id=request.args['user_id']).order_by(Category.timestamp).all()
+		return json.dumps([r.serialize for r in categories])
+
 	if request.method == 'GET' and id == '':
 		categories = session.query(Category).order_by(Category.timestamp).all()
 		return json.dumps([r.serialize for r in categories])
@@ -72,7 +76,7 @@ def categoryAPI(id=''):
 				img_url = ''
 			else:
 				img_url = request.json['img_url']
-			if validateExists(request.json['name']):
+			if 'name' in request.json and validateExists(request.json['name']):
 				valid, img_url, msg = validateImageUrl(img_url)
 				# Save new category.
 				if valid == 200:
@@ -82,7 +86,6 @@ def categoryAPI(id=''):
 
 					return jsonify(message='Category created.'), 201
 				else:
-					print(valid)
 					return jsonify(message=msg), valid
 			else:
 				return jsonify(message='You must enter a name.'), 422
@@ -93,13 +96,11 @@ def categoryAPI(id=''):
 		if category is None:
 			return jsonify(message='Category not found.'), 404
 		if category.user_id != login_session['user_id']:
-			print('here')
 			jsonify(message='You are not the creator.'), 401
-
 
 		# EDIT a CATEGORY, requires login and user_id match
 		if request.method == 'PUT':
-			if validateExists(request.json['name']):
+			if 'name' in request.json and validateExists(request.json['name']):
 				if 'img_url' not in request.json:
 					img_url = ''
 				else:
@@ -131,16 +132,16 @@ def categoryAPI(id=''):
 
 
 # CRUD operations for items (complete)
-@app.route('/api/item', methods=['GET', 'POST'])
+@app.route('/api/item/', methods=['GET', 'POST'])
 @app.route('/api/item/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def itemAPI(id=''):
 	# return items
 	if request.method == 'GET' and id == '':
 		items = session.query(Item).order_by(Item.timestamp).all()
-		return jsonify(Item=[r.serialize for r in items])
+		return json.dumps([r.serialize for r in items])
 	elif request.method == 'GET':
 		item = session.query(Item).filter_by(id=id).one()
-		return jsonify(Item=[item.serialize])
+		return json.dumps(item.serialize)
 
 	if 'username' in login_session:
 		# verify that the user owns the category in which they are creating an item
@@ -151,18 +152,25 @@ def itemAPI(id=''):
 
 		# CREATE an ITEM, requires login
 		if request.method == 'POST':
-			if validateExists(request.json['name']) and validateExists(request.json['category_id']):
-				if 'img_url' not in request.json:
-					img_url = ''
-				else:
-					img_url = request.json['img_url']
+			if 'img_url' not in request.json:
+				img_url = ''
+			else:
+				img_url = request.json['img_url']
+			if 'name' in request.json and validateExists(request.json['name']) and 'category_id' in request.json and validateExists(request.json['category_id']):
 				valid, img_url, msg = validateImageUrl(img_url)
 				# Save new item.
 				if valid == 200:
-					new_item = Item(name=request.json['name'], description=request.json['description'],
+
+					if 'description' not in request.json:
+						description = ''
+					else:
+						description = request.json['description']
+					print(img_url)
+					new_item = Item(name=request.json['name'], description=description,
 					     img_url=img_url, category_id=request.json['category_id'], user_id=login_session['user_id'])
 					session.add(new_item)
 					session.commit()
+					return jsonify(message='Item created.'), 201
 				else:
 					return jsonify(message=msg), valid
 			else:
@@ -180,18 +188,21 @@ def itemAPI(id=''):
 
 		# EDIT an ITEM, requires login and user_id match
 		if request.method == 'PUT':
-			if validateExists(request.json['name']) and validateExists(request.json['category_id']):
+			if 'name' in request.json and validateExists(request.json['name']) and 'category_id' in request.json and validateExists(request.json['category_id']):
 				if 'img_url' not in request.json:
 					img_url = ''
 				else:
 					img_url = request.json['img_url']
 				valid, img_url, msg = validateImageUrl(img_url)
-				# Save new item.
+				# Save edited item.
 				if valid == 200:
-					edit_item = item(name=request.json['name'], description=request.json['description'],
-					     img_url=img_url, category_id=request.json['category_id'])
-					session.add(edit_item)
+					item.name = request.json['name']
+					item.description = request.json['description']
+					item.img_url = img_url
+					item.category_id = request.json['category_id']
+					session.add(item)
 					session.commit()
+					return jsonify(message='Item updated.'), 202
 				else:
 					return jsonify(message=msg), valid
 			else:
@@ -202,18 +213,12 @@ def itemAPI(id=''):
 		if request.method == 'DELETE':
 			session.delete(item)
 			session.commit()
+			return jsonify(message='Category deleted.'), 204
 		# END DELETE
 
 	# Request that require login, but user is not loggedin
 	else:
-		redirect('/login')
-
-
-# return all items to any request TODO: optional limit
-@app.route('/api/item')
-def getAllItems():
-	items = session.query(Item).order_by(Item.timestamp).all()
-	return jsonify(items=[r.serialize for r in items])
+		abort(401)
 
 
 ##########################

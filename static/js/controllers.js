@@ -30,11 +30,62 @@ var app = angular.module('catalog');
 
 
   // Primary page for logged in users
-  app.controller('CatalogCtrl', ['$scope', function($scope) {}]);
+  app.controller('CatalogCtrl', ['$scope', 'Category', 'Item', '$uibModal', function($scope, Category, Item, $uibModal) {
+    $scope.categories = Category.query(); //fetch all categories. Issues a GET to /api/categories
+    $scope.items = Item.query();
+
+    $scope.deleteCategory = function(category) {
+      category.$delete(function(resp) {
+        $scope.categories = Category.query(function () {});
+      })
+    };
+
+    $scope.deleteItem = function(item) {
+      item.$delete(function(resp) {
+        $scope.items = Item.query(function () {});
+      })
+    };
+
+
+    $scope.openDeleteCategory = function (category) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '../static/partials/_confirm_delete.html',
+        controller: 'ModalInstanceCtrl',
+        size: 'sm',
+        resolve: {
+          header: function () { return 'Are you sure?' },
+          body: function () {
+            return 'If you delete this category, all items under it will also be deleted.'
+          }
+        }
+      });
+
+      modalInstance.result.then(function () { $scope.deleteCategory(category); });
+    };
+
+    $scope.openDeleteItem = function (item) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '../static/partials/_confirm_delete.html',
+        controller: 'ModalInstanceCtrl',
+        size: 'sm',
+        resolve: {
+          header: function () { return 'Are you sure?' },
+          body: function () {
+            return 'This action cannot be undone.'
+          }
+        }
+      });
+
+      modalInstance.result.then(function () { $scope.deleteItem(item); });
+    };
+
+  }]);
 
 
   app.controller('CategoryCtrl', ['$scope', 'Category', '$uibModal', function($scope, Category, $uibModal) {
-    $scope.categories = Category.query(function () {}); //fetch all categories. Issues a GET to /api/categories
+    $scope.categories = Category.query(); //fetch all categories. Issues a GET to /api/categories
 
     $scope.deleteCategory = function(category) {
       category.$delete(function(resp) {
@@ -70,10 +121,6 @@ var app = angular.module('catalog');
     $scope.createCategory = function() { //create a new category. Issues a POST to /api/category
       $scope.category.$save(function() {
         $state.go('categories'); // on success go back to categories page
-      }, function(err) {
-        if (err.status === 401) {
-          $state.go('login');
-        }
       });
     };
   }]);
@@ -94,25 +141,54 @@ var app = angular.module('catalog');
   }]);
 
 
-  app.controller('ItemCtrl', ['$scope', 'Item', function($scope, Item) {
-    // I open a Confirm-type modal.
-    $scope.confirmSomething = function() {
-      // The .open() method returns a promise that will be either
-      // resolved or rejected when the modal window is closed.
-      var promise = modals.open("confirm", {
-          message: "Are you sure you want to taste that?!"
-        });
-      promise.then(function handleResolve( response ) {
-          console.log( "Confirm resolved." );
-        },
-        function handleReject( error ) {
-          console.warn( "Confirm rejected!" );
-        });
+  app.controller('ItemCtrl', ['$scope', 'Item', '$uibModal', function($scope, Item, $uibModal) {
+    $scope.items = Item.query();
+
+    $scope.logs = function() {
+      console.log($scope.items)
+    };
+
+
+    $scope.deleteItem = function(item) {
+      item.$delete(function(resp) {
+        $scope.items = Item.query(function () {});
+      })
+    };
+    $scope.openDeleteItem = function (item) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: '../static/partials/_confirm_delete.html',
+        controller: 'ModalInstanceCtrl',
+        size: 'sm',
+        resolve: {
+          header: function () { return 'Are you sure?' },
+          body: function () {
+            return 'This action cannot be undone.'
+          }
+        }
+      });
+
+      modalInstance.result.then(function () { $scope.deleteItem(item); });
     };
   }]);
 
 
-  app.controller('ItemCreateCtrl', ['$scope', 'Item', function($scope, Item) {}]);
+  app.controller('ItemCreateCtrl', ['$scope', 'Item', 'Category', '$state', function($scope, Item, Category, $state) {
+    $scope.item = new Item();  //create new Item instance. Properties will be set via ng-model on UI
+    $scope.categories = Category.query({user_id: $scope.currentUser.id});
+
+    $scope.createItem = function() { //create a new item. Issues a POST to /api/item
+      $scope.item.$save(function() {
+        $state.go('items'); // on success go back to items page
+      }, function(err) {
+        if (err.status === 401) {
+          $state.go('login');
+        } else if (err.status === 403) {
+          $state.go('home')
+        }
+      });
+    };
+  }]);
 
 
   app.controller('ItemEditCtrl', ['$scope', 'Item', function($scope, Item) {}]);

@@ -40,6 +40,7 @@ footer, .push {
   display: none !important;
 }
 
+
 /* Required for ui-bootrap components having a pointer instead of including an href attr. */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
@@ -50,9 +51,11 @@ footer, .push {
 	position: relative;
 	font-size: 18px;
 	color: #aaa;
+	margin-top: 10px;
 	margin-bottom: 10px;
 	padding-top: 10px;
 	padding-bottom: 10px;
+
 	margin-top:30px;
 }
 
@@ -81,7 +84,7 @@ footer, .push {
 .crud button {
 	display: block;
 	margin: auto;
-	margin-bottom: 0.5em;	
+	margin-bottom: 0.5em;
 }
 
 .category-wrap {
