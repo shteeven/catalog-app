@@ -50,7 +50,6 @@
     }
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-      console.log(toParams);
       if (toState.name === 'login' && $rootScope.isLoggedin != '') {
         event.preventDefault();
         $state.go('home')
@@ -124,14 +123,11 @@
     $provide.factory('ErrorInterceptor', function ($q, $rootScope) {
       return {
         responseError: function(rejection) {
-          console.log(rejection);
           if (rejection.data.message) {
             $rootScope.serverRejects.push(rejection.data.message);
           } else {
             $rootScope.serverRejects.push(rejection.data);
           }
-          console.log(rejection);
-
           return $q.reject(rejection);
         }
       };

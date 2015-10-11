@@ -211,7 +211,7 @@ var app = angular.module('catalog');
     };
 
     $scope.register = function (credentials) { AuthService.register(credentials)
-      .then(function () { $scope.credentials = {} }, function (err) { console.log(err) });
+      .then(function () { $scope.credentials = {} });
     };
 
     $scope.login = function (credentials) { AuthService.login(credentials)

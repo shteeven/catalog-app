@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __author__ = 'Shtav'
 from flask import Flask, render_template, request, redirect, jsonify, url_for, flash, make_response, abort
 from flask.ext.login import LoginManager
@@ -13,6 +14,7 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 import json
+import re
 import requests
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 from flask.ext.cors import cross_origin
@@ -32,6 +34,7 @@ session = DBSession()
 
 default_img_url = 'http://img2.wikia.nocookie.net/__cb20130511180903/legendmarielu/images/b/b4/No_image_available.jpg'
 
+email_pattern = "^(([-a-zA–Z0-9!#$%&'*+/=?^_`{|}~.])|((^|\.)\"((\\\")|(\\\\)|\w|[-!#$%&'*+/=?^_`{|}~. \[\])(,:;<>@])*\"\.?)*)+@[-a-zA-Z0-9.]+\.[A-Za-z]{1,3}"
 
 ##########################
 # GET: RSS endpoint
@@ -336,21 +339,16 @@ def gdisconnect():
 	# Only disconnect a connected user.
 	access_token = login_session.get('access_token')
 	if access_token is None:
-		return '200'
+		return 200
 	url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
 	h = httplib2.Http()
 	result = h.request(url, 'GET')[0]
-	print(result)
 	if result['status'] == '200':
 		# Reset the user's session.
-		print(result)
-		return '200'
+		return 200
 	else:
 		# For whatever reason, the given token was invalid.
-		response = make_response(
-			json.dumps('Failed to revoke token for given user.', 400))
-		response.headers['Content-Type'] = 'application/json'
-		return '200'
+		return jsonify(message='Failed to revoke token for given user.'), 400
 
 
 # umbrella disconnect function, signing out user regardless of service used
@@ -367,14 +365,14 @@ def disconnect():
 @app.route('/api/register', methods=['POST'])
 def registerUser():
 	email = request.form.get('email')
+	if not re.match(email_pattern, email):
+		return jsonify(message="Email is not valid."), 400
 	password = request.form.get('password')
 	username = request.form.get('username')
 	if email is None or password is None or username is None:
-		print('Form fields incomplete.')
-		abort(400)  # missing arguments
+		return jsonify(message='Form fields incomplete.'), 400
 	if session.query(User).filter_by(email=email).first() is not None:
-		print('User already registered.')
-		abort(400)  # existing user
+		return jsonify(message='User already registered.'), 400
 	# initialize user
 	user = User(email=email)
 	user.username = username
@@ -389,8 +387,7 @@ def registerUser():
 	login_session['picture'] = user.picture
 	login_session['user_id'] = user.id
 	login_session['provider'] = 'none'
-
-	return jsonify({'username': user.username, 'email': user.email, 'picture': user.picture, 'user_id': user.id}), 201
+	return jsonify(message='You have successfully registered.'), 201
 
 # login user without oauth
 @app.route('/api/login', methods=['POST'])
@@ -398,15 +395,12 @@ def login():
 	username = request.form.get('username')
 	password = request.form.get('password')
 	if username is None or password is None:
-		print('Form fields incomplete.')
-		abort(400)  # missing arguments
+		return jsonify(message='Form fields incomplete.'), 400
 	user = session.query(User).filter_by(username=username).first()
 	if user is None:
-		print('User not registered.')
-		abort(400)  # non-existent user
+		return jsonify(message='User not registered.'), 400
 	if not user.verify_password(password=password):
-		print('Username or password incorrect.')
-		abort(401)  # invalid credentials
+		return jsonify(message='Username or password incorrect.'), 400
 
 	# set login_session data
 	login_session['username'] = user.username
