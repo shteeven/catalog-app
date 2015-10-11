@@ -1,1 +1,57 @@
-ITEMSSSS
+<!-- THIS IS THE ITEM PAGE -->
+<!-- All user Items should repeat here -->
+<div class="container-fluid ng-cloak">
+  <!-- If there are no items -->
+  <div ng-if="items.length===0">
+    <p>
+      You have no items, yet. <a href="/item/create">Try creating one!</a>
+    </p>
+  </div>
+
+	<div class="row" ng-repeat="item in items"> <!-- Angular should repeat this entire section? -->
+		
+		<div class="col-xs-12 col-md-10 col-md-offset-1">
+
+			<div class="container-fluid">
+				
+				<div class="row"> <!-- Angular should repeat this block -->
+						
+					<!-- Image thumbnail -->
+					<div class="col-xs-3 col-md-2">
+						<img class="img-thumb" ng-src="[[ item.img_url ]]" alt="[[ item.name ]] image.">
+					</div>
+
+					<!-- Item Title -->
+					<div class="col-xs-6 col-md-8">
+						<h3 class="title">[[ item.name ]]</h3>
+					</div>
+
+					<!-- CRUD -->
+					<div class="col-xs-3 col-md-2 crud">
+            <div ng-show="currentUser.id === item.user_id">
+              <!-- Edit button -->
+              <button type="button" ui-sref="editItem({id:item.id})" class="btn btn-success">
+								<span class="glyphicon glyphicon-pencil"></span>
+              </button>
+              <!-- Delete button -->
+              <button type="button" ng-click="open(item)" class="btn btn-danger">
+								<span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </div>
+
+            <div ng-hide="currentUser.id === item.user_id">
+              <p>
+                Date Created: [[ item.created[0] ]]-[[ item.created[1] ]]-[[ item.created[2] ]]
+                @ [[ item.created[3] ]]:[[ item.created[4] ]]
+              </p>
+            </div>
+					</div>
+
+				</div> <!-- / .row -->
+
+			</div> <!-- / .container-fluid -->
+
+		</div> <!-- / .col-md-10.col-md-offset-1 -->
+	
+	</div> <!-- / .row -->
+</div>

@@ -153,8 +153,8 @@ footer {
 
 /* Raise the footer above the sidebar */
 @media (min-width:768px) {
-	
-	.footer-distributed {	
+
+	.footer-distributed {
 		position: fixed;
 		z-index: 1001;
 	}

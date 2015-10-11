@@ -4,9 +4,9 @@
  * https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec
  */
 (function () {
-
-    'use strict';
+  'use strict';
   var app = angular.module('catalog');
+
 
   //////////////////
   //AUTHENTICATION//
@@ -108,6 +108,7 @@
     return authService;
   });
 
+
   //////////////////
   ///RESOURCES//////
   //////////////////
@@ -121,20 +122,9 @@
       });
   });
 
-  //app.factory('EditCategory', function(Category, AuthService) {
-  //  var editCategory = {};
-  //
-  //  console.log(AuthService.getUserData());
-  //
-  //  editCategory.resolveCategory = function(id) {
-  //    Category.get({ id: id }).then(function())
-  //  };
-  //
-  //});
-
 
   app.factory('Item', function ($resource) {
-    return $resource('/api/category/:id', {id: '@id'}, {
+    return $resource('/api/item/:id', {id: '@id'}, {
       update: {
         method: 'PUT' // this method issues a PUT request
       }

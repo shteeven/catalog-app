@@ -99,7 +99,8 @@ class Item(Base):
 			'id': self.id,
 			'category_id': self.category_id,
 			'user': self.user_id,
-			'timestamp': datetimeformat(self.timestamp)
+			'timestamp': datetimeformat(self.timestamp),
+			'img_url': self.img_url
 		}
 
 
