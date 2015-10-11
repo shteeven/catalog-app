@@ -32,6 +32,35 @@ session = DBSession()
 
 default_img_url = 'http://img2.wikia.nocookie.net/__cb20130511180903/legendmarielu/images/b/b4/No_image_available.jpg'
 
+
+##########################
+# GET: RSS endpoint
+##########################
+@app.route('/api/recent.atom')
+def recentFeed():
+	feed = AtomFeed('Recent Articles',
+	                feed_url=request.url, url=request.url_root)
+	try:
+		items = session.query(Item).order_by(Item.timestamp).limit(15).all()
+	except exc.NoResultFound:
+		response = make_response(
+			json.dumps('No items found. Please create some. %s' % url_for('/'),
+			           400))
+		response.headers['Content-Type'] = 'application/json'
+		return response
+	for item in items:
+		creator = session.query(User).filter_by(id=item.user_id).one()
+		feed.add(item.name, unicode(item.description),
+		         content_type='html',
+		         author=creator.name,
+		         updated=item.timestamp,
+		         url=make_external('category/' + str(item.category_id) +
+		                           '/item/' + str(item.id) + '/'))
+	return feed.get_response()
+
+def make_external(url):
+	return urljoin(request.url_root, url)
+
 ##########################
 # GET: API and Page Rendering
 ##########################
@@ -54,6 +83,7 @@ def loginForm():
 	return render_template("login-form.html", client_id=CLIENT_ID)
 
 # CRUD operations for categories (complete)
+# TODO: accept args more queries
 @app.route('/api/category/', methods=['GET', 'POST'])
 @app.route('/api/category/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def categoryAPI(id=''):
@@ -132,6 +162,7 @@ def categoryAPI(id=''):
 
 
 # CRUD operations for items (complete)
+# TODO: accept args more queries
 @app.route('/api/item/', methods=['GET', 'POST'])
 @app.route('/api/item/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def itemAPI(id=''):
@@ -160,7 +191,6 @@ def itemAPI(id=''):
 				valid, img_url, msg = validateImageUrl(img_url)
 				# Save new item.
 				if valid == 200:
-
 					if 'description' not in request.json:
 						description = ''
 					else:

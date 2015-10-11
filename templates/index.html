@@ -23,7 +23,7 @@
 </head>
 
 <body ng-controller="MainCtrl">
-
+<div id="sidebar-overlay" ng-class="{toggled: menu_toggled}" ng-click="menuToggle()"></div>
 <!-- Sidebar -->
 <div id="sidebar-wrapper" ng-class="{toggled: menu_toggled}">
   <!-- Sidebar Toggle -->
@@ -33,15 +33,15 @@
   </button>
   <nav>
     <ul class="sidebar-nav">
-      <li class="sidebar-brand">Catalog</li>
-      <li role="presentation"><a href="home">Home</a></li>
-      <li role="presentation"><a href="landing">Landing</a></li>
-      <li role="presentation"><a href="categories">Categories</a></li>
-      <li role="presentation"><a href="category/create">Create Category</a></li>
-      <li role="presentation"><a href="items">Items</a></li>
-      <li role="presentation"><a href="item/create">Create Item</a></li>
-      <li role="presentation">
-        <a ng-if="!currentUser.username" type="button" href="login" class="btn btn-block btn-success ng-cloak">Login or Register</a>
+      <li class="sidebar-brand">Catalog App</li>
+      <li role="presentation" ng-click="menuToggle()"><a ui-sref="home">Home</a></li>
+      <li role="presentation" ng-click="menuToggle()"><a ui-sref="landing">Landing</a></li>
+      <li role="presentation" ng-click="menuToggle()"><a ui-sref="categories">Categories</a></li>
+      <li role="presentation" ng-click="menuToggle()"><a ui-sref="createCategory">Create Category</a></li>
+      <li role="presentation" ng-click="menuToggle()"><a ui-sref="items">Items</a></li>
+      <li role="presentation" ng-click="menuToggle()"><a ui-sref="createItem">Create Item</a></li>
+      <li role="presentation" ng-click="menuToggle()">
+        <a ng-if="!currentUser.username" type="button" ui-sref="login" class="btn btn-block btn-success ng-cloak">Login or Register</a>
         <a ng-if="currentUser.username" type="button" ng-click="logout()" class="btn btn-success btn-block ng-cloak">Log Out</a>
       </li>
     </ul>
@@ -56,7 +56,7 @@
     <div class="container-fluid">
       <div class="pull-right greeting ng-cloak">
         <div ng-if="currentUser.username">Welcome, [[currentUser.username]]</div>
-        <div ng-if="!currentUser.username"><a href="login">Login or Register</a></div>
+        <div ng-if="!currentUser.username"><a ui-sref="login">Login or Register</a></div>
       </div>
     </div>
   </nav>
@@ -80,31 +80,6 @@
   </div>
 </div>
 <!-- /Main Content -->
-
-<!-- Needed for sticky footer -->
-<!--<div class="push"></div>-->
-<!--</div> &lt;!&ndash; #wrapper &ndash;&gt;-->
-
-<!--<footer class="footer-distributed hidden">-->
-  <!--<div class="footer-left">-->
-    <!--<p class="footer-links">-->
-      <!--<a href="#">Home</a> ·-->
-      <!--<a href="#">Blog</a> ·-->
-      <!--<a href="#">Pricing</a> ·-->
-      <!--<a href="#">About</a> ·-->
-      <!--<a href="#">Faq</a> ·-->
-      <!--<a href="#">Contact</a>-->
-    <!--</p>-->
-    <!--<p class="footer-company-name">Shtav Enterprises &copy; 2015</p>-->
-  <!--</div>-->
-  <!--<div class="footer-right">-->
-    <!--<form method="get" action="#">-->
-      <!--<input placeholder="Search our website" name="search" />-->
-      <!--<i class="fa fa-search"></i>-->
-    <!--</form>-->
-  <!--</div>-->
-<!--</footer>-->
-
 
 
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>

@@ -78,8 +78,8 @@
 
     <!-- Sign In and Registration Form Swap -->
     <p class="help-block">
-      <a ng-if="!show_signin" class="pull-left text-muted" href="#" ng-click="toggleSignin(true)"><small>Sign In</small></a>
-      <a ng-if="show_signin" class="text-muted" href="#" ng-click="toggleSignin(false)"><small>Register</small></a>
+      <a ng-if="!show_signin" class="pull-left text-muted" ng-click="toggleSignin(true)"><small>Sign In</small></a>
+      <a ng-if="show_signin" class="text-muted" ng-click="toggleSignin(false)"><small>Register</small></a>
     </p>
 
 
@@ -93,7 +93,7 @@
     <div class="row">
 
       <div class="col-xs-6 col-sm-6 col-md-6">
-        <a href="#" class="btn btn-primary btn-block">Facebook</a>
+        <a class="btn btn-primary btn-block">Facebook</a>
       </div>
 
       <div class="col-xs-6 col-sm-6 col-md-6">

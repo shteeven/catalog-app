@@ -8,7 +8,7 @@
   'use strict';
 var app = angular.module('catalog');
 
-  app.controller('MainCtrl', ['$scope', '$window', '$rootScope', 'AuthService', function($scope, $window, $rootScope, AuthService) {
+  app.controller('MainCtrl', ['$scope', '$window', '$rootScope', 'AuthService', '$state', function($scope, $window, $rootScope, AuthService, $state) {
 
     $scope.menu_toggled = false; // initialize toggle
 
@@ -20,6 +20,10 @@ var app = angular.module('catalog');
     $scope.$watch('currentUser', function(newValue) { $scope.currentUser = newValue; });
 
     $scope.logout = function() { AuthService.logout(); };
+
+    $scope.loginState = function () {
+      $state.go('login', { clicked: true })
+    }
 
 
   }]);

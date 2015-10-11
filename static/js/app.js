@@ -5,7 +5,7 @@
 
 (function () {
   'use strict';
-  var app = angular.module('catalog', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngCookies', 'ngMessages']);
+  var app = angular.module('catalog', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngCookies', 'ngMessages', 'ngAnimate']);
 
   app.config(function($interpolateProvider){
     $interpolateProvider.startSymbol('[[').endSymbol(']]');
@@ -34,14 +34,15 @@
     ///////////////////////////////////
     // Handle login
     //////////////////////////////////
-    var isLoggedin = $cookies.get('loggedin');
-
-    if (isLoggedin != '') {
+    $rootScope.isLoggedin = $cookies.get('loggedin');
+    console.log($rootScope.isLoggedin);
+    console.log('ll');
+    if ($rootScope.isLoggedin != '') {
       AuthService.setUserData();
     }
     // direct on initial page load based on login status
     if ($state.current.name == '') {
-      if (isLoggedin === '') {
+      if ($rootScope.isLoggedin === '') {
         $state.go('landing')
       } else {
         $state.go('home')
@@ -49,12 +50,13 @@
     }
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-      if (toState.name === 'login' && isLoggedin != '') {
+      console.log(toParams);
+      if (toState.name === 'login' && $rootScope.isLoggedin != '') {
         event.preventDefault();
         $state.go('home')
       }
       var restricted = ['editCategory', 'createCategory', 'editItem', 'createItem'];
-      if (restricted.indexOf(toState.name) != -1 && isLoggedin === '') {
+      if (restricted.indexOf(toState.name) != -1 && $rootScope.isLoggedin === '') {
         $rootScope.addServerReject('You must sign in to access this page.');
         event.preventDefault();
         $state.go('login')
@@ -110,12 +112,8 @@
         url: '/item/:id/edit',
         templateUrl: 'static/partials/items-edit.html',
         controller: 'ItemEditCtrl'
-      })
-      .state('test', {
-        url: '/test',
-        templateUrl: 'static/partials/test.html',
-        controller: 'TestCtrl'
       });
+
     $urlRouterProvider.otherwise('/');
 
     $locationProvider.html5Mode(true);
@@ -127,7 +125,11 @@
       return {
         responseError: function(rejection) {
           console.log(rejection);
-          $rootScope.serverRejects.push(rejection.data.message);
+          if (rejection.data.message) {
+            $rootScope.serverRejects.push(rejection.data.message);
+          } else {
+            $rootScope.serverRejects.push(rejection.data);
+          }
           console.log(rejection);
 
           return $q.reject(rejection);
