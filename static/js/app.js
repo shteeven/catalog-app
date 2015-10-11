@@ -126,7 +126,7 @@
     $provide.factory('ErrorInterceptor', function ($q, $rootScope) {
       return {
         responseError: function(rejection) {
-
+          console.log(rejection);
           $rootScope.serverRejects.push(rejection.data.message);
           console.log(rejection);
 

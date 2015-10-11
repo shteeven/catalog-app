@@ -418,14 +418,16 @@ def validateImageUrl(img_url):
 			r = requests.get(img_url)
 			msg = ''
 			code = r.status_code
+			print(code)
 			if code == 404:
-				code = 400
 				msg = 'Image was not found. Enter a valid url or leave the field blank.'
 			return 400, img_url, msg
 		except requests.exceptions.MissingSchema:
 			return 400, '', 'Image url is an invalid schema. Enter a valid url or leave the field blank.'
 		except requests.exceptions.InvalidSchema:
 			return 400, '', 'Image url is missing schema. A preceding "http://" might fix it, or leave the field blank.'
+		except:
+			return 400, '', 'We don\'t know what\'s wrong with the entered image url, but please fix it.'
 
 
 ##########################
