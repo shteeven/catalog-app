@@ -86,8 +86,6 @@ def categoryAPI(id=''):
 					return jsonify(message=msg), valid
 			else:
 				return jsonify(message='You must enter a name.'), 422
-		# else:
-		# 	abort(401)
 		# END CREATE
 
 		# get category for PUT or DELETE, user_id, must match that of category.user_id for PUT or DELETE
@@ -414,11 +412,16 @@ def validateImageUrl(img_url):
 	else:
 		try:
 			r = requests.get(img_url)
-			return r.status_code, img_url, ''
+			msg = ''
+			code = r.status_code
+			if code == 404:
+				code = 400
+				msg = 'Image was not found. Enter a valid url or leave the field blank.'
+			return 400, img_url, msg
 		except requests.exceptions.MissingSchema:
-			return '400', '', 'Image url is an invalid schema. Enter an actual url or leave the field blank.'
+			return 400, '', 'Image url is an invalid schema. Enter a valid url or leave the field blank.'
 		except requests.exceptions.InvalidSchema:
-			return '400', '', 'Image url is missing schema. A preceding "http://" might fix it, or leave the field blank.'
+			return 400, '', 'Image url is missing schema. A preceding "http://" might fix it, or leave the field blank.'
 
 
 ##########################

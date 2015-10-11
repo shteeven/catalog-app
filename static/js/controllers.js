@@ -8,7 +8,7 @@
   'use strict';
 var app = angular.module('catalog');
 
-  app.controller('MainCtrl', ['$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+  app.controller('MainCtrl', ['$scope', '$window', '$rootScope', 'AuthService', function($scope, $window, $rootScope, AuthService) {
 
     $scope.menu_toggled = false; // initialize toggle
 
@@ -19,7 +19,19 @@ var app = angular.module('catalog');
 
     $scope.$watch('currentUser', function(newValue) { $scope.currentUser = newValue; });
 
-    $scope.logout = function() { AuthService.logout(); }
+    $scope.logout = function() { AuthService.logout(); };
+
+    $scope.errors = [];
+
+    $scope.removeError = function(msg) {
+      var index = $scope.errors.indexOf(msg);
+      $scope.errors.splice(index, 1);
+    };
+
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+      $scope.errors.splice(0,$scope.errors.length)
+    });
+
 
   }]);
 
@@ -32,7 +44,7 @@ var app = angular.module('catalog');
   app.controller('CatalogCtrl', ['$scope', function($scope) {}]);
 
 
-  app.controller('CategoryCtrl', ['$scope', '$state', '$window', 'Category', '$uibModal', function($scope, $state, $window, Category, $uibModal) {
+  app.controller('CategoryCtrl', ['$scope', 'Category', '$uibModal', function($scope, Category, $uibModal) {
     $scope.categories = Category.query(function () {}); //fetch all categories. Issues a GET to /api/categories
 
     $scope.deleteCategory = function(category) {
@@ -85,6 +97,9 @@ var app = angular.module('catalog');
     $scope.updateCategory = function() { //Update the edited category. Issues a PUT to /api/category/:id
       $scope.category.$update(function() {
         $state.go('categories'); // on success go back to categories
+      }, function(err) {
+        //console.log(err.data.message);
+        $scope.errors.push(err.data.message);
       });
     };
 
