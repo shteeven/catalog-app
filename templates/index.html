@@ -64,8 +64,8 @@
       <div class="col-lg-12">
         <!-- Insert Partials with Angular -->
         <div class="row">
-          <div class="alert alert-warning ng-cloak" ng-repeat="msg in errors" role="alert">
-            <button type="button" class="close" ng-click="removeError(msg)">
+          <div class="alert alert-warning ng-cloak" ng-repeat="msg in serverRejects" role="alert">
+            <button type="button" class="close" ng-click="removeServerReject(msg)">
               <span>&times;</span>
             </button>
             [[msg]]
