@@ -165,7 +165,6 @@ def itemAPI(id=''):
 						description = ''
 					else:
 						description = request.json['description']
-					print(img_url)
 					new_item = Item(name=request.json['name'], description=description,
 					     img_url=img_url, category_id=request.json['category_id'], user_id=login_session['user_id'])
 					session.add(new_item)
