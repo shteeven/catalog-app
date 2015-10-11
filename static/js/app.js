@@ -55,6 +55,7 @@
       }
       var restricted = ['editCategory', 'createCategory', 'editItem', 'createItem'];
       if (restricted.indexOf(toState.name) != -1 && isLoggedin === '') {
+        $rootScope.addServerReject('You must sign in to access this page.');
         event.preventDefault();
         $state.go('login')
       }
