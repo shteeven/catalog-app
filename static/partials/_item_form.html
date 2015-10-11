@@ -1,39 +1,53 @@
-<div class="form-group">
-  <label for="name" class="col-sm-2 control-label">Name</label>
-  <div class="col-sm-10">
-    <input type="text" ng-model="item.name" class="form-control" id="name" placeholder="Item Name Here"/>
+
+<div class="row">
+
+  <div class="col-sm-8 col-sm-offset-2">
+    
+    <div class="form-group">
+      <label for="name" class="col-sm-3 control-label">Name</label>
+      <div class="col-sm-9">
+        <input type="text" ng-model="item.name" class="form-control" id="name" placeholder="Item Name Here"/>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="description" class="col-sm-3 control-label">Description</label>
+      <div class="col-sm-9">
+        <input type="text" ng-model="item.description" class="form-control" id="description" placeholder="How would you describe it?"/>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="img_url" class="col-sm-3 control-label">Image URL</label>
+      <div class="col-sm-9">
+        <input type="text" ng-model="item.img_url" class="form-control" id="img_url" placeholder="URL here or leave blank."/>
+      </div>
+    </div>
+    
+    <!-- Select Field -->
+    <div class="form-group">
+      <label for="selectField" class="col-sm-3 control-label">Item Category</label>
+      <div class="col-sm-9">
+        <select name="selectField" id="selectField" class="form-control" ng-model="item.category_id">
+          <option value="">---Please select---</option> <!-- not selected / blank option -->
+          <option ng-repeat="category in categories" value="[[ category.id ]]">[[ category.name ]]</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="category" class="col-sm-3 control-label"> </label>
+      <div class="col-sm-9">
+        <input type="text" ng-model="item.category_id" class="form-control" id="category" placeholder="Item Category"/>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input type="submit" class="btn btn-primary" value="Save"/>
+      </div>
+    </div>
+
   </div>
-</div>
-<div class="form-group">
-  <label for="description" class="col-sm-2 control-label">Description</label>
-  <div class="col-sm-10">
-    <input type="text" ng-model="item.description" class="form-control" id="description" placeholder="How would you describe it?"/>
-  </div>
-</div>
-<div class="form-group">
-  <label for="img_url" class="col-sm-2 control-label">Image URL</label>
-  <div class="col-sm-10">
-    <input type="text" ng-model="item.img_url" class="form-control" id="img_url" placeholder="URL here or leave blank."/>
-  </div>
-</div>
-<!-- Select Field -->
-<div class="form-group">
-  <label for="selectField" class="col-sm-2 control-label">Item Category</label>
-  <div class="col-sm-10">
-    <select name="selectField" id="selectField" class="form-control" ng-model="item.category_id">
-      <option value="">---Please select---</option> <!-- not selected / blank option -->
-      <option ng-repeat="category in categories" value="[[ category.id ]]">[[ category.name ]]</option>
-    </select>
-  </div>
-</div>
-<div class="form-group">
-  <label for="category" class="col-sm-2 control-label"> </label>
-  <div class="col-sm-10">
-    <input type="text" ng-model="item.category_id" class="form-control" id="category" placeholder="Item Category"/>
-  </div>
-</div>
-<div class="form-group">
-  <div class="col-sm-offset-2 col-sm-10">
-    <input type="submit" class="btn btn-primary" value="Save"/>
-  </div>
+  
 </div>
