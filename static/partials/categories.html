@@ -3,7 +3,7 @@
 <!-- Only Categories of the signed in user should show CRUD ops -->
 <!-- Only SIGNED IN users should see the ADD button -->
 
-<div class="container-fluid">
+<div class="container-fluid ng-cloak">
 			
 	<div class="row" ng-repeat="category in categories"> <!-- Angular should repeat this entire section? -->
 		
@@ -32,8 +32,11 @@
               <button type="button" ng-click="open(category)" class="btn btn-danger btn-block">Delete Catalog</button>
             </div>
 
-            <div ng-hide="user.id == item.user_id">
-              <p>Date Created: January 17, 1707</p>
+            <div ng-hide="currentUser.id === category.user_id">
+              <p>
+                Date Created: [[ category.created[0] ]]-[[ category.created[1] ]]-[[ category.created[2] ]]
+                @ [[ category.created[3] ]]:[[ category.created[4] ]]
+              </p>
             </div>
 					</div>
 
@@ -45,5 +48,3 @@
 	
 	</div> <!-- / .row -->
 </div>
-    <button type="button" class="btn btn-default" ng-click="open()">Open me!</button>
-[[selected]]
