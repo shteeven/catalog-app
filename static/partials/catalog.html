@@ -1,3 +1,122 @@
-<h1>Here is the home page</h1>
-<p ng-init="hey = 'hey'"> [[hey]]</p>
-<p>[[ currentUser.username ]]</p>
+<div class="home-category col-sm-6">
+  <!-- THIS IS THE CATEGORY SECTION OF THE HOME PAGE-->
+<!-- Most recent categories should repeat here -->
+<!-- Only Categories of the signed in user should show CRUD ops -->
+<!-- Only SIGNED IN users should see the ADD button -->
+<div class="container-fluid ng-cloak">
+  <div class="col-xs-offset-1 col-sm-offset-4" ng-if="categories.length===0">
+    <p>
+      You have no categories, yet. <a ui-sref="createCategory">Try creating one!</a>
+    </p>
+  </div>
+	<div class="row" ng-repeat="category in categories"> <!-- Angular should repeat this entire section? -->
+
+		<div class="col-xs-12 col-md-10 col-md-offset-1">
+
+			<!--<div class="container-fluid">-->
+
+				<div class="row category-wrap"> <!-- Angular should repeat this block -->
+
+					<!-- Image thumbnail -->
+					<div ng-click="go('items', {c_id:category.id})" class="col-xs-1">
+						<img class="img-thumb" ng-src="[[ category.img_url ]]" alt="[[ category.name ]] image.">
+					</div>
+
+					<!-- Category Title -->
+					<div class="col-xs-6 col-md-7">
+						<h3 ng-click="go('items', {c_id:category.id} )" class="title">[[ category.name ]]</h3>
+					</div>
+
+					<!-- CRUD -->
+					<div class="col-xs-5 col-md-4 crud">
+            <div ng-show="currentUser.id === category.user_id">
+              <!-- Edit button -->
+              <button type="button" ui-sref="editCategory({id:category.id})" class="btn btn-success">
+								<span class="glyphicon glyphicon-pencil"></span>
+              </button>
+              <!-- Delete button -->
+              <button type="button" ng-click="open(category)" class="btn btn-danger">
+								<span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </div>
+
+            <div ng-hide="currentUser.id === category.user_id">
+              <p>
+                Date Created: [[ category.created[0] ]]-[[ category.created[1] ]]-[[ category.created[2] ]]
+                @ [[ category.created[3] ]]:[[ category.created[4] ]]
+              </p>
+              <a ui-sref="categories({u_id: category.user_id})">[[category.username]]</a>
+            </div>
+					</div>
+
+				</div> <!-- / .row -->
+
+			<!--</div> &lt;!&ndash; / .container-fluid &ndash;&gt;-->
+
+		</div> <!-- / .col-md-10.col-md-offset-1 -->
+
+	</div> <!-- / .row -->
+</div>
+</div>
+
+
+<!-- ITEMS SECTION OF HOME PAGE -->
+<!-- Most recently create items should repeat here -->
+<div class="home-items col-sm-6">
+  <div class="container-fluid ng-cloak">
+  <!-- If there are no items -->
+  <div ng-if="items.length===0">
+    <p>
+      You have no items, yet. <a ui-sref="createItem">Try creating one!</a>
+    </p>
+  </div>
+
+	<div class="row" ng-repeat="item in items"> <!-- Angular should repeat this entire section? -->
+
+		<div class="col-xs-12 col-md-10 col-md-offset-1">
+
+			<!--<div class="container-fluid">-->
+
+				<div class="row category-wrap"> <!-- Angular should repeat this block -->
+
+					<!-- Image thumbnail -->
+					<div class="col-xs-1">
+						<img class="img-thumb" ng-src="[[ item.img_url ]]" alt="[[ item.name ]] image.">
+					</div>
+
+					<!-- Item Title -->
+					<div class="col-xs-6 col-md-7">
+						<h3 class="title">[[ item.name ]]</h3>
+					</div>
+
+					<!-- CRUD -->
+					<div class="col-xs-5 col-md-4 crud">
+            <div ng-show="currentUser.id === item.user_id">
+              <!-- Edit button -->
+              <button type="button" ui-sref="editItem({id:item.id})" class="btn btn-success">
+								<span class="glyphicon glyphicon-pencil"></span>
+              </button>
+              <!-- Delete button -->
+              <button type="button" ng-click="openDeleteItem(item)" class="btn btn-danger">
+								<span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </div>
+
+            <div ng-hide="currentUser.id === item.user_id">
+              <p>
+                Date Created: [[ item.created[0] ]]-[[ item.created[1] ]]-[[ item.created[2] ]]
+                @ [[ item.created[3] ]]:[[ item.created[4] ]]
+              </p>
+              <a ui-sref="items({c_id: item.category_id})">[[item.category_name]]</a>
+            </div>
+					</div>
+
+				</div> <!-- / .row -->
+
+			<!--</div> &lt;!&ndash; / .container-fluid &ndash;&gt;-->
+
+		</div> <!-- / .col-md-10.col-md-offset-1 -->
+
+	</div> <!-- / .row -->
+</div>
+</div>

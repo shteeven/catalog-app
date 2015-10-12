@@ -12,10 +12,8 @@ var app = angular.module('catalog');
 
     // make state available to the scope
     $scope.go= function (state) {
-
-      console.log(state);
       $state.go(state);
-    }
+    };
 
     $scope.menu_toggled = false; // initialize toggle
 
