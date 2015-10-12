@@ -30,14 +30,9 @@
 
 				<div class="row category-wrap"> <!-- Angular should repeat this block -->
 
-					<!--&lt;!&ndash; Image thumbnail &ndash;&gt;-->
-					<!--<div ng-click="go('items', {c_id:category.id})" class="col-xs-1">-->
-						<!--<img class="img-thumb" ng-src="[[ category.img_url ]]" alt="[[ category.name ]] image.">-->
-					<!--</div>-->
-
 					<!-- Category Title -->
 					<div class="col-xs-6 col-md-7">
-						<h3 ng-click="go('items', {c_id:category.id} )" class="title">[[ category.name ]]</h3>
+						<h3 ui-sref="items({c_id:category.id})" class="title">[[ category.name ]]</h3>
 					</div>
 
 					<!-- CRUD -->
@@ -110,7 +105,7 @@
 
 					<!-- Item Title -->
 					<div class="col-xs-6 col-md-7">
-						<h3 class="title">[[ item.name ]]</h3>
+              <h3 ui-sref="items({c_id:item.category_id})" class="title">[[ item.name ]]</h3>
 					</div>
 
 					<!-- CRUD -->

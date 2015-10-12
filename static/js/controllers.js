@@ -12,6 +12,7 @@ var app = angular.module('catalog');
 
     // make state available to the scope
     $scope.go= function (state) {
+      console.log(state);
       $state.go(state);
     };
 
@@ -42,6 +43,8 @@ var app = angular.module('catalog');
   app.controller('CatalogCtrl', ['$scope', 'Category', 'Item', '$uibModal', function($scope, Category, Item, $uibModal) {
     $scope.categories = Category.query(); //fetch all categories. Issues a GET to /api/categories
     $scope.items = Item.query();
+
+
 
     $scope.deleteCategory = function(category) {
       category.$delete(function(resp) {
@@ -94,7 +97,11 @@ var app = angular.module('catalog');
 
 
   app.controller('CategoryCtrl', ['$scope', 'Category', '$uibModal', '$stateParams', function($scope, Category, $uibModal, $stateParams) {
+
     $scope.categories = Category.query({user_id: $stateParams.u_id});
+
+    $scope.usersCategory = $stateParams.u_id;
+
     //$scope.categories = Category.query(); //fetch all categories. Issues a GET to /api/categories
 
     $scope.deleteCategory = function(category) {
@@ -129,8 +136,9 @@ var app = angular.module('catalog');
     $scope.category = new Category();  //create new Category instance. Properties will be set via ng-model on UI
 
     $scope.createCategory = function() { //create a new category. Issues a POST to /api/category
-      $scope.category.$save(function() {
-        $state.go('categories', {u_id: $scope.category.user_id}); // on success go back to categories page
+      $scope.category.$save(function(data) {
+        console.log(data);
+        $state.go('categories', {'u_id': $scope.currentUser.id}); // on success go back to categories page
       });
     };
   }]);
@@ -138,8 +146,8 @@ var app = angular.module('catalog');
 
   app.controller('CategoryEditCtrl', ['$scope', 'Category', '$stateParams', '$state', function($scope, Category, $stateParams, $state) {
     $scope.updateCategory = function() { //Update the edited category. Issues a PUT to /api/category/:id
-      $scope.category.$update(function() {
-        $state.go('categories', {u_id: $scope.category.user_id}); // on success go back to categories
+      $scope.category.$update(function(data) {
+        $state.go('categories', {'u_id': $scope.currentUser.id}); // on success go back to categories
       });
     };
 
@@ -152,8 +160,9 @@ var app = angular.module('catalog');
 
 
   app.controller('ItemCtrl', ['$scope', 'Item', '$uibModal', '$stateParams', function($scope, Item, $uibModal, $stateParams) {
-
+    console.log($stateParams.c_id);
     $scope.items = Item.query({category_id: $stateParams.c_id});
+    $scope.categoryItems = $stateParams.c_id;
 
 
     $scope.deleteItem = function(item) {
@@ -185,8 +194,9 @@ var app = angular.module('catalog');
     $scope.categories = Category.query({user_id: $scope.currentUser.id});
 
     $scope.createItem = function() { //create a new item. Issues a POST to /api/item
-      $scope.item.$save(function() {
-        $state.go('items', {c_id: $scope.item.category_id}); // on success go back to items page
+      $scope.item.$save(function(data) {
+        console.log(data);
+        $state.go('items', {'c_id': data.category_id}); // on success go back to items page
       }, function(err) {
         if (err.status === 401) {
           $state.go('login');
@@ -201,7 +211,7 @@ var app = angular.module('catalog');
   app.controller('ItemEditCtrl', ['$scope', 'Item', '$stateParams', 'Category', function($scope, Item, $stateParams, Category) {
     $scope.updateItem = function() { //Update the edited category. Issues a PUT to /api/category/:id
       $scope.item.$update(function() {
-        $state.go('items', {c_id: $scope.item.category_id}); // on success go back to categories
+        $state.go('items', {'c_id': data.category_id}); // on success go back to categories
       });
     };
 

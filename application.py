@@ -117,8 +117,7 @@ def categoryAPI(id=''):
 					newCategory = Category(name=request.json['name'], img_url=img_url, user_id=login_session['user_id'])
 					session.add(newCategory)
 					session.commit()
-
-					return jsonify(message='Category created.'), 201
+					return json.dumps({'message':'Category created.', 'id': newCategory.id}), 201
 				else:
 					return jsonify(message=msg), valid
 			else:
@@ -146,7 +145,7 @@ def categoryAPI(id=''):
 					category.img_url = img_url
 					session.add(category)
 					session.commit()
-					return jsonify(message='Category updated.'), 202
+					return json.dumps({'message':'Category updated.', 'id': category.id}), 202
 				else:
 					return jsonify(message=msg), valid
 			else:
@@ -209,7 +208,7 @@ def itemAPI(id=''):
 					     img_url=img_url, category_id=request.json['category_id'], user_id=login_session['user_id'])
 					session.add(new_item)
 					session.commit()
-					return jsonify(message='Item created.'), 201
+					return json.dumps({'message': 'Item created.', 'category_id': new_item.category_id, 'id': new_item.id}), 201
 				else:
 					return jsonify(message=msg), valid
 			else:
@@ -238,7 +237,7 @@ def itemAPI(id=''):
 					item.category_id = request.json['category_id']
 					session.add(item)
 					session.commit()
-					return jsonify(message='Item updated.'), 202
+					return json.dumps({'message':'Item updated.', 'category_id': item.category_id, 'id': item.id}), 202
 				else:
 					return jsonify(message=msg), valid
 			else:

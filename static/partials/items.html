@@ -1,6 +1,11 @@
 <!-- THIS IS THE ITEM PAGE -->
 <!-- All user Items should repeat here -->
 <div class="container-fluid ng-cloak">
+  <br>
+  <h2 class="col-sm-offset-1">
+    <span ng-if="categoryItems">Items in [[items[0].category_name]]</span>
+    <span ng-if="!categoryItems">Items</span>
+  </h2>
   <!-- If there are no items -->
   <div ng-if="items.length===0">
     <p>
@@ -9,7 +14,6 @@
   </div>
 
   <!-- Item Search Filter -->
-  <br>
   <div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
     <input type="text" class="form-control" placeholder="Start typing to search the item list" ng-model="searchItems">
   </div>

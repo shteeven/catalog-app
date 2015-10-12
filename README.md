@@ -5,6 +5,13 @@ This Catalog App is the fulfillment of the third project in Udacity's Fullstack 
 ## Explanation
 
 The frontend is powered by AngularJS and interations with the backend are done through json, with authentication being the exception as it uses Flask cookies. All requests for data are done through the `/api/` endpoints which are handled by Angular, and consequently, most pages(partials) are request directly by Angular. For the pages that require rendering, Flask handles the request. 
+
+## API
+All unsecured data can be retrieved via JSON.
+* All categories -- http://localhost:8000/api/category/
+* All items -- http://localhost:8000/api/item/
+* Specific category -- http://localhost:8000/api/category/:id
+* Specific item -- http://localhost:8000/api/item/:id
 An Atoms RSS feed can be reached at `/api/recent.atom`.
 
 ## Installation
