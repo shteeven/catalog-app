@@ -49,7 +49,7 @@
     }
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-      if (toState.name === 'login' && $rootScope.isLoggedin != '') {
+      if (toState.name === 'login' && $rootScope.isLoggedin != '' && $rootScope.isLoggedin) {
         event.preventDefault();
         $state.go('home')
       }
