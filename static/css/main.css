@@ -8,7 +8,7 @@
 body{
 	font:14px/1.5 Arial, Helvetica, sans-serif;
     background-color: #3E4144;
-    color: #929292;
+    color: #929292
 }
 
 .navbar {
@@ -23,18 +23,6 @@ body{
 /* Sticky Footer Mess */
 html, body {
 	height: 100%;
-}
-
-.wrapper {
-	min-height: 100%;
-	margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
-}
-footer, .push {
-	height: 155px; /* '.push' must be the same height as 'footer' */
-}
-
-.greeting {
-	margin: 1em 0.5em;
 }
 
 /* Keeps angular objects from flashing before angular is loaded and data populated. */

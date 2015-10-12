@@ -1,3 +1,30 @@
+
+
+/*TOPNAV STYLES*/
+.top-nav-profile {
+    margin-bottom: 0;
+    font-size: 1.2em;
+}
+
+.top-nav-profile img{
+    display: inline-block;
+    height: 35px;
+}
+.greeting {
+	margin: 0.5em 0.5em;
+}
+/*END TOPNAV*/
+
+
+/*SIDEBAR STYLES*/
+
+/*bs fix to keep .navbar-static-top from covering sidebar*/
+.navbar-static-top {
+    z-index: 101;
+    background-color: #292c2f;
+}
+/*END fix*/
+
 #sidebar-overlay{
     display: none;
     opacity: 0;
@@ -40,7 +67,7 @@
     display: block;
     right: -55px;
     z-index: 1000;
-    margin: 0.25em;
+    margin: 0.5em;
 
     color: #999999;
     background: #292c2f;
@@ -50,6 +77,11 @@
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* Toggle Styles */
@@ -67,6 +99,11 @@
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
+}
+
+#sidebar-wrapper nav ul{
+    height: 100%;
+    overflow-y: auto;
 }
 
 #sidebar-wrapper.toggled {

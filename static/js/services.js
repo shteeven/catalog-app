@@ -11,7 +11,7 @@
   //////////////////
   //AUTHENTICATION//
   //////////////////
-  app.factory('AuthService', function ($http, $cookies, $state) {
+  app.factory('AuthService', function ($http, $cookies, $state, $rootScope) {
     var authService = {};
 
     authService.currentUser = {};
@@ -78,6 +78,7 @@
         .get('/api/disconnect')
         .success(function () {
           $cookies.put('loggedin', '');
+          $rootScope.isLoggedin = '';
           $cookies.remove('user');
           $cookies.remove('userInfo');
           authService.currentUser = angular.copy({}, authService.currentUser);
