@@ -42,7 +42,7 @@
       <li role="presentation" ng-click="menuToggle()"><a ui-sref="home">Home</a></li>
       <li ng-if="isLoggedin" role="presentation" ng-click="menuToggle()"><a ui-sref="categories({u_id: currentUser.id})">My Categories</a></li>
       <li role="presentation" ng-click="menuToggle()"><a ui-sref="createCategory">Create Category</a></li>
-      <li ng-if="isLoggedin" role="presentation" ng-click="menuToggle()"><a ui-sref="items">My Items</a></li>
+      <li ng-if="isLoggedin" role="presentation" ng-click="menuToggle()"><a ui-sref="items({u_id: currentUser.id})">My Items</a></li>
       <li role="presentation" ng-click="menuToggle()"><a ui-sref="createItem">Create Item</a></li>
       <li role="presentation" ng-click="menuToggle()">
         <a ng-if="!currentUser.username" type="button" ui-sref="login" class="btn btn-block btn-success ng-cloak">Login or Register</a>

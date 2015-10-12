@@ -191,7 +191,7 @@ var app = angular.module('catalog');
   app.controller('ItemCreateCtrl', ['$scope', 'Item', 'Category', '$state', '$stateParams', function($scope, Item, Category, $state, $stateParams) {
     $scope.item = new Item();  //create new Item instance. Properties will be set via ng-model on UI
     $scope.categories = Category.query({user_id: $scope.currentUser.id});
-    
+
     $scope.createItem = function() { //create a new item. Issues a POST to /api/item
       $scope.item.$save(function(data) {
         console.log(data);

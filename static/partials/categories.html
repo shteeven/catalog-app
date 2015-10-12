@@ -9,7 +9,7 @@
   <div class="row">
     <div class="col-sm-offset-1">
       <h2>
-        <span ng-if="usersCategory">[[categories[0].username]]'s Category</span>
+        <span ng-if="usersCategory"><span ng-if="categories.length!=0">[[categories[0].username]]'s </span>Category</span>
         <span ng-if="!usersCategory">Categories</span>
         <button class="btn btn-success" ui-sref="createCategory" title="Create a category."><span class="glyphicon glyphicon-plus"></span></button>
       </h2>

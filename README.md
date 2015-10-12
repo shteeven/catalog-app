@@ -38,6 +38,10 @@ $ python application.py
 ```
 After this, the application is ready to use. In your browser, go to `localhost:8000`
 
+## Known issues
+
+There are many, but having the State 'refresh' when a new param is introduced is on the top of my list of fixes. The ability to edit profile info: coming soon.
+
 ## Contributors 
 
 Some code has been taken an modified from online tutorials:
