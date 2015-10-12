@@ -33,6 +33,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 default_img_url = 'http://img2.wikia.nocookie.net/__cb20130511180903/legendmarielu/images/b/b4/No_image_available.jpg'
+default_picture_url = 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRm4xo-buhgKdRnRVIwPQhCC5SiF4hBn4VJOIP3k2gFy4CnfJYOeSsh'
 
 email_pattern = "^(([-a-zA–Z0-9!#$%&'*+/=?^_`{|}~.])|((^|\.)\"((\\\")|(\\\\)|\w|[-!#$%&'*+/=?^_`{|}~. \[\])(,:;<>@])*\"\.?)*)+@[-a-zA-Z0-9.]+\.[A-Za-z]{1,3}"
 
@@ -366,6 +367,7 @@ def disconnect():
 
 
 # register users without oauth
+# TODO: allow picture upload or link
 @app.route('/api/register', methods=['POST'])
 def registerUser():
 	email = request.form.get('email')
@@ -381,6 +383,7 @@ def registerUser():
 	user = User(email=email)
 	user.username = username
 	user.hash_password(password)
+	user.picture = default_picture_url
 	session.add(user)
 	session.commit()
 

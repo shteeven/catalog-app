@@ -36,6 +36,10 @@ html, body {
   display: none !important;
 }
 
+[ng-click] {
+    cursor: pointer;
+}
+
 
 /* Required for ui-bootrap components having a pointer instead of including an href attr. */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
