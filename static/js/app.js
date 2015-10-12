@@ -34,12 +34,14 @@
     // Handle login
     //////////////////////////////////
     $rootScope.isLoggedin = $cookies.get('loggedin');
-    if ($rootScope.isLoggedin != '') {
+
+    if ($rootScope.isLoggedin != '' && $rootScope.isLoggedin) {
       AuthService.setUserData();
     }
     // direct on initial page load based on login status
     if ($state.current.name == '') {
-      if ($rootScope.isLoggedin === '') {
+      if ($rootScope.isLoggedin === '' || !$rootScope.isLoggedin) {
+        console.log('here');
         $state.go('landing')
       } else {
         $state.go('home')
@@ -113,6 +115,12 @@
       })
       .state('createItem', {
         url: '/item/create',
+        params: {
+          c_id: {
+            value: null,
+            squash: false
+          }
+        },
         templateUrl: 'static/partials/items-create.html',
         controller: 'ItemCreateCtrl'
       })

@@ -16,7 +16,7 @@ An Atoms RSS feed can be reached at `/api/recent.atom`.
 
 ## Installation
 
-All depencies for the frontend are either contained within the repo or have links to their CDN. For the backend, you must first install [VirtualBox](https://www.virtualbox.org/), then [Vagrant](https://www.vagrantup.com/). Once these requirments are fulfilled, open terminal. From terminal, `cd` into Catalog Apps directory:
+All depencies for the frontend are either contained within the repo or have links to their CDN. For the backend, you must first install [VirtualBox](https://www.virtualbox.org/), then [Vagrant](https://www.vagrantup.com/). Once these requirements are fulfilled, open terminal. From terminal, `cd` into Catalog Apps directory:
 ```sh
 $ cd /catalog-app-master
 ```

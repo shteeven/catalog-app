@@ -2,10 +2,15 @@
 <!-- All user Items should repeat here -->
 <div class="container-fluid ng-cloak">
   <br>
-  <h2 class="col-sm-offset-1">
-    <span ng-if="categoryItems">Items in [[items[0].category_name]]</span>
-    <span ng-if="!categoryItems">Items</span>
-  </h2>
+  <div class="row">
+    <div class="col-sm-offset-1">
+      <h2>
+        <span ng-if="categoryItems">Items <span ng-if="items.length != 0">in [[items[0].category_name]]</span> </span>
+        <span ng-if="!categoryItems">Items</span>
+        <button class="btn btn-success" ui-sref="createItem({c_id:categoryItems})" title="Create a category."><span class="glyphicon glyphicon-plus"></span></button>
+      </h2>
+    </div>
+  </div>
   <!-- If there are no items -->
   <div ng-if="items.length===0">
     <p>
@@ -15,7 +20,7 @@
 
   <!-- Item Search Filter -->
   <div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3">
-    <input type="text" class="form-control" placeholder="Start typing to search the item list" ng-model="searchItems">
+    <input type="text" class="form-control" placeholder="Type to search the item list" ng-model="searchItems">
   </div>
 
 	<div class="row" ng-repeat="item in items | filter:searchItems"> <!-- Angular should repeat this entire section? -->
@@ -51,10 +56,10 @@
 
             <div ng-hide="currentUser.id === item.user_id">
               <p>
-                Date Created: [[ item.created[0] ]]-[[ item.created[1] ]]-[[ item.created[2] ]]
-                @ [[ item.created[3] ]]:[[ item.created[4] ]]
+                Created: [[ item.created[0] ]]-[[ item.created[1] ]]-[[ item.created[2] ]]
+                <!--@ [[ item.created[3] ]]:[[ item.created[4] ]]-->
               </p>
-              <a ui-sref="items({c_id: item.category_id})">[[item.category_name]]</a>
+              By: <a ui-sref="items({c_id: item.category_id})">[[item.username]]</a>
             </div>
 					</div>
 

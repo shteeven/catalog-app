@@ -4,11 +4,6 @@
 <!-- Only Categories of the signed in user should show CRUD ops -->
 <!-- Only SIGNED IN users should see the ADD button -->
 <div class="container-fluid ng-cloak">
-  <div class="col-xs-offset-1 col-sm-offset-4" ng-if="categories.length===0">
-    <p>
-      You have no categories, yet. <a ui-sref="createCategory">Try creating one!</a>
-    </p>
-  </div>
 
   <br>
   <!-- Category Search Filter -->
@@ -16,10 +11,16 @@
     <div class="form-group">
       <h3 class="pull-left no-pad">Recent Categories</h3>
       <div class="col-xs-7 pull-right">
-        <input type="text" class="form-control" ng-model="searchCategories">
+        <input type="text" class="form-control" placeholder="Type to search categories" ng-model="searchCategories">
       </div>
     </div>
   </form>
+
+  <div class="col-xs-offset-1 col-sm-offset-4" ng-if="categories.length===0">
+    <p>
+      You have no categories, yet. <a ui-sref="createCategory">Try creating one!</a>
+    </p>
+  </div>
 
   <!-- CATEGORIES SECTION OF HOME PAGE -->
 	<div class="row" ng-repeat="category in categories | filter: searchCategories | limitTo: 5"> <!-- Angular should repeat this entire section? -->
@@ -72,12 +73,6 @@
 <div class="home-items col-sm-6">
   <div class="container-fluid ng-cloak">
   <!-- If there are no items -->
-  <div ng-if="items.length===0">
-    <p>
-      You have no items, yet. <a ui-sref="createItem">Try creating one!</a>
-    </p>
-  </div>
-
 
   <br>
   <!-- Item Search Filter -->
@@ -85,10 +80,16 @@
     <div class="form-group">
       <h3 class="pull-left no-pad">Recent Items</h3>
       <div class="col-xs-7 pull-right">
-        <input type="text" class="form-control" ng-model="searchItems">
+        <input type="text" class="form-control" placeholder="Type to search items" ng-model="searchItems">
       </div>
     </div>
   </form>
+
+    <div ng-if="items.length===0">
+      <p>
+        You have no items, yet. <a ui-sref="createItem">Try creating one!</a>
+      </p>
+    </div>
 
 	<div class="row" ng-repeat="item in items | filter:searchItems | limitTo: 10"> <!-- Angular should repeat this entire section? -->
 

@@ -160,7 +160,6 @@ var app = angular.module('catalog');
 
 
   app.controller('ItemCtrl', ['$scope', 'Item', '$uibModal', '$stateParams', function($scope, Item, $uibModal, $stateParams) {
-    console.log($stateParams.c_id);
     $scope.items = Item.query({category_id: $stateParams.c_id});
     $scope.categoryItems = $stateParams.c_id;
 
@@ -189,10 +188,10 @@ var app = angular.module('catalog');
   }]);
 
 
-  app.controller('ItemCreateCtrl', ['$scope', 'Item', 'Category', '$state', function($scope, Item, Category, $state) {
+  app.controller('ItemCreateCtrl', ['$scope', 'Item', 'Category', '$state', '$stateParams', function($scope, Item, Category, $state, $stateParams) {
     $scope.item = new Item();  //create new Item instance. Properties will be set via ng-model on UI
     $scope.categories = Category.query({user_id: $scope.currentUser.id});
-
+    
     $scope.createItem = function() { //create a new item. Issues a POST to /api/item
       $scope.item.$save(function(data) {
         console.log(data);
