@@ -34,7 +34,7 @@
 								<span class="glyphicon glyphicon-pencil"></span>
               </button>
               <!-- Delete button -->
-              <button type="button" ng-click="open(item)" class="btn btn-danger">
+              <button type="button" ng-click="openDeleteItem(item)" class="btn btn-danger">
 								<span class="glyphicon glyphicon-trash"></span>
               </button>
             </div>
@@ -44,6 +44,7 @@
                 Date Created: [[ item.created[0] ]]-[[ item.created[1] ]]-[[ item.created[2] ]]
                 @ [[ item.created[3] ]]:[[ item.created[4] ]]
               </p>
+              <a ui-sref="items({c_id: item.category_id})">[[item.category_name]]</a>
             </div>
 					</div>
 

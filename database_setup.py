@@ -82,10 +82,11 @@ class Item(Base):
 			'description': self.description,
 			'id': self.id,
 			'category_id': self.category_id,
+			'category_name': self.category.name,
 			'user_id': self.user_id,
 			'username': self.user.username,
-			'timestamp': datetimeformat(self.timestamp),
-			'img_url': self.img_url
+			'img_url': self.img_url,
+			'created': list(self.timestamp.timetuple())
 		}
 
 

@@ -156,11 +156,6 @@ var app = angular.module('catalog');
   app.controller('ItemCtrl', ['$scope', 'Item', '$uibModal', '$stateParams', function($scope, Item, $uibModal, $stateParams) {
 
     $scope.items = Item.query({category_id: $stateParams.c_id});
-    console.log('here');
-    $scope.logs = function() {
-      console.log('asdf');
-      console.log($scope.items)
-    };
 
 
     $scope.deleteItem = function(item) {
