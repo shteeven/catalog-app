@@ -101,6 +101,7 @@
         })
         .error(function (err) {
           $cookies.put('loggedin', '');
+          $rootScope.isLoggedin = '';
           console.log(err);
         });
     };
