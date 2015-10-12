@@ -14,7 +14,7 @@
   <!-- Category Search Filter -->
   <form class="form-horizontal">
     <div class="form-group">
-      <h3 class="pull-left no-pad">Some Heading</h3>
+      <h3 class="pull-left no-pad">Recent Categories</h3>
       <div class="col-xs-7 pull-right">
         <input type="text" class="form-control" ng-model="searchCategories">
       </div>
@@ -22,7 +22,7 @@
   </form>
 
   <!-- CATEGORIES SECTION OF HOME PAGE -->
-	<div class="row" ng-repeat="category in categories | filter:searchCategories"> <!-- Angular should repeat this entire section? -->
+	<div class="row" ng-repeat="category in categories | filter: searchCategories | limitTo: 5"> <!-- Angular should repeat this entire section? -->
 
 		<div class="col-xs-12 col-md-10 col-md-offset-1">
 
@@ -30,10 +30,10 @@
 
 				<div class="row category-wrap"> <!-- Angular should repeat this block -->
 
-					<!-- Image thumbnail -->
-					<div ng-click="go('items', {c_id:category.id})" class="col-xs-1">
-						<img class="img-thumb" ng-src="[[ category.img_url ]]" alt="[[ category.name ]] image.">
-					</div>
+					<!--&lt;!&ndash; Image thumbnail &ndash;&gt;-->
+					<!--<div ng-click="go('items', {c_id:category.id})" class="col-xs-1">-->
+						<!--<img class="img-thumb" ng-src="[[ category.img_url ]]" alt="[[ category.name ]] image.">-->
+					<!--</div>-->
 
 					<!-- Category Title -->
 					<div class="col-xs-6 col-md-7">
@@ -55,10 +55,9 @@
 
             <div ng-hide="currentUser.id === category.user_id">
               <p>
-                Date Created: [[ category.created[0] ]]-[[ category.created[1] ]]-[[ category.created[2] ]]
-                @ [[ category.created[3] ]]:[[ category.created[4] ]]
+                Created: [[ category.created[0] ]]-[[ category.created[1] ]]-[[ category.created[2] ]]
               </p>
-              <a ui-sref="categories({u_id: category.user_id})">[[category.username]]</a>
+              By: <a ui-sref="categories({u_id: category.user_id})">[[category.username]]</a>
             </div>
 					</div>
 
@@ -89,14 +88,14 @@
   <!-- Item Search Filter -->
   <form class="form-horizontal">
     <div class="form-group">
-      <h3 class="pull-left no-pad">Some Heading</h3>
+      <h3 class="pull-left no-pad">Recent Items</h3>
       <div class="col-xs-7 pull-right">
         <input type="text" class="form-control" ng-model="searchItems">
       </div>
     </div>
   </form>
 
-	<div class="row" ng-repeat="item in items | filter:searchItems"> <!-- Angular should repeat this entire section? -->
+	<div class="row" ng-repeat="item in items | filter:searchItems | limitTo: 10"> <!-- Angular should repeat this entire section? -->
 
 		<div class="col-xs-12 col-md-10 col-md-offset-1">
 
@@ -104,10 +103,10 @@
 
 				<div class="row category-wrap"> <!-- Angular should repeat this block -->
 
-					<!-- Image thumbnail -->
-					<div class="col-xs-1">
-						<img class="img-thumb" ng-src="[[ item.img_url ]]" alt="[[ item.name ]] image.">
-					</div>
+					<!--&lt;!&ndash; Image thumbnail &ndash;&gt;-->
+					<!--<div class="col-xs-1">-->
+						<!--<img class="img-thumb" ng-src="[[ item.img_url ]]" alt="[[ item.name ]] image.">-->
+					<!--</div>-->
 
 					<!-- Item Title -->
 					<div class="col-xs-6 col-md-7">
@@ -115,7 +114,7 @@
 					</div>
 
 					<!-- CRUD -->
-					<div class="col-xs-5 col-md-4 crud">
+					<div class="col-xs-5 col-md-5 crud">
             <div ng-show="currentUser.id === item.user_id">
               <!-- Edit button -->
               <button type="button" ui-sref="editItem({id:item.id})" class="btn btn-success">
@@ -129,10 +128,10 @@
 
             <div ng-hide="currentUser.id === item.user_id">
               <p>
-                Date Created: [[ item.created[0] ]]-[[ item.created[1] ]]-[[ item.created[2] ]]
-                @ [[ item.created[3] ]]:[[ item.created[4] ]]
+                Created: [[ item.created[0] ]]-[[ item.created[1] ]]-[[ item.created[2] ]]
+                <!--@ [[ item.created[3] ]]:[[ item.created[4] ]]-->
               </p>
-              <a ui-sref="items({c_id: item.category_id})">[[item.username]]</a>
+              By: <a ui-sref="items({c_id: item.category_id})">[[item.username]]</a>
             </div>
 					</div>
 
