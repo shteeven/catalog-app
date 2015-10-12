@@ -27,10 +27,15 @@
 <!-- Sidebar -->
 <div id="sidebar-wrapper" ng-class="{toggled: menu_toggled}">
   <!-- Sidebar Toggle -->
-  <button id="menu-toggle" ng-class="{toggled: menu_toggled}" ng-click="menuToggle()" type="button" class="btn">
-    <p class="sr-only">Sidebar Menu Toggle</p>
-    <span class="glyphicon glyphicon-menu-hamburger"></span>
+  <button type="button" id="menu-toggle" ng-class="{toggled: menu_toggled}" ng-click="menuToggle()" >
+    <span class="hamb-top"></span>
+    <span class="hamb-middle"></span>
+    <span class="hamb-bottom"></span>
   </button>
+  <!--<button id="menu-toggle" ng-class="{toggled: menu_toggled}" ng-click="menuToggle()" type="button" class="btn">-->
+    <!--<p class="sr-only">Sidebar Menu Toggle</p>-->
+    <!--<span class="glyphicon glyphicon-menu-hamburger"></span>-->
+  <!--</button>-->
   <nav>
     <ul class="sidebar-nav">
       <li class="sidebar-brand">Catalog App</li>
