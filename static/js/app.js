@@ -35,8 +35,6 @@
     // Handle login
     //////////////////////////////////
     $rootScope.isLoggedin = $cookies.get('loggedin');
-    console.log($rootScope.isLoggedin);
-    console.log('ll');
     if ($rootScope.isLoggedin != '') {
       AuthService.setUserData();
     }
@@ -56,9 +54,9 @@
       }
       var restricted = ['editCategory', 'createCategory', 'editItem', 'createItem'];
       if (restricted.indexOf(toState.name) != -1 && $rootScope.isLoggedin === '') {
-        $rootScope.addServerReject('You must sign in to access this page.');
         event.preventDefault();
-        $state.go('login')
+        $state.go('login');
+        //$rootScope.addServerReject('You must sign in to access this page.');
       }
     });
 

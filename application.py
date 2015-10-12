@@ -166,7 +166,7 @@ def categoryAPI(id=''):
 
 
 # CRUD operations for items (complete)
-# TODO: accept args more queries
+# TODO: accept args for more types of queries
 @app.route('/api/item/', methods=['GET', 'POST'])
 @app.route('/api/item/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def itemAPI(id=''):
@@ -185,6 +185,8 @@ def itemAPI(id=''):
 	if 'username' in login_session:
 		# verify that the user owns the category in which they are creating an item
 		if request.method != 'DELETE':
+			if 'category_id' not in login_session:
+				return jsonify(message='You must select a category.'), 400
 			category = session.query(Category).filter_by(id=request.json['category_id']).one()
 			if category.user_id != login_session['user_id']:
 				return jsonify(message='You do not own the category for which this item is to be created.'), 401

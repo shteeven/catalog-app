@@ -1,6 +1,6 @@
 ## Synopsis
 
-This Catalog App is the fulfillment of the third project in Udacity's Fullstack Nanodegree. The requirements for which are to build a cataloging application using flask and sqlalchemy as a backend and using html to create create a front. The app is to take user authentication and keep data safe; allowing only authorized users to perform CRUD operations on data for which they are the creators. This does all that and **more**.
+This Catalog App is the fulfillment of the third project in Udacity's Fullstack Nanodegree. The requirements for which are to build a cataloging application using flask and sqlalchemy as a backend and using html and css (bootstrap) as a front. The app is to take user authentication and keep data safe; allowing only authorized users to perform CRUD operations on data for which they are the creators. This does all that and **more**.
 
 ## Explanation
 
