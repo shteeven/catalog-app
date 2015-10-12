@@ -19,6 +19,12 @@ body{
 	max-width: 100%;
 }
 
+button {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 /* Sticky Footer Mess */
 html, body {
@@ -72,7 +78,7 @@ html, body {
 ********************/
 
 .crud button {
-	display: block;
+	display: inline-block;
 	margin: auto;
 	margin-bottom: 0.5em;
 }
@@ -83,6 +89,16 @@ html, body {
 	border-bottom: 2px solid #292c2f;
 }
 
+.crud button.success {
+    background-image: -webkit-linear-gradient(top, #5cb85c 0%, #419641 100%);
+    background-image: -o-linear-gradient(top, #5cb85c 0%, #419641 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#5cb85c), to(#419641));
+    background-image: linear-gradient(to bottom, #5cb85c 0%, #419641 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5cb85c', endColorstr='#ff419641', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+    background-repeat: repeat-x;
+    border-color: #3e8f3e;
+}
 
 
 

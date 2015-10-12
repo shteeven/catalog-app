@@ -1,7 +1,13 @@
 <div class="col-sm-8 col-sm-offset-2">
-	<br>
-	<form ng-submit="createItem()" role="form" class="form-horizontal">
+  <div class="col-sm-offset-3">
+    <h2>Create an item</h2>
+  </div>
+  <div class="col-sm-offset-1" ng-if="categories.length===0">
+    <p>
+      You have no categories in which to place your item. <a ui-sref="createCategory">Create one here!</a>
+    </p>
+  </div>
+	<form ng-if="categories.length !=0" ng-submit="createItem()" role="form" class="form-horizontal">
 	  <div ng-include="'static/partials/_item_form.html'"></div>
 	</form>
-	
 </div>

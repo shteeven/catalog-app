@@ -83,7 +83,13 @@
         controller: 'LoginCtrl'
       })
       .state('categories', {
-        url: '/categories',
+        url: '/categories/:u_id',
+        params: {
+          u_id: {
+            value: null,
+            squash: false
+          }
+        },
         templateUrl: 'static/partials/categories.html',
         controller: 'CategoryCtrl'
       })
@@ -98,7 +104,13 @@
         controller: 'CategoryEditCtrl'
       })
       .state('items', {
-        url: '/items',
+        url: '/items/:c_id',
+        params: {
+          c_id: {
+            value: null,
+            squash: false
+          }
+        },
         templateUrl: 'static/partials/items.html',
         controller: 'ItemCtrl'
       })

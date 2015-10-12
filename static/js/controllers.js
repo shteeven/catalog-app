@@ -10,6 +10,13 @@ var app = angular.module('catalog');
 
   app.controller('MainCtrl', ['$scope', '$window', '$rootScope', 'AuthService', '$state', function($scope, $window, $rootScope, AuthService, $state) {
 
+    // make state available to the scope
+    $scope.go= function (state) {
+
+      console.log(state);
+      $state.go(state);
+    }
+
     $scope.menu_toggled = false; // initialize toggle
 
     $scope.menuToggle = function() { $scope.menu_toggled = !$scope.menu_toggled; };
@@ -88,8 +95,9 @@ var app = angular.module('catalog');
   }]);
 
 
-  app.controller('CategoryCtrl', ['$scope', 'Category', '$uibModal', function($scope, Category, $uibModal) {
-    $scope.categories = Category.query(); //fetch all categories. Issues a GET to /api/categories
+  app.controller('CategoryCtrl', ['$scope', 'Category', '$uibModal', '$stateParams', function($scope, Category, $uibModal, $stateParams) {
+    $scope.categories = Category.query({user_id: $stateParams.u_id});
+    //$scope.categories = Category.query(); //fetch all categories. Issues a GET to /api/categories
 
     $scope.deleteCategory = function(category) {
       category.$delete(function(resp) {
@@ -145,10 +153,12 @@ var app = angular.module('catalog');
   }]);
 
 
-  app.controller('ItemCtrl', ['$scope', 'Item', '$uibModal', function($scope, Item, $uibModal) {
-    $scope.items = Item.query();
+  app.controller('ItemCtrl', ['$scope', 'Item', '$uibModal', '$stateParams', function($scope, Item, $uibModal, $stateParams) {
 
+    $scope.items = Item.query({category_id: $stateParams.c_id});
+    console.log('here');
     $scope.logs = function() {
+      console.log('asdf');
       console.log($scope.items)
     };
 
@@ -195,7 +205,21 @@ var app = angular.module('catalog');
   }]);
 
 
-  app.controller('ItemEditCtrl', ['$scope', 'Item', function($scope, Item) {}]);
+  app.controller('ItemEditCtrl', ['$scope', 'Item', '$stateParams', 'Category', function($scope, Item, $stateParams, Category) {
+    $scope.updateItem = function() { //Update the edited category. Issues a PUT to /api/category/:id
+      $scope.item.$update(function() {
+        $state.go('items'); // on success go back to categories
+      });
+    };
+
+    $scope.categories = Category.query({user_id: $scope.currentUser.id});
+
+    $scope.loadItem = function() { //Issues a GET request to /api/categories/:id to get a category
+      $scope.item = Item.get({ id: $stateParams.id });
+    };
+
+    $scope.loadItem(); // Load a movie which can be edited on UI
+  }]);
 
 
   app.controller('LoginCtrl', ['$scope', '$window', 'AuthService', function ($scope, $window, AuthService) {

@@ -43,6 +43,7 @@ class Category(Base):
 	id = Column(Integer, primary_key=True)
 	name = Column(String(250), nullable=False)
 	user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+	user = relationship(User)
 	item = relationship('Item', cascade="all, delete-orphan")
 	img_url = Column(String(500))
 	timestamp = Column(DateTime, default=datetime.datetime.utcnow)
@@ -55,6 +56,7 @@ class Category(Base):
 			'id': self.id,
 			'user_id': self.user_id,
 			'img_url': self.img_url,
+			'username': self.user.username,
 			'created': list(self.timestamp.timetuple())
 		}
 
@@ -67,7 +69,7 @@ class Item(Base):
 	description = Column(String(250))
 	category_id = Column(Integer, ForeignKey('category.id'))
 	category = relationship(Category)
-	user_id = Column(Integer, ForeignKey('user.id'))
+	user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 	user = relationship(User)
 	timestamp = Column(DateTime, default=datetime.datetime.utcnow)
 	img_url = Column(String(500))
@@ -81,6 +83,7 @@ class Item(Base):
 			'id': self.id,
 			'category_id': self.category_id,
 			'user_id': self.user_id,
+			'username': self.user.username,
 			'timestamp': datetimeformat(self.timestamp),
 			'img_url': self.img_url
 		}

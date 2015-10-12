@@ -1,4 +1,4 @@
-
+<br>
 <div class="row">
 
   <div class="col-sm-8 col-sm-offset-2">
@@ -26,21 +26,12 @@
     
     <!-- Select Field -->
     <div class="form-group">
-      <label for="selectField" class="col-sm-3 control-label">Item Category</label>
+      <label for="selectField" class="col-sm-3 control-label">Item Category</label> [[item.category_id]]
       <div class="col-sm-9">
-        <select name="selectField" id="selectField" class="form-control" ng-model="item.category_id">
-          <option value="">---Please select---</option> <!-- not selected / blank option -->
-          <option ng-repeat="category in categories" value="[[ category.id ]]">[[ category.name ]]</option>
-        </select>
+        <select id="selectField" class="form-control" ng-options="value.id as value.name for (key, value) in categories" ng-model="item.category_id"></select>
       </div>
     </div>
-    
-    <div class="form-group">
-      <label for="category" class="col-sm-3 control-label"> </label>
-      <div class="col-sm-9">
-        <input type="text" ng-model="item.category_id" class="form-control" id="category" placeholder="Item Category"/>
-      </div>
-    </div>
+
     
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">

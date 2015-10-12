@@ -26,6 +26,7 @@
         })
         .success(function (data, status, headers, config) {
           $cookies.put('loggedin', 'true');
+          $rootScope.isLoggedin ='true';
           authService.setUserData();
           $state.go('home');
         })
@@ -45,6 +46,7 @@
         })
         .success(function (data, status, headers, config) {
           $cookies.put('loggedin', 'true');
+          $rootScope.isLoggedin ='true';
           authService.setUserData();
           $state.go('home');
         })
@@ -65,6 +67,7 @@
         })
         .success(function () {
           $cookies.put('loggedin', 'true');
+          $rootScope.isLoggedin ='true';
           authService.setUserData();
           $state.go('home');
         })
@@ -133,6 +136,8 @@
       stripTrailingSlashes: false
     });
   });
+
+
 
 
 }());

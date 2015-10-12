@@ -4,7 +4,11 @@
 <!-- Only SIGNED IN users should see the ADD button -->
 
 <div class="container-fluid ng-cloak">
-			
+  <div class="col-xs-offset-1 col-sm-offset-4" ng-if="categories.length===0">
+    <p>
+      You have no categories, yet. <a ui-sref="createCategory">Try creating one!</a>
+    </p>
+  </div>
 	<div class="row" ng-repeat="category in categories"> <!-- Angular should repeat this entire section? -->
 		
 		<div class="col-xs-12 col-md-10 col-md-offset-1">
@@ -14,13 +18,13 @@
 				<div class="row category-wrap"> <!-- Angular should repeat this block -->
 						
 					<!-- Image thumbnail -->
-					<div class="col-xs-3 col-md-2">
+					<div ng-click="go('items', {c_id:category.id})" class="col-xs-3 col-md-2">
 						<img class="img-thumb" ng-src="[[ category.img_url ]]" alt="[[ category.name ]] image.">
 					</div>
 
 					<!-- Category Title -->
 					<div class="col-xs-6 col-md-8">
-						<h3 class="title">[[ category.name ]]</h3>
+						<h3 ng-click="go('items', {c_id:category.id} )" class="title">[[ category.name ]]</h3>
 					</div>
 
 					<!-- CRUD -->
@@ -41,6 +45,7 @@
                 Date Created: [[ category.created[0] ]]-[[ category.created[1] ]]-[[ category.created[2] ]]
                 @ [[ category.created[3] ]]:[[ category.created[4] ]]
               </p>
+              <a ui-sref="categories({u_id: category.user_id})">[[category.username]]</a>
             </div>
 					</div>
 

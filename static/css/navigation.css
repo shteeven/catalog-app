@@ -56,11 +56,6 @@
     opacity: .5;
 }
 
-#sidebar-overlay.toggled{
-    display: block;
-    opacity: .3;
-}
-
 /* Toggle Styles */
 
 #sidebar-wrapper {
@@ -162,10 +157,6 @@
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
 
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 #menu-toggle:hover,

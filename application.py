@@ -170,6 +170,10 @@ def categoryAPI(id=''):
 @app.route('/api/item/<int:id>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def itemAPI(id=''):
 	# return items
+	if request.method == 'GET' and 'category_id' in request.args:
+		items = session.query(Item).filter_by(category_id=request.args['category_id']).order_by(Item.timestamp).all()
+		return json.dumps([r.serialize for r in items])
+
 	if request.method == 'GET' and id == '':
 		items = session.query(Item).order_by(Item.timestamp).all()
 		return json.dumps([r.serialize for r in items])
@@ -445,7 +449,8 @@ def validateImageUrl(img_url):
 			print(code)
 			if code == 404:
 				msg = 'Image was not found. Enter a valid url or leave the field blank.'
-			return 400, img_url, msg
+				code = 400
+			return code, img_url, msg
 		except requests.exceptions.MissingSchema:
 			return 400, '', 'Image url is an invalid schema. Enter a valid url or leave the field blank.'
 		except requests.exceptions.InvalidSchema:
