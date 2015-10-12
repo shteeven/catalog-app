@@ -9,7 +9,16 @@
       You have no categories, yet. <a ui-sref="createCategory">Try creating one!</a>
     </p>
   </div>
-	<div class="row" ng-repeat="category in categories"> <!-- Angular should repeat this entire section? -->
+  <form>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Search these categories" ng-model="searchCategories">
+      </div>
+    </div>
+  </form>
+
+	<div class="row" ng-repeat="category in categories | filter:searchCategories"> <!-- Angular should repeat this entire section? -->
 		
 		<div class="col-xs-12 col-md-10 col-md-offset-1">
 
