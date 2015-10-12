@@ -108,6 +108,10 @@
           c_id: {
             value: null,
             squash: false
+          },
+          u_id: {
+            value: null,
+            squash: false
           }
         },
         templateUrl: 'static/partials/items.html',

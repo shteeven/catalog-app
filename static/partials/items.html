@@ -6,7 +6,8 @@
     <div class="col-sm-offset-1">
       <h2>
         <span ng-if="categoryItems">Items <span ng-if="items.length != 0">in [[items[0].category_name]]</span> </span>
-        <span ng-if="!categoryItems">Items</span>
+        <span ng-if="userItems"><span ng-if="items.length != 0">[[items[0].username]]'s</span>Items</span>
+        <span ng-if="!categoryItems && !userItems">Items</span>
         <button class="btn btn-success" ui-sref="createItem({c_id:categoryItems})" title="Create a category."><span class="glyphicon glyphicon-plus"></span></button>
       </h2>
     </div>

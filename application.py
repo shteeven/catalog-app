@@ -173,6 +173,9 @@ def itemAPI(id=''):
 	if request.method == 'GET' and 'category_id' in request.args:
 		items = session.query(Item).filter_by(category_id=request.args['category_id']).order_by(Item.timestamp).all()
 		return json.dumps([r.serialize for r in items])
+	if request.method == 'GET' and 'user_id' in request.args:
+		items = session.query(Item).filter_by(user_id=request.args['user_id']).order_by(Item.timestamp).all()
+		return json.dumps([r.serialize for r in items])
 
 	if request.method == 'GET' and id == '':
 		items = session.query(Item).order_by(Item.timestamp).all()

@@ -160,8 +160,9 @@ var app = angular.module('catalog');
 
 
   app.controller('ItemCtrl', ['$scope', 'Item', '$uibModal', '$stateParams', function($scope, Item, $uibModal, $stateParams) {
-    $scope.items = Item.query({category_id: $stateParams.c_id});
+    $scope.items = Item.query({category_id: $stateParams.c_id, user_id: $stateParams.u_id});
     $scope.categoryItems = $stateParams.c_id;
+    $scope.userItems = $stateParams.u_id;
 
 
     $scope.deleteItem = function(item) {
