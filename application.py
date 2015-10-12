@@ -374,7 +374,7 @@ def registerUser():
 		return jsonify(message="Email is not valid."), 400
 	password = request.form.get('password')
 	username = request.form.get('username')
-	if email is None or password is None or username is None:
+	if email == '' or password == '' or username == '':
 		return jsonify(message='Form fields incomplete.'), 400
 	if session.query(User).filter_by(email=email).first() is not None:
 		return jsonify(message='User already registered.'), 400

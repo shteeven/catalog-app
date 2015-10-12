@@ -8,7 +8,17 @@
     </p>
   </div>
 
-	<div class="row" ng-repeat="item in items"> <!-- Angular should repeat this entire section? -->
+    <form>
+      <div class="h2">alksdjfa;sdf</div>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Search these categories" ng-model="searchItems">
+      </div>
+    </div>
+  </form>
+
+	<div class="row" ng-repeat="item in items | filter:items"> <!-- Angular should repeat this entire section? -->
 		
 		<div class="col-xs-12 col-md-10 col-md-offset-1">
 
