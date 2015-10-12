@@ -40,7 +40,6 @@
     <ul class="sidebar-nav">
       <li class="sidebar-brand">Catalog App</li>
       <li role="presentation" ng-click="menuToggle()"><a ui-sref="home">Home</a></li>
-      <!--<li role="presentation" ng-click="menuToggle()"><a ui-sref="landing">Landing</a></li>-->
       <li ng-if="isLoggedin" role="presentation" ng-click="menuToggle()"><a ui-sref="categories({u_id: currentUser.id})">My Categories</a></li>
       <li role="presentation" ng-click="menuToggle()"><a ui-sref="createCategory">Create Category</a></li>
       <li ng-if="isLoggedin" role="presentation" ng-click="menuToggle()"><a ui-sref="items">My Items</a></li>
