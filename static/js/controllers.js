@@ -103,7 +103,7 @@ var app = angular.module('catalog');
       })
     };
 
-    $scope.open = function (category) {
+    $scope.openDeleteCategory = function (category) {
       var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: '../static/partials/_confirm_delete.html',

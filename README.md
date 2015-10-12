@@ -31,3 +31,9 @@ $ python application.py
 ```
 After this, the application is ready to use. In your browser, go to `localhost:8000`
 
+## Contributors 
+
+Some code has been taken an modified from online tutorials:
+Login services courtesy of Gert Hengeveld at [Medium](https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec)
+Assistance in writing HTML and css styles provided by [Neven Hadjer](https://github.com/nevenhajder)
+

@@ -1,6 +1,5 @@
 /**
  * Created by stevenbarnhurst on 10/1/15.
- * Modal operations and functions courtesy of Ben Nadel (http://www.bennadel.com/blog/2806-creating-a-simple-modal-system-in-angularjs.htm)
  */
 
 (function () {
