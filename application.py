@@ -185,7 +185,7 @@ def itemAPI(id=''):
 	if 'username' in login_session:
 		# verify that the user owns the category in which they are creating an item
 		if request.method != 'DELETE':
-			if 'category_id' not in login_session:
+			if 'category_id' not in request.json:
 				return jsonify(message='You must select a category.'), 400
 			category = session.query(Category).filter_by(id=request.json['category_id']).one()
 			if category.user_id != login_session['user_id']:
@@ -214,8 +214,6 @@ def itemAPI(id=''):
 					return jsonify(message=msg), valid
 			else:
 				return jsonify(message='You must enter a name.'), 422
-		else:
-			abort(401)
 		# END CREATE
 
 		# get item for PUT or DELETE, user_id, must match that of category.user_id for PUT or DELETE
@@ -224,7 +222,6 @@ def itemAPI(id=''):
 			return jsonify(message='Item not found.'), 404
 		if item.user_id != login_session['user_id']:
 			jsonify(message='You are not the creator.'), 401
-
 		# EDIT an ITEM, requires login and user_id match
 		if request.method == 'PUT':
 			if 'name' in request.json and validateExists(request.json['name']) and 'category_id' in request.json and validateExists(request.json['category_id']):
