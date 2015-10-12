@@ -10,24 +10,25 @@
     </p>
   </div>
 
+  <br>
+  <!-- Category Search Filter -->
+  <form class="form-horizontal">
+    <div class="form-group">
+      <h3 class="pull-left no-pad">Some Heading</h3>
+      <div class="col-xs-7 pull-right">
+        <input type="text" class="form-control" ng-model="searchCategories">
+      </div>
+    </div>
+  </form>
+
   <!-- CATEGORIES SECTION OF HOME PAGE -->
-	<div class="row" ng-repeat="category in categories"> <!-- Angular should repeat this entire section? -->
+	<div class="row" ng-repeat="category in categories | filter:searchCategories"> <!-- Angular should repeat this entire section? -->
 
 		<div class="col-xs-12 col-md-10 col-md-offset-1">
 
 			<!--<div class="container-fluid">-->
 
 				<div class="row category-wrap"> <!-- Angular should repeat this block -->
-          
-          <!-- Category Search Filter -->
-          <form class="form-horizontal">
-            <div class="form-group">
-              <h3 class="pull-left no-pad">Some Heading</h3>
-              <div class="col-xs-7 pull-right">
-                <input type="text" class="form-control" id="category-search">
-              </div>
-            </div>
-          </form>
 
 					<!-- Image thumbnail -->
 					<div ng-click="go('items', {c_id:category.id})" class="col-xs-1">
@@ -83,23 +84,25 @@
     </p>
   </div>
 
-	<div class="row" ng-repeat="item in items"> <!-- Angular should repeat this entire section? -->
+
+  <br>
+  <!-- Item Search Filter -->
+  <form class="form-horizontal">
+    <div class="form-group">
+      <h3 class="pull-left no-pad">Some Heading</h3>
+      <div class="col-xs-7 pull-right">
+        <input type="text" class="form-control" ng-model="searchItems">
+      </div>
+    </div>
+  </form>
+
+	<div class="row" ng-repeat="item in items | filter:searchItems"> <!-- Angular should repeat this entire section? -->
 
 		<div class="col-xs-12 col-md-10 col-md-offset-1">
 
 			<!--<div class="container-fluid">-->
 
 				<div class="row category-wrap"> <!-- Angular should repeat this block -->
-
-          <!-- Item Search Filter -->
-          <form class="form-horizontal">
-            <div class="form-group">
-              <h3 class="pull-left no-pad">Some Heading</h3>
-              <div class="col-xs-7 pull-right">
-                <input type="text" class="form-control" id="item-search">
-              </div>
-            </div>
-          </form>
 
 					<!-- Image thumbnail -->
 					<div class="col-xs-1">
