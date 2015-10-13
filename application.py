@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Shtav'
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash, make_response, abort
-from flask.ext.login import LoginManager
+from flask import Flask, render_template, request, jsonify, url_for, flash, make_response, abort
 from urlparse import urljoin
 from werkzeug.contrib.atom import AtomFeed
-from sqlalchemy import create_engine, asc
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, exc
 from database_setup import Base, Category, Item, User
 from flask import session as login_session
@@ -16,8 +15,7 @@ import httplib2
 import json
 import re
 import requests
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
-from flask.ext.cors import cross_origin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
 app = Flask(__name__)
@@ -278,11 +276,14 @@ def gconnect():
 		oauth_flow.redirect_uri = 'postmessage'
 		credentials = oauth_flow.step2_exchange(code)
 	except FlowExchangeError:
-		response = make_response(
-			json.dumps('Failed to upgrade the authorization code.'), 401)
+		# the gplus oauth call back is firing multiple times and before the first request can finish
+		# a solution is being searched for
+		response = make_response(json.dumps('Let this error fail silently.'), 200)
 		response.headers['Content-Type'] = 'application/json'
 		return response
 
+
+	login_session['code'] = code
 	# Check that the access token is valid.
 	access_token = credentials.access_token
 	url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
@@ -329,7 +330,6 @@ def gconnect():
 	user = getUser(user_id)
 	login_session['access_token'] = access_token
 	login_session['gplus_id'] = gplus_id
-
 	login_session['username'] = user.username
 	login_session['email'] = user.email
 	login_session['picture'] = user.picture
@@ -404,7 +404,7 @@ def login():
 	password = request.form.get('password')
 	if username is None or password is None:
 		return jsonify(message='Form fields incomplete.'), 400
-	user = session.query(User).filter_by(username=username).first()
+	user = session.query(User).filter(User.username.like('%'+username+'%')).first()
 	if user is None:
 		return jsonify(message='User not registered.'), 400
 	if not user.verify_password(password=password):

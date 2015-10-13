@@ -33,14 +33,14 @@
     ///////////////////////////////////
     // Handle login
     //////////////////////////////////
-    $rootScope.isLoggedin = $cookies.get('loggedin');
+    $rootScope.isLoggedin = $cookies.get('loggedin') || '';
 
-    if ($rootScope.isLoggedin != '' && $rootScope.isLoggedin) {
+    if ($rootScope.isLoggedin != '') {
       AuthService.setUserData();
     }
     // direct on initial page load based on login status
     if ($state.current.name == '') {
-      if ($rootScope.isLoggedin === '' || !$rootScope.isLoggedin) {
+      if ($rootScope.isLoggedin === '') {
         console.log('here');
         $state.go('landing')
       } else {
@@ -49,7 +49,7 @@
     }
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-      if (toState.name === 'login' && $rootScope.isLoggedin != '' && $rootScope.isLoggedin) {
+      if (toState.name === 'login' && $rootScope.isLoggedin != '') {
         event.preventDefault();
         $state.go('home')
       }

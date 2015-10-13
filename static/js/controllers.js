@@ -44,7 +44,13 @@ var app = angular.module('catalog');
     $scope.categories = Category.query(); //fetch all categories. Issues a GET to /api/categories
     $scope.items = Item.query();
 
+    $scope.sortTypesCategory = ['name', 'username', 'created'];
+    $scope.sortReverseCategory = true;
+    $scope.sortCategoryBy = 'created';
 
+    $scope.sortTypesItem = ['name', 'username', 'created', 'category_name'];
+    $scope.sortReverseItem = true;
+    $scope.sortItemBy = 'created';
 
     $scope.deleteCategory = function(category) {
       category.$delete(function(resp) {
@@ -102,7 +108,13 @@ var app = angular.module('catalog');
 
     $scope.usersCategory = $stateParams.u_id;
 
-    //$scope.categories = Category.query(); //fetch all categories. Issues a GET to /api/categories
+    if ($stateParams.u_id) {
+      $scope.sortTypesCategory = ['name', 'created'];
+    } else {
+      $scope.sortTypesCategory = ['name', 'username', 'created'];
+    }
+    $scope.sortReverseCategory = true;
+    $scope.sortCategoryBy = 'created';
 
     $scope.deleteCategory = function(category) {
       category.$delete(function(resp) {
@@ -164,6 +176,15 @@ var app = angular.module('catalog');
     $scope.categoryItems = $stateParams.c_id;
     $scope.userItems = $stateParams.u_id;
 
+    if ($stateParams.c_id) {
+      $scope.sortTypesItem = ['name', 'username', 'created'];
+    } else if ($stateParams.u_id) {
+      $scope.sortTypesItem = ['name', 'created', 'category_name'];
+    } else {
+      $scope.sortTypesItem = ['name', 'username', 'created', 'category_name'];
+    }
+    $scope.sortReverseItem = true;
+    $scope.sortItemBy = 'created';
 
     $scope.deleteItem = function(item) {
       item.$delete(function(resp) {
