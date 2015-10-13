@@ -229,9 +229,9 @@ var app = angular.module('catalog');
   }]);
 
 
-  app.controller('ItemEditCtrl', ['$scope', 'Item', '$stateParams', 'Category', function($scope, Item, $stateParams, Category) {
+  app.controller('ItemEditCtrl', ['$scope', 'Item', '$stateParams', 'Category', '$state', function($scope, Item, $stateParams, Category, $state) {
     $scope.updateItem = function() { //Update the edited category. Issues a PUT to /api/category/:id
-      $scope.item.$update(function() {
+      $scope.item.$update(function(data) {
         $state.go('items', {'c_id': data.category_id}); // on success go back to categories
       });
     };
