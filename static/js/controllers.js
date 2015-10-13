@@ -177,7 +177,7 @@ var app = angular.module('catalog');
     $scope.userItems = $stateParams.u_id;
 
     if ($stateParams.c_id) {
-      $scope.sortTypesItem = ['name', 'username', 'created'];
+      $scope.sortTypesItem = ['name', 'created'];
     } else if ($stateParams.u_id) {
       $scope.sortTypesItem = ['name', 'created', 'category_name'];
     } else {

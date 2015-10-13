@@ -32,10 +32,6 @@
     <span class="hamb-middle"></span>
     <span class="hamb-bottom"></span>
   </button>
-  <!--<button id="menu-toggle" ng-class="{toggled: menu_toggled}" ng-click="menuToggle()" type="button" class="btn">-->
-    <!--<p class="sr-only">Sidebar Menu Toggle</p>-->
-    <!--<span class="glyphicon glyphicon-menu-hamburger"></span>-->
-  <!--</button>-->
   <nav>
     <ul class="sidebar-nav">
       <li class="sidebar-brand">Catalog App</li>
@@ -45,8 +41,8 @@
       <li ng-if="isLoggedin" role="presentation" ng-click="menuToggle()"><a ui-sref="items({u_id: currentUser.id})">My Items</a></li>
       <li role="presentation" ng-click="menuToggle()"><a ui-sref="createItem">Create Item</a></li>
       <li role="presentation" ng-click="menuToggle()">
-        <a ng-if="!currentUser.username" type="button" ui-sref="login" class="btn btn-block btn-success ng-cloak">Login or Register</a>
-        <a ng-if="currentUser.username" type="button" ng-click="logout()" class="btn btn-success btn-block ng-cloak">Log Out</a>
+        <a ng-if="isLoggedin === ''" type="button" ui-sref="login" class="btn btn-block btn-success ng-cloak">Login or Register</a>
+        <a ng-if="isLoggedin != ''" type="button" ng-click="logout()" class="btn btn-success btn-block ng-cloak">Log Out</a>
       </li>
     </ul>
   </nav>
@@ -59,13 +55,13 @@
   <nav class="navbar navbar-static-top">
     <div class="container-fluid">
       <div class="pull-right greeting ng-cloak">
-        <div ng-if="currentUser.username">
+        <div ng-if="isLoggedin != ''">
           <p class="top-nav-profile">
             <img class="img-responsive" ng-src="[[currentUser.picture]]" alt="[[currentUser.username]]'s profile picture">
             Welcome, [[currentUser.username]]
           </p>
         </div>
-        <div ng-if="!currentUser.username"><a ui-sref="login">Login or Register</a></div>
+        <div ng-if="isLoggedin === ''"><a ui-sref="login">Login or Register</a></div>
       </div>
     </div>
   </nav>

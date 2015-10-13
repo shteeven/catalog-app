@@ -41,7 +41,6 @@
     // direct on initial page load based on login status
     if ($state.current.name == '') {
       if ($rootScope.isLoggedin === '') {
-        console.log('here');
         $state.go('landing')
       } else {
         $state.go('home')
