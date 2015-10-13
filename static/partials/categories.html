@@ -62,7 +62,7 @@
 
             <div ng-hide="currentUser.id === category.user_id">
               <p>
-                Created: [[ category.created[0] ]]-[[ category.created[1] ]]-[[ category.created[2] ]]
+                Created: [[category.created | date:'yy-MM-dd HH:mm']]
               </p>
               By: <a ui-sref="categories({u_id: category.user_id})">[[category.username]]</a>
             </div>

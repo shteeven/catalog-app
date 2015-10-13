@@ -57,7 +57,7 @@ class Category(Base):
 			'user_id': self.user_id,
 			'img_url': self.img_url,
 			'username': self.user.username,
-			'created': list(self.timestamp.timetuple())
+			'created': self.timestamp.isoformat()
 		}
 
 
@@ -86,7 +86,7 @@ class Item(Base):
 			'user_id': self.user_id,
 			'username': self.user.username,
 			'img_url': self.img_url,
-			'created': list(self.timestamp.timetuple())
+			'created': self.timestamp.isoformat()
 		}
 
 

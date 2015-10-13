@@ -51,7 +51,7 @@
 
             <div ng-hide="currentUser.id === category.user_id">
               <p>
-                Created: [[ category.created[0] ]]-[[ category.created[1] ]]-[[ category.created[2] ]]
+                Created: [[category.created | date:'yy-MM-dd HH:mm']]
               </p>
               By: <a ui-sref="categories({u_id: category.user_id})">[[category.username]]</a>
             </div>
@@ -94,24 +94,15 @@
 	<div class="row" ng-repeat="item in items | filter:searchItems | limitTo: 10"> <!-- Angular should repeat this entire section? -->
 
 		<div class="col-xs-12 col-md-10 col-md-offset-1">
+      <div class="row category-wrap"> <!-- Angular should repeat this block -->
 
-			<!--<div class="container-fluid">-->
-
-				<div class="row category-wrap"> <!-- Angular should repeat this block -->
-
-					<!--&lt;!&ndash; Image thumbnail &ndash;&gt;-->
-					<!--<div class="col-xs-1">-->
-						<!--<img class="img-thumb" ng-src="[[ item.img_url ]]" alt="[[ item.name ]] image.">-->
-					<!--</div>-->
-
-					<!-- Item Title -->
-					<div class="col-xs-6 col-md-7">
-              <h3 ui-sref="items({c_id:item.category_id})" class="title">[[ item.name ]]</h3>
-					</div>
-
-					<!-- CRUD -->
-					<div class="col-xs-5 col-md-5 crud">
-            <div ng-show="currentUser.id === item.user_id">
+        <!-- Item Title -->
+        <div class="col-xs-6 col-md-7">
+          <h3 ui-sref="items({c_id:item.category_id})" class="title">[[ item.name ]]</h3>
+        </div>
+        <!-- CRUD -->
+        <div class="col-xs-5 col-md-5 crud">
+          <div ng-show="currentUser.id === item.user_id">
               <!-- Edit button -->
               <button type="button" ui-sref="editItem({id:item.id})" class="btn btn-success">
 								<span class="glyphicon glyphicon-pencil"></span>
@@ -121,19 +112,15 @@
 								<span class="glyphicon glyphicon-trash"></span>
               </button>
             </div>
-
-            <div ng-hide="currentUser.id === item.user_id">
-              <p>
-                Created: [[ item.created[0] ]]-[[ item.created[1] ]]-[[ item.created[2] ]]
-                <!--@ [[ item.created[3] ]]:[[ item.created[4] ]]-->
+          <div ng-hide="currentUser.id === item.user_id">
+            <p>
+                Created: [[item.created | date:'yy-MM-dd HH:mm']]
               </p>
-              By: <a ui-sref="items({c_id: item.category_id})">[[item.username]]</a>
-            </div>
-					</div>
+            By: <a ui-sref="items({c_id: item.category_id})">[[item.username]]</a>
+          </div>
+        </div>
 
 				</div> <!-- / .row -->
-
-			<!--</div> &lt;!&ndash; / .container-fluid &ndash;&gt;-->
 
 		</div> <!-- / .col-md-10.col-md-offset-1 -->
 
