@@ -14,32 +14,21 @@
   </div>
 
   <!-- Category Search Filter -->
-  <form class="form-inline row">
+  <form class="form-inline">
 
-    <div class="form-group col-xs-2">
-      <div class="container-fluid">
-        <div class="row">
-        <div class="input-group col-xs-12">
-          <select class="form-control input-sm" ng-options="value as value for (key, value) in sortTypesCategory" ng-model="sortCategoryBy"></select>
-        </div>
+    <div class="form-group">
+      <div class="input-group input-group-sm">
+        <select class="form-control" ng-options="value as value for (key, value) in sortTypesCategory" ng-model="sortCategoryBy"></select>
       </div>
-      </div>
-    </div>
-
-    <div class="form-group col-xs-1">
-      <div class="row">
-        <div class="input-group col-xs-12">
-          <button class="btn btn-default btn-sm" title="Reverse sort" ng-click="sortReverseCategory = !sortReverseCategory"><span class="glyphicon glyphicon-sort"></span></button>
-        </div>
+      <div class="input-group input-group-sm">
+        <button class="btn btn-default btn-sm" title="Reverse sort" ng-click="sortReverseCategory = !sortReverseCategory"><span class="glyphicon glyphicon-sort"></span></button>
       </div>
     </div>
 
-    <div class="form-group col-xs-8">
-      <div class="row">
-        <div class="input-group col-xs-12">
-          <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-          <input type="text" class="form-control input-sm" placeholder="Type to search categories" ng-model="searchCategories">
-        </div>
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+        <input type="text" class="form-control input-sm" placeholder="Type to search categories" ng-model="searchCategories">
       </div>
     </div>
 
