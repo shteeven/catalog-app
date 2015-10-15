@@ -4,58 +4,59 @@
 <div class="col-xs-11 col-sm-10 col-xs-offset-1 ng-cloak">
   <br>
 
-  <h2>
-    <span ng-if="categoryItems">Items <span ng-if="items.length != 0">in [[items[0].category_name]]</span> </span>
-    <span ng-if="userItems"><span ng-if="items.length != 0">[[items[0].username]]'s </span>Items</span>
-    <span ng-if="!categoryItems && !userItems">Items</span>
-    <button class="btn btn-success" ui-sref="createItem({c_id:categoryItems})" title="Create a category."><span class="glyphicon glyphicon-plus"></span></button>
-  </h2>
+  <div class="row">
+    <h2 class="col-xs-12">
+      <span ng-if="categoryItems">Items <span ng-if="items.length != 0">in [[items[0].category_name]]</span> </span>
+      <span ng-if="userItems"><span ng-if="items.length != 0">[[items[0].username]]'s </span>Items</span>
+      <span ng-if="!categoryItems && !userItems">Items</span>
+      <button class="btn btn-success" ui-sref="createItem({c_id:categoryItems})" title="Create a category."><span class="glyphicon glyphicon-plus"></span></button>
+    </h2>
+  </div>
 
 
   <!-- Item Search Filter -->
   <form class="form-inline row">
 
-    <div class="form-group col-xs-2">
-      <div class="row">
-        <div class="input-group col-xs-12">
-          <select class="form-control input-sm" ng-options="value as value for (key, value) in sortTypesItem" ng-model="sortItemBy"></select>
-        </div>
+    <div class="form-horizontal col-xs-4">
+      <div class="input-group">
+        <select class="form-control input-sm" ng-options="value as value for (key, value) in sortTypesItem" ng-model="sortItemBy"></select>
       </div>
+
     </div>
 
     <div class="form-group col-xs-1">
-      <div class="row">
-        <div class="input-group col-xs-12">
-          <button class="btn btn-default btn-sm" title="Reverse sort" ng-click="sortReverseItem = !sortReverseItem"><span class="glyphicon glyphicon-sort"></span></button>
-        </div>
-      </div>
+
+
     </div>
 
-    <div class="form-group col-xs-8">
-      <div class="row">
-        <div class="input-group col-xs-12">
-          <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+    <div class="form-group col-xs-6 col-sm-3">
+
+        <div class="input-group">
+          <span class="input-group-addon"><div class="input-group">
+        <button class="btn btn-default btn-sm" title="Reverse sort" ng-click="sortReverseItem = !sortReverseItem"><span class="glyphicon glyphicon-sort"></span></button>
+      </div></span>
           <input type="text" class="form-control input-sm" placeholder="Type to search items" ng-model="searchItems">
         </div>
-      </div>
     </div>
 
   </form>
   <!--END ITEM FILTERS-->
 
   <!-- If there are no items -->
-  <div ng-if="items.length===0">
-    <p>You have no items, yet. <a ui-sref="createItem">Try creating one!</a></p>
+  <div class="row" ng-if="items.length===0">
+    <div class="col-xs-12">
+      <p>You have no items, yet. <a ui-sref="createItem">Try creating one!</a></p>
+    </div>
   </div>
 
 	<div class="row" ng-repeat="item in items | orderBy:sortItemBy:sortReverseItem | filter:searchItems"> <!-- Angular should repeat this entire section? -->
-		
-		<div class="col-xs-12 col-md-10 col-md-offset-1">
+
+		<div class="col-xs-12 col-md-12">
 
 			<div class="container-fluid">
-				
+
 				<div class="row category-wrap"> <!-- Angular should repeat this block -->
-						
+
 					<!-- Image thumbnail -->
 					<div class="col-xs-3 col-md-2">
 						<img class="img-thumb" ng-src="[[ item.img_url ]]" alt="[[ item.name ]] image.">
@@ -82,7 +83,7 @@
 
             <div ng-hide="currentUser.id === item.user_id">
               <p>
-                Created: [[item.created | date:'yy-MM-dd HH:mm']]
+                Created: [[item.created | date:'yy-MM-dd']]
               </p>
               By: <a ui-sref="items({c_id: item.category_id})">[[item.username]]</a>
             </div>
@@ -93,6 +94,8 @@
 			</div> <!-- / .container-fluid -->
 
 		</div> <!-- / .col-md-10.col-md-offset-1 -->
-	
+
 	</div> <!-- / .row -->
+
+
 </div>
