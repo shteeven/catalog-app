@@ -302,6 +302,10 @@ def item_api(i_id=''):
 @app.route('/api/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
+    # All responses receive a _csrf_token, if the user is signing in with gplus,
+    # the token is not popped and validated in csrf_protect_read, but is
+    # validated here. On the frontend, the app sends the callback with the
+    # token as 'state'.
     if request.args.get('state') != login_session['_csrf_token']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
