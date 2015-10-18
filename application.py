@@ -142,7 +142,7 @@ def category_api(c_id=''):
 
         # get category for PUT or DELETE, user_id, must match that of category.
         # user_id for PUT or DELETE
-        category = session.query(Category).filter_by(id=id).one()
+        category = session.query(Category).filter_by(id=c_id).one()
         if category is None:
             return jsonify(message='Category not found.'), 404
         if category.user_id != login_session['user_id']:
@@ -252,7 +252,7 @@ def item_api(i_id=''):
 
         # get item for PUT or DELETE, user_id, must match that of
         # category.user_id for PUT or DELETE
-        item = session.query(Item).filter_by(id=id).one()
+        item = session.query(Item).filter_by(id=i_id).one()
         if item is None:
             return jsonify(message='Item not found.'), 404
         if item.user_id != login_session['user_id']:
@@ -515,10 +515,14 @@ def validate_image_url(img_url):
         except requests.exceptions.InvalidSchema:
             return 400, '', 'Image url is missing schema. A preceding ' \
                             '"http://" might fix it, or leave the field blank.'
+        except requests.exceptions.Timeout:
+            return 200, default_img_url, 'Image Timeout. Set to default.'
+        except requests.exceptions.ConnectionError:
+            return 200, default_img_url, 'Connection error. Set to default.'
         except:
-            return 400, '', 'We don\'t know what\'s wrong with the entered ' \
-                            'image url, but please fix it.'
-
+            return 200, default_img_url, 'We don\'t know what\'s wrong with ' \
+                                         'the entered image url. Set to ' \
+                                         'default.'
 
 ##########################
 # User Helper

@@ -118,7 +118,7 @@ var app = angular.module('catalog');
 
     $scope.deleteCategory = function(category) {
       category.$delete(function(resp) {
-        $scope.categories = Category.query(function () {});
+        $scope.categories = Category.query({user_id: $stateParams.u_id});
       })
     };
 
@@ -188,7 +188,7 @@ var app = angular.module('catalog');
 
     $scope.deleteItem = function(item) {
       item.$delete(function(resp) {
-        $scope.items = Item.query(function () {});
+        $scope.items = Item.query({category_id: $stateParams.c_id, user_id: $stateParams.u_id});
       })
     };
     $scope.openDeleteItem = function (item) {
