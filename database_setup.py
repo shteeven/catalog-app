@@ -36,7 +36,6 @@ class User(Base):
 		return pwd_context.verify(password, self.password_hash)
 
 
-
 class Category(Base):
 	__tablename__ = 'category'
 
