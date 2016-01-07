@@ -107,7 +107,14 @@
           c_id: {
             value: null,
             squash: false
-          },
+          }
+        },
+        templateUrl: 'static/partials/items.html',
+        controller: 'ItemCtrl'
+      })
+      .state('u_items', {
+        url: '/items/:u_id',
+        params: {
           u_id: {
             value: null,
             squash: false
