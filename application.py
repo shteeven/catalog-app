@@ -596,7 +596,7 @@ def crsf_protect_write(resp):
 ##########################
 # Run application
 ##########################
-if __name__ == '__main__':
-    app.secret_key = 'Spray tans are so 1998.'
-    app.debug = True
+# if __name__ == '__main__':
+app.secret_key = 'Spray tans are so 1998.'
+app.debug = True
     # app.run(host='0.0.0.0', port=8000)
