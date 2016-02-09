@@ -24,7 +24,7 @@ __author__ = 'Shtav'
 app = Flask(__name__)
 
 APPLICATION_NAME = "Catalog"
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web'][
+CLIENT_ID = json.loads(open('/var/www/catalog-app/client_secrets.json', 'r').read())['web'][
     'client_id']
 
 # Connect to Database and create database session
