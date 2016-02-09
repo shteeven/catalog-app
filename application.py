@@ -20,8 +20,6 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 __author__ = 'Shtav'
 
 app = Flask(__name__)
-app.secret_key = 'Spray tans are so 1998.'
-app.debug = True
 
 APPLICATION_NAME = "Catalog"
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web'][
@@ -598,5 +596,7 @@ def crsf_protect_write(resp):
 ##########################
 # Run application
 ##########################
+app.secret_key = 'Spray tans are so 1998.'
+app.debug = True
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
