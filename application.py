@@ -16,6 +16,8 @@ from flask import session as login_session
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+import sys
+sys.path.insert(0, '/var/www/catalog-app')
 
 __author__ = 'Shtav'
 
