@@ -28,7 +28,7 @@ CLIENT_ID = json.loads(open('/var/www/catalog-app/client_secrets.json', 'r').rea
     'client_id']
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('sqlite:///catalog.db', connect_args={'check_same_thread':False})
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
