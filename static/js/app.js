@@ -102,7 +102,7 @@
         controller: 'CategoryEditCtrl'
       })
       .state('items', {
-        url: '/items/:c_id',
+        url: '/items/c/:c_id',
         params: {
           c_id: {
             value: null,
@@ -113,7 +113,7 @@
         controller: 'ItemCtrl'
       })
       .state('u_items', {
-        url: '/items/:u_id',
+        url: '/items/u/:u_id',
         params: {
           u_id: {
             value: null,
