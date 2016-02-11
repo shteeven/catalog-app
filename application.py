@@ -16,19 +16,18 @@ from flask import session as login_session
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-import sys
-sys.path.insert(0, '/var/www/catalog-app')
 
 __author__ = 'Shtav'
 
 app = Flask(__name__)
 
 APPLICATION_NAME = "Catalog"
-CLIENT_SECRET = '/var/www/catalog-app/client_secrets.json'
+CLIENT_SECRET = 'client_secrets.json' if app.debug is True else '/var/www/catalog-app/client_secrets.json'
 CLIENT_ID = json.loads(open(CLIENT_SECRET, 'r').read())['web'][
     'client_id']
 
 # Connect to Database and create database session
+# TODO: errors in running this on Apache with check_same_thread set to true
 engine = create_engine('sqlite:///catalog.db', connect_args={'check_same_thread':False})
 Base.metadata.bind = engine
 
@@ -600,6 +599,7 @@ def crsf_protect_write(resp):
 # Run application
 ##########################
 app.secret_key = 'Spray tans are so 1998.'
-app.debug = True
+
 if __name__ == '__main__':
+    app.debug = True  # change value if ran with Python and not server
     app.run(host='0.0.0.0', port=8000)
