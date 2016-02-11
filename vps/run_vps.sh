@@ -1,13 +1,14 @@
 requirements="../requirements.txt"
 config="../pg_config.sh"
 regex="^apt-get|^pip"
-sudo pip install -r $requirements
+pip install -r $requirements
 
 cat $config | while read line; do
 	if [[ $line =~ $regex ]]; then
-		sudo $line
+		echo "installing $line"
+		$line
 	fi
 done
 
 # move wsgi for use by the VPS
-sudo cp -f catalog-app.wsgi ../
+cp -f catalog-app.wsgi ../
