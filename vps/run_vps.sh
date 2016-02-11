@@ -7,6 +7,8 @@ cat $config | while read line; do
 	if [[ $line =~ $regex ]]; then
 		echo "installing $line"
 		$line
+	else
+		echo "DID NOT INSTALL $line"
 	fi
 done
 
