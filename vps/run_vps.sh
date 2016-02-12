@@ -1,19 +1,13 @@
 requirements="../requirements.txt"
 config="../pg_config.sh"
 regex="^apt-get|^pip"
+
+# TODO: I think this only involves vagrant
+# not necessary??? Doesn't hurt to have it though.
 pip install -r $requirements
 
 chmod +x ${config}
 ${config}
-
-#cat $config | while read line; do
-#	if [[ $line =~ $regex ]]; then
-#		echo "installing $line"
-#		$line
-#	else
-#		echo "DID NOT INSTALL $line"
-#	fi
-#done
 
 # move wsgi for use by the VPS
 cp -f catalog-app.wsgi ../
