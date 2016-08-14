@@ -1,6 +1,5 @@
 requirements="../requirements.txt"
 config="../pg_config.sh"
-regex="^apt-get|^pip"
 
 # TODO: I think this only involves vagrant
 # not necessary??? Doesn't hurt to have it though.
